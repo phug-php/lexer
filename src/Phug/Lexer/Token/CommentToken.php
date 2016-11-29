@@ -3,7 +3,7 @@
 namespace Phug\Lexer\Token;
 
 use Phug\Lexer\AbstractToken;
-use Phug\Lexer\Token\Partial\VisibleTrait;
+use Phug\Util\Partial\VisibleTrait;
 
 class CommentToken extends AbstractToken
 {

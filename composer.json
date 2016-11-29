@@ -20,7 +20,8 @@
     "minimum-stability": "stable",
     "require": {
         "php": ">=5.5.0",
-        "phug/reader": "*@dev"
+        "phug/reader": "*@dev",
+        "phug/util": "*@dev"
     },
     "autoload": {
         "psr-4": {

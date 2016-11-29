@@ -3,8 +3,8 @@
 namespace Phug\Lexer\Token;
 
 use Phug\Lexer\AbstractToken;
-use Phug\Lexer\Token\Partial\NameTrait;
-use Phug\Lexer\Token\Partial\SubjectTrait;
+use Phug\Util\Partial\NameTrait;
+use Phug\Util\Partial\SubjectTrait;
 
 class CaseToken extends AbstractToken
 {

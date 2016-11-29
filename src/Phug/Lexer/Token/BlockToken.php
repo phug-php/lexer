@@ -3,8 +3,8 @@
 namespace Phug\Lexer\Token;
 
 use Phug\Lexer\AbstractToken;
-use Phug\Lexer\Token\Partial\ModeTrait;
-use Phug\Lexer\Token\Partial\NameTrait;
+use Phug\Util\Partial\ModeTrait;
+use Phug\Util\Partial\NameTrait;
 
 class BlockToken extends AbstractToken
 {

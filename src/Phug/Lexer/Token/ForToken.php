@@ -3,7 +3,7 @@
 namespace Phug\Lexer\Token;
 
 use Phug\Lexer\AbstractToken;
-use Phug\Lexer\Token\Partial\SubjectTrait;
+use Phug\Util\Partial\SubjectTrait;
 
 class ForToken extends AbstractToken
 {

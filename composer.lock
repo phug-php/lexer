@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c0ccc675bd2a9c759f6b2a71e80ae572",
-    "content-hash": "bd46e1b33a61057258c80717c254fa71",
+    "hash": "a468b386369795cf7f9368d874358067",
+    "content-hash": "f1a1f8bd613074a3a35ae00a24ccf949",
     "packages": [
         {
             "name": "phug/reader",
@@ -17,7 +17,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phug-php/reader/zipball/efca4e9e554250fed9ed903dbb96d98648b47489",
+                "url": "https://api.github.com/repos/phug-php/reader/zipball/f8cdadfc855a26b049fe053e4c6b00a3990a2b3b",
                 "reference": "efca4e9e554250fed9ed903dbb96d98648b47489",
                 "shasum": ""
             },
@@ -58,6 +58,56 @@
                 "views"
             ],
             "time": "2016-11-25 15:15:36"
+        },
+        {
+            "name": "phug/util",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phug-php/util.git",
+                "reference": "ea215a7aedfd173b4e1f2b41c9cf1065e0764f0b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phug-php/util/zipball/ea215a7aedfd173b4e1f2b41c9cf1065e0764f0b",
+                "reference": "ea215a7aedfd173b4e1f2b41c9cf1065e0764f0b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "./src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Torben Koehn",
+                    "email": "torben@talesoft.codes"
+                }
+            ],
+            "homepage": "http://phug-lang.com",
+            "keywords": [
+                "dialect",
+                "html",
+                "jade",
+                "php",
+                "phtml",
+                "phug",
+                "presentation",
+                "pug",
+                "render",
+                "template",
+                "util",
+                "views"
+            ],
+            "time": "2016-11-29 15:04:34"
         },
         {
             "name": "psr/http-message",
@@ -173,7 +223,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "phug/reader": 20
+        "phug/reader": 20,
+        "phug/util": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
