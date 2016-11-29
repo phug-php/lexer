@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phug-php/reader.git",
-                "reference": "efca4e9e554250fed9ed903dbb96d98648b47489"
+                "reference": "f8cdadfc855a26b049fe053e4c6b00a3990a2b3b"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/phug-php/reader/zipball/f8cdadfc855a26b049fe053e4c6b00a3990a2b3b",
-                "reference": "efca4e9e554250fed9ed903dbb96d98648b47489",
+                "reference": "f8cdadfc855a26b049fe053e4c6b00a3990a2b3b",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +57,7 @@
                 "template",
                 "views"
             ],
-            "time": "2016-11-25 15:15:36"
+            "time": "2016-11-29 15:11:03"
         },
         {
             "name": "phug/util",
@@ -65,12 +65,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phug-php/util.git",
-                "reference": "ea215a7aedfd173b4e1f2b41c9cf1065e0764f0b"
+                "reference": "e83bc76c90c7f4541ec2563e7a43c052215924ef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phug-php/util/zipball/ea215a7aedfd173b4e1f2b41c9cf1065e0764f0b",
-                "reference": "ea215a7aedfd173b4e1f2b41c9cf1065e0764f0b",
+                "url": "https://api.github.com/repos/phug-php/util/zipball/e83bc76c90c7f4541ec2563e7a43c052215924ef",
+                "reference": "e83bc76c90c7f4541ec2563e7a43c052215924ef",
                 "shasum": ""
             },
             "require": {
@@ -107,7 +107,7 @@
                 "util",
                 "views"
             ],
-            "time": "2016-11-29 15:04:34"
+            "time": "2016-11-29 15:43:28"
         },
         {
             "name": "psr/http-message",

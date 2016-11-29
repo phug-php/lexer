@@ -40,6 +40,8 @@ use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Lexer\TokenInterface;
+use Phug\Util\OptionInterface;
+use Phug\Util\Partial\OptionTrait;
 
 /**
  * Performs lexical analysis and provides a token generator.
@@ -62,24 +64,16 @@ use Phug\Lexer\TokenInterface;
  *     $lexer = new Lexer();
  *
  *     foreach ($lexer->lex($pugInput) as $token)
- *          echo $token;
- *
- *     //Prints a human-readable dump of the generated tokens
+ *          var_dump($token);
  *
  * </code>
  */
-class Lexer
+class Lexer implements OptionInterface
 {
+    use OptionTrait;
 
     const INDENT_SPACE = ' ';
     const INDENT_TAB = "\t";
-
-    /**
-     * The configuration options associated with the lexer.
-     *
-     * @var array
-     */
-    private $options;
 
     /**
      * The state of the current lexing process.
@@ -120,13 +114,15 @@ class Lexer
     {
 
         $this->options = array_replace_recursive([
-            'stateClassName' => State::class,
+            'state_class_name' => State::class,
             'level' => 0,
-            'indentStyle' => null,
-            'indentWidth' => null,
+            'indent_style' => null,
+            'indent_width' => null,
             'encoding'    => null,
             'scanners' => [
-                'newLine' => NewLineScanner::class,
+                //TODO: Several of these are non-standard and need to be capsulated into extensions
+                //Namely: ForScanner, DoScanner, VariableScanner
+                'new_line' => NewLineScanner::class,
                 'indent' => IndentationScanner::class,
                 'import' => ImportScanner::class,
                 'block' => BlockScanner::class,
@@ -138,7 +134,7 @@ class Lexer
                 'while' => WhileScanner::class,
                 'for' => ForScanner::class,
                 'mixin' => MixinScanner::class,
-                'mixinCall' => MixinCallScanner::class,
+                'mixin_call' => MixinCallScanner::class,
                 'doctype' => DoctypeScanner::class,
                 'tag' => TagScanner::class,
                 'class' => ClassScanner::class,
@@ -151,7 +147,7 @@ class Lexer
                 'expression' => ExpressionScanner::class,
                 'code' => CodeScanner::class,
                 'markup' => MarkupScanner::class,
-                'textLine' => TextLineScanner::class
+                'text_line' => TextLineScanner::class
             ]
         ], $options ?: []);
 
@@ -236,19 +232,19 @@ class Lexer
     public function lex($input)
     {
 
-        $stateClassName = $this->options['stateClassName'];
+        $stateClassName = $this->options['state_class_name'];
 
         if (!is_a($stateClassName, State::class, true)) {
             throw new \InvalidArgumentException(
-                'stateClassName needs to be a valid '.State::class.' sub class'
+                'state_class_name needs to be a valid '.State::class.' sub class'
             );
         }
 
         //Put together our initial state
         $this->state = new State($input, [
             'encoding' => $this->options['encoding'],
-            'indentStyle' => $this->options['indentStyle'],
-            'indentWidth' => $this->options['indentWidth'],
+            'indent_style' => $this->options['indent_style'],
+            'indent_width' => $this->options['indent_width'],
             'level' => $this->options['level']
         ]);
 

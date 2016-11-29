@@ -5,20 +5,16 @@ namespace Phug\Lexer;
 use Phug\Reader;
 use Phug\Lexer;
 use Phug\LexerException;
+use Phug\Util\OptionInterface;
+use Phug\Util\Partial\OptionTrait;
 
 /**
  * Represents the state of a currently running lexing process.
  */
-class State
+class State implements OptionInterface
 {
-
-    /**
-     * Holds an array of configuration options.
-     *
-     * @var array
-     */
-    private $options;
-
+    use OptionTrait;
+    
     /**
      * Stores the current indentation level of the lexing process.
      *
@@ -57,15 +53,15 @@ class State
     {
 
         $this->options = array_replace([
-            'readerClassName' => Reader::class,
+            'reader_class_name' => Reader::class,
             'encoding' => null,
             'level' => 0,
-            'indentWidth' => null,
-            'indentStyle' => null
+            'indent_width' => null,
+            'indent_style' => null
         ], $options ?: []);
 
 
-        $readerClassName = $this->options['readerClassName'];
+        $readerClassName = $this->options['reader_class_name'];
         if (!is_a($readerClassName, Reader::class, true)) {
             throw new \InvalidArgumentException(
                 'Configuration option `readerClassName` needs to be a valid FQCN of a class that extends '.
@@ -77,8 +73,8 @@ class State
             $input,
             $this->options['encoding']
         );
-        $this->indentStyle = $this->options['indentWidth'];
-        $this->indentWidth = $this->options['indentStyle'];
+        $this->indentStyle = $this->options['indent_width'];
+        $this->indentWidth = $this->options['indent_style'];
         $this->level = $this->options['level'];
 
         //This will strip \r, \0 etc. from the input
