@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a468b386369795cf7f9368d874358067",
-    "content-hash": "f1a1f8bd613074a3a35ae00a24ccf949",
+    "hash": "a4d64adfda797cdf775b34af4af45303",
+    "content-hash": "b1e96673d66c28c98b679b16345e4f6d",
     "packages": [
         {
             "name": "phug/reader",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phug-php/reader.git",
-                "reference": "f8cdadfc855a26b049fe053e4c6b00a3990a2b3b"
+                "reference": "64097c13783e7427dc4ce1aaf9eb550fe6768caf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phug-php/reader/zipball/f8cdadfc855a26b049fe053e4c6b00a3990a2b3b",
-                "reference": "f8cdadfc855a26b049fe053e4c6b00a3990a2b3b",
+                "url": "https://api.github.com/repos/phug-php/reader/zipball/64097c13783e7427dc4ce1aaf9eb550fe6768caf",
+                "reference": "64097c13783e7427dc4ce1aaf9eb550fe6768caf",
                 "shasum": ""
             },
             "require": {
@@ -57,20 +57,20 @@
                 "template",
                 "views"
             ],
-            "time": "2016-11-29 15:11:03"
+            "time": "2016-11-30 15:08:08"
         },
         {
             "name": "phug/util",
-            "version": "dev-master",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phug-php/util.git",
-                "reference": "e83bc76c90c7f4541ec2563e7a43c052215924ef"
+                "reference": "2215734b4b8f31bfbd9f3b5cb7196fbec6386132"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phug-php/util/zipball/e83bc76c90c7f4541ec2563e7a43c052215924ef",
-                "reference": "e83bc76c90c7f4541ec2563e7a43c052215924ef",
+                "url": "https://api.github.com/repos/phug-php/util/zipball/2215734b4b8f31bfbd9f3b5cb7196fbec6386132",
+                "reference": "2215734b4b8f31bfbd9f3b5cb7196fbec6386132",
                 "shasum": ""
             },
             "require": {
@@ -107,7 +107,7 @@
                 "util",
                 "views"
             ],
-            "time": "2016-11-29 15:43:28"
+            "time": "2016-11-29 17:03:33"
         },
         {
             "name": "psr/http-message",
@@ -222,10 +222,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "phug/reader": 20,
-        "phug/util": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
