@@ -21,7 +21,8 @@
     "require": {
         "php": ">=5.5.0",
         "phug/reader": "*@dev",
-        "phug/util": "*@dev"
+        "phug/util": "*@dev",
+        "phpunit/php-code-coverage": "^4.0"
     },
     "autoload": {
         "psr-4": {

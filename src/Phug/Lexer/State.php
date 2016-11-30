@@ -57,14 +57,15 @@ class State implements OptionInterface
             'encoding' => null,
             'level' => 0,
             'indent_width' => null,
-            'indent_style' => null
+            'indent_style' => null,
+            'path' => null
         ], $options ?: []);
 
 
         $readerClassName = $this->options['reader_class_name'];
         if (!is_a($readerClassName, Reader::class, true)) {
             throw new \InvalidArgumentException(
-                'Configuration option `readerClassName` needs to be a valid FQCN of a class that extends '.
+                'Configuration option `reader_class_name` needs to be a valid FQCN of a class that extends '.
                 Reader::class
             );
         }
@@ -296,7 +297,7 @@ class State implements OptionInterface
      * @param $className
      * @param $pattern
      * @param null $modifiers
-     * @return TokenInterface|null
+     * @return \Generator
      */
     public function scanToken($className, $pattern, $modifiers = null)
     {
@@ -363,6 +364,10 @@ class State implements OptionInterface
     {
 
         $pattern = "Failed to lex: %s \nNear: %s \nLine: %s \nOffset: %s \nPosition: %s";
+
+        if ($this->options['path']) {
+            $pattern .= "\nPath: {$this->options['path']}";
+        }
 
         throw new LexerException(vsprintf($pattern, [
             $message,
