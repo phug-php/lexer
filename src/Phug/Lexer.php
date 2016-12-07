@@ -148,6 +148,9 @@ class Lexer implements OptionInterface
                 'code' => CodeScanner::class,
                 'markup' => MarkupScanner::class,
                 'text_line' => TextLineScanner::class
+                //Notice that TextScanner is always added in lex(), as we'd basically disable extensions otherwise
+                //As this array is replaced recursively, your extensions are either added or overwritten
+                //If Text would be last one, every extension would end up as text, as text matches everything
             ]
         ], $options ?: []);
 
@@ -227,9 +230,11 @@ class Lexer implements OptionInterface
      *
      * @param string $input the pug-string to lex into tokens.
      *
+     * @param null   $path
+     *
      * @return \Generator a generator that can be iterated sequentially
      */
-    public function lex($input)
+    public function lex($input, $path = null)
     {
 
         $stateClassName = $this->options['state_class_name'];
@@ -245,7 +250,8 @@ class Lexer implements OptionInterface
             'encoding' => $this->options['encoding'],
             'indent_style' => $this->options['indent_style'],
             'indent_width' => $this->options['indent_width'],
-            'level' => $this->options['level']
+            'level' => $this->options['level'],
+            'path' => $path
         ]);
 
         $scanners = $this->scanners;
