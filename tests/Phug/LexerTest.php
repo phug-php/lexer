@@ -13,19 +13,8 @@ use Phug\LexerException;
 /**
  * @coversDefaultClass Phug\Lexer
  */
-class LexerTest extends \PHPUnit_Framework_TestCase
+class LexerTest extends AbstractLexerTest
 {
-
-    /**
-     * @var Lexer
-     */
-    protected $lexer;
-
-    public function setUp()
-    {
-
-        $this->lexer = new Lexer([]);
-    }
 
     /**
      * @covers ::lex
@@ -33,10 +22,9 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     public function testAssignmentScan()
     {
 
-        $this->assertTokens(
-            $this->lexer->lex('&test'),
+        $this->assertTokens('&test', [
             AssignmentToken::class
-        );
+        ]);
     }
 
     /**
@@ -46,40 +34,38 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     public function testAttributeScan()
     {
 
-        $this->assertTokens(
-            $this->lexer->lex('(a=b c=d e=f)'),
+        $this->assertTokens('(a=b c=d e=f)', [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeEndToken::class
-        );
+        ]);
 
-        $this->assertTokens(
-            $this->lexer->lex('(a=b,c=d, e=f)'),
+        $this->assertTokens('(a=b,c=d, e=f)', [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeEndToken::class
-        );
+        ]);
 
         $this->assertTokens(
-            $this->lexer->lex('(a=b
+            '(a=b
         c=d     e=f
         //ignored line
-    ,g=h        )'),
+    ,g=h        )', [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeEndToken::class
-        );
+        ]);
 
 
         $this->assertTokens(
-            $this->lexer->lex('(
+            '(
                 a//ignore
                 b //ignore
                 c//ignore
@@ -87,7 +73,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
                 e=//ignore
                 f//ignore
                 g=h//ignore
-            )'),
+            )', [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
@@ -95,7 +81,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
             AttributeToken::class,
             AttributeToken::class,
             AttributeEndToken::class
-        );
+        ]);
 
         $this->expectException(LexerException::class);
         iterator_to_array($this->lexer->lex('(a=b'));
@@ -143,33 +129,13 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     {
 
         $this->assertTokens(
-            $this->lexer->lex('doctype 5'),
-            DoctypeToken::class
+            'doctype 5',
+            [DoctypeToken::class]
         );
 
         $this->assertTokens(
-            $this->lexer->lex('!!! 5'),
-            DoctypeToken::class
+            '!!! 5',
+            [DoctypeToken::class]
         );
-    }
-    
-    public function assertTokens(\Generator $tokens)
-    {
-
-        $args = func_get_args();
-        array_shift($args);
-
-        $tokens = iterator_to_array($tokens);
-
-        $this->assertEquals(count($args), count($tokens), 'same amount of tokens');
-
-        foreach ($tokens as $i => $token) {
-            $isset = isset($args[$i]);
-            $this->assertTrue($isset, "tokens has index $i");
-
-            if ($isset) {
-                $this->assertInstanceOf($args[$i], $token, "token is {$args[$i]}");
-            }
-        }
     }
 }
