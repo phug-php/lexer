@@ -83,13 +83,6 @@ class Lexer implements OptionInterface
     private $state;
 
     /**
-     * The registered scanners to run.
-     *
-     * @var ScannerInterface[]
-     */
-    private $scanners;
-
-    /**
      * Creates a new lexer instance.
      *
      * The options should be an associative array
@@ -113,7 +106,7 @@ class Lexer implements OptionInterface
     public function __construct(array $options = null)
     {
 
-        $this->options = array_replace_recursive([
+        $this->setOptionsRecursive([
             'state_class_name' => State::class,
             'level' => 0,
             'indent_style' => null,
@@ -155,11 +148,6 @@ class Lexer implements OptionInterface
         ], $options ?: []);
 
         $this->state = null;
-        $this->scanners = [];
-
-        foreach ($this->options['scanners'] as $scanner) {
-            $this->addScanner($scanner);
-        }
     }
 
     /**
@@ -169,7 +157,8 @@ class Lexer implements OptionInterface
      */
     public function getScanners()
     {
-        return $this->scanners;
+
+        return $this->options['scanners'];
     }
 
     /**
@@ -195,25 +184,41 @@ class Lexer implements OptionInterface
      * The scanner class needs to extend Phug\Lexer\ScannerInterface. It can be the class name itself
      * or an instance of it.
      *
+     * @param string $name
      * @param ScannerInterface|string $scanner
-     * @param bool|false $prepend
+     * @param string $before
      *
      * @return $this
      */
-    public function addScanner($scanner, $prepend = false)
+    public function addScanner($name, $scanner, $before = null)
     {
 
-        if (!is_subclass_of($scanner, ScannerInterface::class)) {
-            throw new \InvalidArgumentException(
-                "Scanner $scanner is not a valid ".ScannerInterface::class
-            );
+        $this->filterScanner($scanner);
+
+        //Quick return if we don't want to prepend
+        if (!$before) {
+
+            $this->options['scanners'][$name] = $scanner;
+            return $this;
         }
 
-        if ($prepend) {
-            array_unshift($this->scanners, $scanner);
-        } else {
-            $this->scanners[] = $scanner;
+        $scanners = [];
+        $added = false;
+        foreach ($this->options['scanners'] as $scannerName => $classNameOrInstance) {
+
+            if ($scannerName === $name) {
+
+                $scanners[$name] = $scanner;
+                $added = true;
+            }
+
+            $scanners[$scannerName] = $classNameOrInstance;
         }
+
+        if (!$added)
+            $scanners[$name] = $scanner;
+
+        $this->options['scanners'] = $scanners;
 
         return $this;
     }
@@ -254,10 +259,10 @@ class Lexer implements OptionInterface
             'path' => $path
         ]);
 
-        $scanners = $this->scanners;
+        $scanners = $this->options['scanners'];
 
         //We always scan for text at the very end.
-        $scanners[] = TextScanner::class;
+        $scanners['final_plain_text'] = TextScanner::class;
 
         //Scan for tokens
         foreach ($this->state->loopScan($scanners) as $token) {
@@ -330,6 +335,16 @@ class Lexer implements OptionInterface
         }
 
         return "[$dumped]".$suffix;
+    }
+
+    private function filterScanner($scanner)
+    {
+
+        if (!is_subclass_of($scanner, ScannerInterface::class)) {
+            throw new \InvalidArgumentException(
+                "Scanner $scanner is not a valid ".ScannerInterface::class." instance or extended class"
+            );
+        }
     }
 
     private function getTokenName($token)

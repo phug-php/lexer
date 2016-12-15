@@ -6,6 +6,7 @@ use Phug\Reader;
 use Phug\Lexer;
 use Phug\LexerException;
 use Phug\Util\OptionInterface;
+use Phug\Util\Partial\LevelTrait;
 use Phug\Util\Partial\OptionTrait;
 
 /**
@@ -14,13 +15,7 @@ use Phug\Util\Partial\OptionTrait;
 class State implements OptionInterface
 {
     use OptionTrait;
-    
-    /**
-     * Stores the current indentation level of the lexing process.
-     *
-     * @var int
-     */
-    private $level;
+    use LevelTrait;
 
     /**
      * Contains the current `Phug\Reader` instance used by the lexer.
@@ -91,31 +86,6 @@ class State implements OptionInterface
     {
 
         return $this->reader;
-    }
-
-    /**
-     * Returns the current indentation level the reader operates on.
-     *
-     * @return int|mixed
-     */
-    public function getLevel()
-    {
-
-        return $this->level;
-    }
-
-    /**
-     * Sets the current indentation level to a new one.
-     *
-     * @param $level
-     * @return $this
-     */
-    public function setLevel($level)
-    {
-
-        $this->level = $level;
-
-        return $this;
     }
 
     /**

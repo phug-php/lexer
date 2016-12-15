@@ -2,10 +2,10 @@
 
 namespace Phug\Lexer;
 
-interface TokenInterface
-{
+use Phug\Util\DocumentLocationInterface;
 
-    public function getLine();
-    public function getOffset();
+interface TokenInterface extends DocumentLocationInterface
+{
+    
     public function getLevel();
 }

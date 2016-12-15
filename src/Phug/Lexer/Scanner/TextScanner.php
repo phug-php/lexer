@@ -16,10 +16,16 @@ class TextScanner implements ScannerInterface
 
         /** @var TextToken $token */
         $token = $state->createToken(TextToken::class);
-        $text = trim($reader->readUntilNewLine());
-
+        $text = $reader->readUntilNewLine();
+        
         if (mb_strlen($text) < 1) {
             return;
+        }
+
+        //Always omit the very first space in basically every text (if there is one)
+        if ($text[0] === ' ') {
+
+            $text = substr($text, 1);
         }
 
         $token->setValue($text);

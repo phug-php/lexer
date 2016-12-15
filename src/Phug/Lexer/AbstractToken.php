@@ -2,12 +2,13 @@
 
 namespace Phug\Lexer;
 
+use Phug\Util\Partial\DocumentLocationTrait;
+use Phug\Util\Partial\LevelGetTrait;
+
 abstract class AbstractToken implements TokenInterface
 {
-
-    private $line;
-    private $offset;
-    private $level;
+    use DocumentLocationTrait;
+    use LevelGetTrait;
 
     public function __construct($line = null, $offset = null, $level = null)
     {
@@ -15,32 +16,5 @@ abstract class AbstractToken implements TokenInterface
         $this->line = $line ?: 0;
         $this->offset = $offset ?: 0;
         $this->level = $level ?: 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLine()
-    {
-
-        return $this->line;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOffset()
-    {
-
-        return $this->offset;
-    }
-
-    /**
-     * @return int
-     */
-    public function getLevel()
-    {
-
-        return $this->level;
     }
 }

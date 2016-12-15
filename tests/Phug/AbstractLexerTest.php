@@ -26,7 +26,7 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
     protected function assertTokens($expression, array $classNames)
     {
 
-        self::assertGenerator($this->lexer->lex($expression), $classNames);
+        return self::assertGenerator($this->lexer->lex($expression), $classNames);
     }
 
     protected static function assertGenerator(\Generator $generator, array $classNames)
@@ -34,7 +34,15 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
 
         $data = iterator_to_array($generator);
 
-        self::assertEquals(count($data), count($classNames), 'same amount of values');
+        self::assertEquals(
+            count($data),
+            count($classNames),
+            'same amount of values ('
+            .implode(', ', array_map('get_class', $data))
+            .' vs. '
+            .implode(', ', $classNames)
+            .')'
+        );
 
         foreach ($data as $i => $item) {
 
@@ -45,5 +53,7 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
                 self::assertInstanceOf($classNames[$i], $item, "token is {$classNames[$i]}");
             }
         }
+
+        return $data;
     }
 }

@@ -22,7 +22,8 @@ class TextLineScanner implements ScannerInterface
 
         $reader->consume();
 
-        foreach ($state->scan(TextBlockScanner::class) as $token) {
+        foreach ($state->scan(TextScanner::class) as $token) {
+
             if ($escaped && $token instanceof TextToken) {
                 $token->escape();
             }

@@ -7,19 +7,15 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\DoToken;
 
-class DoScanner implements ScannerInterface
+class DoScanner extends ControlStatementScanner
 {
 
-    public function scan(State $state)
+    public function __construct()
     {
 
-        $scanner = new ControlStatementScanner(
+        parent::__construct(
             DoToken::class,
             ['do']
         );
-
-        foreach ($state->scan($scanner) as $token) {
-            yield $token;
-        }
     }
 }

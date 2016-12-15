@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a4d64adfda797cdf775b34af4af45303",
-    "content-hash": "b1e96673d66c28c98b679b16345e4f6d",
+    "hash": "c54f8fb4bb37c30cdc54fdb5616e6ac2",
+    "content-hash": "82125038dbe927e13d4233e40937518e",
     "packages": [
         {
             "name": "phug/reader",
@@ -61,16 +61,16 @@
         },
         {
             "name": "phug/util",
-            "version": "0.1.0",
+            "version": "0.1.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phug-php/util.git",
-                "reference": "2215734b4b8f31bfbd9f3b5cb7196fbec6386132"
+                "reference": "c00b5650631b8b929bcae495bf3764abe9057242"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phug-php/util/zipball/2215734b4b8f31bfbd9f3b5cb7196fbec6386132",
-                "reference": "2215734b4b8f31bfbd9f3b5cb7196fbec6386132",
+                "url": "https://api.github.com/repos/phug-php/util/zipball/c00b5650631b8b929bcae495bf3764abe9057242",
+                "reference": "c00b5650631b8b929bcae495bf3764abe9057242",
                 "shasum": ""
             },
             "require": {
@@ -107,7 +107,7 @@
                 "util",
                 "views"
             ],
-            "time": "2016-11-29 17:03:33"
+            "time": "2016-12-15 13:44:42"
         },
         {
             "name": "psr/http-message",

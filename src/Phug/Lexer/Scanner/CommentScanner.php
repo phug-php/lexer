@@ -24,10 +24,11 @@ class CommentScanner implements ScannerInterface
         $token = $state->createToken(CommentToken::class);
 
         if ($reader->peekChar('-')) {
+
             $reader->consume();
             $token->hide();
         }
-
+        
         yield $token;
 
         foreach ($state->scan(TextBlockScanner::class) as $token) {

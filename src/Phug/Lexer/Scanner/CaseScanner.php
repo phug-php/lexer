@@ -7,19 +7,15 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CaseToken;
 
-class CaseScanner implements ScannerInterface
+class CaseScanner extends ControlStatementScanner
 {
 
-    public function scan(State $state)
+    public function __construct()
     {
 
-        $scanner = new ControlStatementScanner(
+        parent::__construct(
             CaseToken::class,
             ['case']
         );
-
-        foreach ($state->scan($scanner) as $token) {
-            yield $token;
-        }
     }
 }

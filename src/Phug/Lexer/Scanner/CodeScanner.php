@@ -25,12 +25,21 @@ class CodeScanner implements ScannerInterface
         $token = $state->createToken(CodeToken::class);
         $reader->consume();
 
+        //Single-line code
         foreach ($state->scan(TextScanner::class) as $textToken) {
+
+            //Trim the text as expressions usually would
             yield $token;
-            yield $textToken;
+
+            if ($textToken instanceof Lexer\Token\TextToken) {
+
+                $textToken->setValue(trim($textToken->getValue()));
+                yield $textToken;
+            }
             return;
         }
 
+        //Multi-line code
         $token->setIsBlock(true);
         yield $token;
 

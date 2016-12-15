@@ -41,7 +41,41 @@ class ControlStatementScanner implements ScannerInterface
         }
 
         if (method_exists($token, 'setSubject')) {
-            $token->setSubject($reader->readExpression(["\n", ":"]));
+
+            $subject = $reader->readExpression(["\n", '?', ':']);
+
+            //Handle `if Foo::bar`
+            if ($reader->peekString('::')) {
+
+                $subject .= $reader->getLastPeekResult();
+                $reader->consume();
+
+                $subject .= $reader->readExpression(["\n", ':']);
+            } else if ($reader->peekChar('?')) {
+
+                $subject .= ' '.$reader->getLastPeekResult();
+                $reader->consume();
+
+                //Ternary expression
+                if ($reader->peekChars('?:')) {
+
+                    $subject .= $reader->getLastPeekResult().' ';
+                    $reader->consume();
+                } else {
+
+                    $subject .= ' '.$reader->readExpression(["\n", ':']).' ';
+
+                    if ($reader->peekChar(':')) {
+
+                        $subject .= $reader->getLastPeekResult().' ';
+                        $reader->consume();
+                    }
+                }
+
+                $subject .= $reader->readExpression(["\n", ':']);
+            }
+
+            $token->setSubject(trim($subject));
         }
 
         yield $token;

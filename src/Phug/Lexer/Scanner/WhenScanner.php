@@ -7,19 +7,15 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\WhenToken;
 
-class WhenScanner implements ScannerInterface
+class WhenScanner extends ControlStatementScanner
 {
 
-    public function scan(State $state)
+    public function __construct()
     {
 
-        $scanner = new ControlStatementScanner(
+        parent::__construct(
             WhenToken::class,
             ['when', 'default']
         );
-
-        foreach ($state->scan($scanner) as $token) {
-            yield $token;
-        }
     }
 }

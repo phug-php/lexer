@@ -7,19 +7,15 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\WhileToken;
 
-class WhileScanner implements ScannerInterface
+class WhileScanner extends ControlStatementScanner
 {
 
-    public function scan(State $state)
+    public function __construct()
     {
 
-        $scanner = new ControlStatementScanner(
+        parent::__construct(
             WhileToken::class,
             ['while']
         );
-
-        foreach ($state->scan($scanner) as $token) {
-            yield $token;
-        }
     }
 }
