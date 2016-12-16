@@ -13,7 +13,10 @@ class FilterScanner implements ScannerInterface
     public function scan(State $state)
     {
 
-        foreach ($state->scanToken(FilterToken::class, ':(?<name>[a-zA-Z_][a-zA-Z0-9\-_]*)') as $token) {
+        foreach ($state->scanToken(
+            FilterToken::class,
+            ':(?<name>[a-zA-Z_][a-zA-Z0-9\-_]*(?::[a-zA-Z_][a-zA-Z0-9\-_]*)*)'
+        ) as $token) {
             yield $token;
 
             foreach ($state->scan(TextBlockScanner::class) as $subToken) {

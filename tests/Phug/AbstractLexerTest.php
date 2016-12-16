@@ -26,34 +26,31 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
     protected function assertTokens($expression, array $classNames)
     {
 
-        return self::assertGenerator($this->lexer->lex($expression), $classNames);
-    }
-
-    protected static function assertGenerator(\Generator $generator, array $classNames)
-    {
-
-        $data = iterator_to_array($generator);
-
+        $tokens = iterator_to_array($this->lexer->lex($expression));
+        
         self::assertEquals(
-            count($data),
+            count($tokens),
             count($classNames),
-            'same amount of values ('
-            .implode(', ', array_map('get_class', $data))
-            .' vs. '
+            "\n"
+            .'expected ('
             .implode(', ', $classNames)
+            .'), '
+            ."\n"
+            .'got      ('
+            .implode(', ', array_map([$this->lexer, 'dump'], $tokens))
             .')'
         );
 
-        foreach ($data as $i => $item) {
+        foreach ($tokens as $i => $token) {
 
             $isset = isset($classNames[$i]);
-            self::assertTrue($isset, "class name exists at $i");
+            self::assertTrue($isset, "Classname at $i exists");
 
             if ($isset) {
-                self::assertInstanceOf($classNames[$i], $item, "token is {$classNames[$i]}");
+                self::assertInstanceOf($classNames[$i], $token, "token is {$classNames[$i]}");
             }
         }
 
-        return $data;
+        return $tokens;
     }
 }

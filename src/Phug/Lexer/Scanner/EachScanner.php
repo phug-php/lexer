@@ -24,11 +24,11 @@ class EachScanner implements ScannerInterface
         $reader->consume();
 
         if (!$reader->match(
-            "\\$?(?<itemName>[a-zA-Z_][a-zA-Z0-9_]*)(?:[\t ]*,[\t ]*".
-            "\\$?(?<keyName>[a-zA-Z_][a-zA-Z0-9_]*))?[\t ]+in[\t ]+"
+            "\\$(?<itemName>[a-zA-Z_][a-zA-Z0-9_]*)(?:[\t ]*,[\t ]*".
+            "\\$(?<keyName>[a-zA-Z_][a-zA-Z0-9_]*))?[\t ]+in[\t ]+"
         )) {
             $state->throwException(
-                'The syntax for each is `each [$]itemName[, [$]keyName]] in [subject]`'
+                'The syntax for each is `each $itemName[, $keyName]] in {{subject}}`'
             );
         }
 
@@ -37,7 +37,51 @@ class EachScanner implements ScannerInterface
 
         $reader->consume();
 
-        $token->setSubject($reader->readExpression([':', "\n"]));
+        $subject = $reader->readExpression(["\n", '?', ':']);
+
+        //TODO: [DRY] This is copied from `Phug\Lexer\Scanner\ControlStatementScanner->scan`
+        //Handle `if Foo::bar`
+        if ($reader->peekString('::')) {
+
+            $subject .= $reader->getLastPeekResult();
+            $reader->consume();
+
+            $subject .= $reader->readExpression(["\n", ':']);
+        } else if ($reader->peekChar('?')) {
+
+            $subject .= ' '.$reader->getLastPeekResult();
+            $reader->consume();
+
+            //Ternary expression
+            if ($reader->peekChars('?:')) {
+
+                $subject .= $reader->getLastPeekResult().' ';
+                $reader->consume();
+            } else {
+
+                $subject .= ' '.$reader->readExpression(["\n", ':']).' ';
+
+                if ($reader->peekChar(':')) {
+
+                    $subject .= $reader->getLastPeekResult().' ';
+                    $reader->consume();
+                }
+            }
+
+            $subject .= $reader->readExpression(["\n", ':']);
+        }
+
+        $subject = trim($subject);
+        //Up to here (See TODO above)
+
+        if (empty($subject)) {
+
+            $state->throwException(
+                "`each`-statement has no subject to operate on"
+            );
+        }
+
+        $token->setSubject($subject);
 
         yield $token;
     }

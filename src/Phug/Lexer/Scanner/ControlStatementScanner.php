@@ -75,7 +75,9 @@ class ControlStatementScanner implements ScannerInterface
                 $subject .= $reader->readExpression(["\n", ':']);
             }
 
-            $token->setSubject(trim($subject));
+            $subject = trim($subject);
+
+            $token->setSubject(!empty($subject) ? $subject : null);
         }
 
         yield $token;

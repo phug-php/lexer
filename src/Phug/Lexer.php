@@ -276,9 +276,15 @@ class Lexer implements OptionInterface
     public function dump($input)
     {
 
+        if ($input instanceof TokenInterface)
+            return $this->dumpToken($input);
+
+        if (!($input instanceof \Generator) && !is_array($input))
+            $input = $this->lex((string)$input);
+
         $dumped = '';
-        foreach ($this->lex($input) as $token) {
-            $dumped .= $this->dumpToken($token);
+        foreach ($input as $token) {
+            $dumped .= $this->dump($token);
         }
 
         return $dumped;
@@ -350,6 +356,6 @@ class Lexer implements OptionInterface
     private function getTokenName($token)
     {
 
-        return preg_replace('/Token$', '', get_class($token));
+        return preg_replace('/Token$/', '', get_class($token));
     }
 }

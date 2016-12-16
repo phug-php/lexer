@@ -34,6 +34,6 @@ class WhenScannerTest extends AbstractControlStatementScannerTest
         ]);
 
         self::assertEquals('default', $tok->getName());
-        self::assertEquals('', $tok->getSubject());
+        self::assertEquals(null, $tok->getSubject());
     }
 }

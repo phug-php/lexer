@@ -13,7 +13,11 @@ class TagScanner implements ScannerInterface
     public function scan(State $state)
     {
 
-        foreach ($state->scanToken(TagToken::class, '(?<name>[a-zA-Z_][a-zA-Z0-9\-_]*(?::[a-zA-Z_][a-zA-Z0-9\-_]*)*)', 'i') as $token) {
+        foreach ($state->scanToken(
+            TagToken::class, 
+            '(?<name>[a-zA-Z_][a-zA-Z0-9\-_]*(?::[a-zA-Z_][a-zA-Z0-9\-_]*)*)', 
+            'i'
+        ) as $token) {
             yield $token;
 
             foreach ($state->scan(ClassScanner::class) as $subToken) {

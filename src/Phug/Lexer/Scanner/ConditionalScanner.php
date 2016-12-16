@@ -27,8 +27,15 @@ class ConditionalScanner extends ControlStatementScanner
 
             if ($token instanceof ConditionalToken) {
 
-                //Make sure spaces are replaced from elseif/else if to make a final keyword, "elseif"
+                //Make sure spaces are replaced from `elseif`/`else if` to make a final keyword, "elseif"
                 $token->setName(preg_replace('/[ \t]/', '', $token->getName()));
+
+                if ($token->getName() === 'else' && !empty($token->getSubject())) {
+
+                    $state->throwException(
+                        'The `else`-conditional statement can\'t have a subject'
+                    );
+                }
             }
 
             yield $token;
