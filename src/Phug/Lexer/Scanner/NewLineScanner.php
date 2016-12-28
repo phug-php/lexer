@@ -2,14 +2,12 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\NewLineToken;
 
 class NewLineScanner implements ScannerInterface
 {
-    
     public function scan(State $state)
     {
         $reader = $state->getReader();

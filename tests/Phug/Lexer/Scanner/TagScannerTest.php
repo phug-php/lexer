@@ -8,7 +8,6 @@ use Phug\Test\AbstractLexerTest;
 
 class TagScannerTest extends AbstractLexerTest
 {
-
     /**
      * @covers Phug\Lexer\Scanner\TagScanner
      * @covers Phug\Lexer\Scanner\TagScanner::scan
@@ -18,7 +17,7 @@ class TagScannerTest extends AbstractLexerTest
 
         /** @var TagToken $tok */
         list($tok) = $this->assertTokens('some-tag-name', [
-            TagToken::class
+            TagToken::class,
         ]);
 
         self::assertEquals('some-tag-name', $tok->getName());
@@ -29,7 +28,7 @@ class TagScannerTest extends AbstractLexerTest
 
         /** @var TagToken $tok */
         list($tok) = $this->assertTokens('some-namespace:some-tag-name', [
-            TagToken::class
+            TagToken::class,
         ]);
 
         self::assertEquals('some-namespace:some-tag-name', $tok->getName());
@@ -39,13 +38,13 @@ class TagScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var TagToken $a
+         * @var TagToken
          * @var TagToken $b
          */
         list($a, , $b) = $this->assertTokens('some-outer-tag: some-inner-tag', [
             TagToken::class,
             ExpansionToken::class,
-            TagToken::class
+            TagToken::class,
         ]);
 
         self::assertEquals('some-outer-tag', $a->getName());

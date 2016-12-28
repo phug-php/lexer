@@ -8,28 +8,23 @@ use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
-use Phug\Util\Partial\NameTrait;
-use Phug\Util\Partial\SubjectTrait;
 
 abstract class EachScannerTest extends AbstractLexerTest
 {
-
     public function provideExpressions()
     {
-
         return [
             ['$someSubject'],
             ['$a ? $b : $c'],
             ['Foo::$bar'],
             ['Foo::bar()'],
             ['$a ? $b : ($c ? $d : $e)'],
-            ['($some ? $ternary : $operator)']
+            ['($some ? $ternary : $operator)'],
         ];
     }
-    
+
     public function provideInvalidSyntaxStyles()
     {
-        
         return [
             ['each item, key in $something'],
             ['each item in $something'],
@@ -37,7 +32,7 @@ abstract class EachScannerTest extends AbstractLexerTest
             ['each $something'],
             ['each $item, anything in $something'],
             ['each $item, $key'],
-            ['each $item, $key in']
+            ['each $item, $key in'],
         ];
     }
 
@@ -46,7 +41,7 @@ abstract class EachScannerTest extends AbstractLexerTest
      */
     public function testWithItemOnly($expr)
     {
-        
+
         /** @var EachToken $tok */
         list($tok) = $this->assertTokens("each \$item in $expr", [EachToken::class]);
 
@@ -79,7 +74,7 @@ abstract class EachScannerTest extends AbstractLexerTest
             EachToken::class,
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertEquals('item', $tok->getItem());
@@ -97,7 +92,7 @@ abstract class EachScannerTest extends AbstractLexerTest
             EachToken::class,
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertEquals('someItem', $tok->getItem());
@@ -110,7 +105,6 @@ abstract class EachScannerTest extends AbstractLexerTest
      */
     public function testThatItFailsWithInvalidSyntax($syntax)
     {
-
         self::setExpectedException(LexerException::class);
         $this->lexer->lex($syntax);
     }

@@ -10,20 +10,18 @@ use Phug\Test\AbstractLexerTest;
 
 class AttributeScannerTest extends AbstractLexerTest
 {
-
     /**
      * @covers Phug\Lexer\Scanner\AttributeScanner
      * @covers Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testScan()
     {
-
         $this->assertTokens('(a=b c=d e=f)', [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
 
         $this->assertTokens('(a=b,c=d, e=f)', [
@@ -31,7 +29,7 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
 
         $this->assertTokens(
@@ -44,9 +42,8 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
-
 
         $this->assertTokens(
             '(
@@ -64,7 +61,7 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
     }
 
@@ -74,7 +71,6 @@ class AttributeScannerTest extends AbstractLexerTest
      */
     public function testFailsOnUnclosedBracket()
     {
-
         $this->setExpectedException(LexerException::class);
         iterator_to_array($this->lexer->lex('(a=b'));
     }
@@ -90,7 +86,7 @@ class AttributeScannerTest extends AbstractLexerTest
         list(, $attr) = $this->assertTokens('(a=b)', [
             AttributeStartToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
         $this->assertEquals('a', $attr->getName());
         $this->assertEquals('b', $attr->getValue());
@@ -101,7 +97,7 @@ class AttributeScannerTest extends AbstractLexerTest
         list(, $attr) = $this->assertTokens('(a!=b)', [
             AttributeStartToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
         $this->assertEquals('a', $attr->getName());
         $this->assertEquals('b', $attr->getValue());
@@ -112,7 +108,7 @@ class AttributeScannerTest extends AbstractLexerTest
         list(, $attr) = $this->assertTokens('(a?=b)', [
             AttributeStartToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
         $this->assertEquals('a', $attr->getName());
         $this->assertEquals('b', $attr->getValue());
@@ -123,7 +119,7 @@ class AttributeScannerTest extends AbstractLexerTest
         list(, $attr) = $this->assertTokens('(a?!=b)', [
             AttributeStartToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
         $this->assertEquals('a', $attr->getName());
         $this->assertEquals('b', $attr->getValue());

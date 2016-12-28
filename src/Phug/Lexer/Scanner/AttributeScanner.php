@@ -2,7 +2,6 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
@@ -12,10 +11,8 @@ use Phug\Reader;
 
 class AttributeScanner implements ScannerInterface
 {
-
     private function skipComments(Reader $reader)
     {
-
         if ($reader->peekString('//')) {
             $reader->consume();
             $reader->readUntilNewLine();
@@ -24,7 +21,6 @@ class AttributeScanner implements ScannerInterface
 
     public function scan(State $state)
     {
-
         $reader = $state->getReader();
 
         if (!$reader->peekChar('(')) {
@@ -38,6 +34,7 @@ class AttributeScanner implements ScannerInterface
         if ($reader->peekChar(')')) {
             $reader->consume();
             yield $state->createToken(AttributeEndToken::class);
+
             return;
         }
 
@@ -60,7 +57,7 @@ class AttributeScanner implements ScannerInterface
             //e.g.:
             // (`a`), (`a`=b), (`$expr`, `$expr2`) (`$expr` `$expr`=a)
             $expr = $reader->readExpression([
-                ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//'
+                ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
             ]);
 
             //Notice we have the following problem with spaces:
@@ -97,7 +94,7 @@ class AttributeScanner implements ScannerInterface
                 //We just skip that one.
                 continue;
             }
-            
+
             $token->setName($expr);
 
             //Check for comments at this point
@@ -146,7 +143,7 @@ class AttributeScanner implements ScannerInterface
 
             if ($hasValue) {
                 $expr = $reader->readExpression([
-                    ' ', "\t", "\n", ',',  ')', '//'
+                    ' ', "\t", "\n", ',',  ')', '//',
                 ]);
                 $token->setValue($expr);
 
@@ -175,7 +172,7 @@ class AttributeScanner implements ScannerInterface
 
         if (!$reader->peekChar(')')) {
             $state->throwException(
-                "Unclosed attribute block"
+                'Unclosed attribute block'
             );
         }
 

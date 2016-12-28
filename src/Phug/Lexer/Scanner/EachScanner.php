@@ -2,17 +2,14 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\EachToken;
 
 class EachScanner implements ScannerInterface
 {
-
     public function scan(State $state)
     {
-
         $reader = $state->getReader();
 
         if (!$reader->match('each[\t ]+')) {
@@ -42,27 +39,22 @@ class EachScanner implements ScannerInterface
         //TODO: [DRY] This is copied from `Phug\Lexer\Scanner\ControlStatementScanner->scan`
         //Handle `if Foo::bar`
         if ($reader->peekString('::')) {
-
             $subject .= $reader->getLastPeekResult();
             $reader->consume();
 
             $subject .= $reader->readExpression(["\n", ':']);
-        } else if ($reader->peekChar('?')) {
-
+        } elseif ($reader->peekChar('?')) {
             $subject .= ' '.$reader->getLastPeekResult();
             $reader->consume();
 
             //Ternary expression
             if ($reader->peekChars('?:')) {
-
                 $subject .= $reader->getLastPeekResult().' ';
                 $reader->consume();
             } else {
-
                 $subject .= ' '.$reader->readExpression(["\n", ':']).' ';
 
                 if ($reader->peekChar(':')) {
-
                     $subject .= $reader->getLastPeekResult().' ';
                     $reader->consume();
                 }
@@ -75,9 +67,8 @@ class EachScanner implements ScannerInterface
         //Up to here (See TODO above)
 
         if (empty($subject)) {
-
             $state->throwException(
-                "`each`-statement has no subject to operate on"
+                '`each`-statement has no subject to operate on'
             );
         }
 

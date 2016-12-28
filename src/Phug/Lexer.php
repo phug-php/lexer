@@ -105,46 +105,45 @@ class Lexer implements OptionInterface
      */
     public function __construct(array $options = null)
     {
-
         $this->setOptionsRecursive([
             'state_class_name' => State::class,
-            'level' => 0,
-            'indent_style' => null,
-            'indent_width' => null,
-            'encoding'    => null,
-            'scanners' => [
+            'level'            => 0,
+            'indent_style'     => null,
+            'indent_width'     => null,
+            'encoding'         => null,
+            'scanners'         => [
                 //TODO: Several of these are non-standard and need to be capsulated into extensions
                 //Namely: ForScanner, DoScanner, VariableScanner
-                'new_line' => NewLineScanner::class,
-                'indent' => IndentationScanner::class,
-                'import' => ImportScanner::class,
-                'block' => BlockScanner::class,
+                'new_line'    => NewLineScanner::class,
+                'indent'      => IndentationScanner::class,
+                'import'      => ImportScanner::class,
+                'block'       => BlockScanner::class,
                 'conditional' => ConditionalScanner::class,
-                'each' => EachScanner::class,
-                'case' => CaseScanner::class,
-                'when' => WhenScanner::class,
-                'do' => DoScanner::class,
-                'while' => WhileScanner::class,
-                'for' => ForScanner::class,
-                'mixin' => MixinScanner::class,
-                'mixin_call' => MixinCallScanner::class,
-                'doctype' => DoctypeScanner::class,
-                'tag' => TagScanner::class,
-                'class' => ClassScanner::class,
-                'id' => IdScanner::class,
-                'attribute' => AttributeScanner::class,
-                'assignment' => AssignmentScanner::class,
-                'variable' => VariableScanner::class,
-                'comment' => CommentScanner::class,
-                'filter' => FilterScanner::class,
-                'expression' => ExpressionScanner::class,
-                'code' => CodeScanner::class,
-                'markup' => MarkupScanner::class,
-                'text_line' => TextLineScanner::class
+                'each'        => EachScanner::class,
+                'case'        => CaseScanner::class,
+                'when'        => WhenScanner::class,
+                'do'          => DoScanner::class,
+                'while'       => WhileScanner::class,
+                'for'         => ForScanner::class,
+                'mixin'       => MixinScanner::class,
+                'mixin_call'  => MixinCallScanner::class,
+                'doctype'     => DoctypeScanner::class,
+                'tag'         => TagScanner::class,
+                'class'       => ClassScanner::class,
+                'id'          => IdScanner::class,
+                'attribute'   => AttributeScanner::class,
+                'assignment'  => AssignmentScanner::class,
+                'variable'    => VariableScanner::class,
+                'comment'     => CommentScanner::class,
+                'filter'      => FilterScanner::class,
+                'expression'  => ExpressionScanner::class,
+                'code'        => CodeScanner::class,
+                'markup'      => MarkupScanner::class,
+                'text_line'   => TextLineScanner::class,
                 //Notice that TextScanner is always added in lex(), as we'd basically disable extensions otherwise
                 //As this array is replaced recursively, your extensions are either added or overwritten
                 //If Text would be last one, every extension would end up as text, as text matches everything
-            ]
+            ],
         ], $options ?: []);
 
         $this->state = null;
@@ -157,7 +156,6 @@ class Lexer implements OptionInterface
      */
     public function getScanners()
     {
-
         return $this->options['scanners'];
     }
 
@@ -168,7 +166,6 @@ class Lexer implements OptionInterface
      */
     public function getState()
     {
-
         if (!$this->state) {
             throw new \RuntimeException(
                 'Failed to get state: No lexing process active. Use the `lex()`-method'
@@ -184,30 +181,27 @@ class Lexer implements OptionInterface
      * The scanner class needs to extend Phug\Lexer\ScannerInterface. It can be the class name itself
      * or an instance of it.
      *
-     * @param string $name
+     * @param string                  $name
      * @param ScannerInterface|string $scanner
-     * @param string $before
+     * @param string                  $before
      *
      * @return $this
      */
     public function addScanner($name, $scanner, $before = null)
     {
-
         $this->filterScanner($scanner);
 
         //Quick return if we don't want to prepend
         if (!$before) {
-
             $this->options['scanners'][$name] = $scanner;
+
             return $this;
         }
 
         $scanners = [];
         $added = false;
         foreach ($this->options['scanners'] as $scannerName => $classNameOrInstance) {
-
             if ($scannerName === $name) {
-
                 $scanners[$name] = $scanner;
                 $added = true;
             }
@@ -215,8 +209,9 @@ class Lexer implements OptionInterface
             $scanners[$scannerName] = $classNameOrInstance;
         }
 
-        if (!$added)
+        if (!$added) {
             $scanners[$name] = $scanner;
+        }
 
         $this->options['scanners'] = $scanners;
 
@@ -234,14 +229,12 @@ class Lexer implements OptionInterface
      * The returned tokens are required to be `Phug\Lexer\TokenInterface` instances.
      *
      * @param string $input the pug-string to lex into tokens.
-     *
      * @param null   $path
      *
      * @return \Generator a generator that can be iterated sequentially
      */
     public function lex($input, $path = null)
     {
-
         $stateClassName = $this->options['state_class_name'];
 
         if (!is_a($stateClassName, State::class, true)) {
@@ -252,11 +245,11 @@ class Lexer implements OptionInterface
 
         //Put together our initial state
         $this->state = new State($input, [
-            'encoding' => $this->options['encoding'],
+            'encoding'     => $this->options['encoding'],
             'indent_style' => $this->options['indent_style'],
             'indent_width' => $this->options['indent_width'],
-            'level' => $this->options['level'],
-            'path' => $path
+            'level'        => $this->options['level'],
+            'path'         => $path,
         ]);
 
         $scanners = $this->options['scanners'];
@@ -275,12 +268,13 @@ class Lexer implements OptionInterface
 
     public function dump($input)
     {
-
-        if ($input instanceof TokenInterface)
+        if ($input instanceof TokenInterface) {
             return $this->dumpToken($input);
+        }
 
-        if (!($input instanceof \Generator) && !is_array($input))
-            $input = $this->lex((string)$input);
+        if (!($input instanceof \Generator) && !is_array($input)) {
+            $input = $this->lex((string) $input);
+        }
 
         $dumped = '';
         foreach ($input as $token) {
@@ -292,7 +286,6 @@ class Lexer implements OptionInterface
 
     private function dumpToken(TokenInterface $token)
     {
-
         $dumped = '';
         $suffix = '';
         switch (get_class($token)) {
@@ -312,7 +305,7 @@ class Lexer implements OptionInterface
             case AttributeToken::class:
                 /** @var AttributeToken $token */
                 $dumped = sprintf(
-                    "Attr %s=%s (%s, %s)",
+                    'Attr %s=%s (%s, %s)',
                     $token->getName() ?: '""',
                     $token->getValue() ?: '""',
                     $token->isEscaped() ? 'escaped' : 'unescaped',
@@ -329,7 +322,7 @@ class Lexer implements OptionInterface
             case ExpressionToken::class:
                 /** @var ExpressionToken $token */
                 $dumped = sprintf(
-                    "Expr %s (%s, %s)",
+                    'Expr %s (%s, %s)',
                     $token->getValue() ?: '""',
                     $token->isEscaped() ? 'escaped' : 'unescaped',
                     $token->isChecked() ? 'checked' : 'unchecked'
@@ -345,17 +338,15 @@ class Lexer implements OptionInterface
 
     private function filterScanner($scanner)
     {
-
         if (!is_subclass_of($scanner, ScannerInterface::class)) {
             throw new \InvalidArgumentException(
-                "Scanner $scanner is not a valid ".ScannerInterface::class." instance or extended class"
+                "Scanner $scanner is not a valid ".ScannerInterface::class.' instance or extended class'
             );
         }
     }
 
     private function getTokenName($token)
     {
-
         return preg_replace('/Token$/', '', get_class($token));
     }
 }
