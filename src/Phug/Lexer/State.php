@@ -2,9 +2,9 @@
 
 namespace Phug\Lexer;
 
-use Phug\Reader;
 use Phug\Lexer;
 use Phug\LexerException;
+use Phug\Reader;
 use Phug\Util\OptionInterface;
 use Phug\Util\Partial\LevelTrait;
 use Phug\Util\Partial\OptionTrait;
@@ -20,7 +20,7 @@ class State implements OptionInterface
     /**
      * Contains the current `Phug\Reader` instance used by the lexer.
      *
-     * @var Reader $reader
+     * @var Reader
      */
     private $reader;
 
@@ -46,16 +46,14 @@ class State implements OptionInterface
      */
     public function __construct($input, array $options)
     {
-
         $this->options = array_replace([
             'reader_class_name' => Reader::class,
-            'encoding' => null,
-            'level' => 0,
-            'indent_width' => null,
-            'indent_style' => null,
-            'path' => null
+            'encoding'          => null,
+            'level'             => 0,
+            'indent_width'      => null,
+            'indent_style'      => null,
+            'path'              => null,
         ], $options ?: []);
-
 
         $readerClassName = $this->options['reader_class_name'];
         if (!is_a($readerClassName, Reader::class, true)) {
@@ -84,7 +82,6 @@ class State implements OptionInterface
      */
     public function getReader()
     {
-
         return $this->reader;
     }
 
@@ -95,7 +92,6 @@ class State implements OptionInterface
      */
     public function getIndentStyle()
     {
-
         return $this->indentStyle;
     }
 
@@ -106,14 +102,14 @@ class State implements OptionInterface
      * pass either a single space or a single tab for the respective style.
      *
      * @param $indentStyle
+     *
      * @return $this
      */
     public function setIndentStyle($indentStyle)
     {
-
         if (!in_array($indentStyle, [null, Lexer::INDENT_TAB, Lexer::INDENT_SPACE])) {
             throw new \InvalidArgumentException(
-                "indentStyle needs to be null or one of the INDENT_* constants of the lexer"
+                'indentStyle needs to be null or one of the INDENT_* constants of the lexer'
             );
         }
 
@@ -138,16 +134,16 @@ class State implements OptionInterface
      * The value of this specifies if e.g. 2 spaces make up one indentation level or 4.
      *
      * @param $indentWidth
+     *
      * @return $this
      */
     public function setIndentWidth($indentWidth)
     {
-
         if (!is_null($indentWidth) &&
             (!is_int($indentWidth) || $indentWidth < 1)
         ) {
             throw new \InvalidArgumentException(
-                "indentWidth needs to be null or an integer above 0"
+                'indentWidth needs to be null or an integer above 0'
             );
         }
 
@@ -165,12 +161,12 @@ class State implements OptionInterface
      *
      * @param array|string $scanners the scanners to run
      *
-     * @return \Generator the generator yielding all tokens found
      * @throws LexerException
+     *
+     * @return \Generator the generator yielding all tokens found
      */
     public function scan($scanners)
     {
-
         $scanners = $this->filterScanners($scanners);
 
         foreach ($scanners as $key => $scanner) {
@@ -202,12 +198,13 @@ class State implements OptionInterface
      *
      * @param $scanners
      * @param bool $required
-     * @return \Generator
+     *
      * @throws LexerException
+     *
+     * @return \Generator
      */
     public function loopScan($scanners, $required = false)
     {
-
         while ($this->reader->hasLength()) {
             $success = false;
             foreach ($this->scan($scanners) as $token) {
@@ -222,7 +219,7 @@ class State implements OptionInterface
 
         if ($this->reader->hasLength() && $required) {
             $this->throwException(
-                "Unexpected ".$this->reader->peek(20)
+                'Unexpected '.$this->reader->peek(20)
             );
         }
     }
@@ -238,7 +235,6 @@ class State implements OptionInterface
      */
     public function createToken($className)
     {
-
         if (!is_subclass_of($className, TokenInterface::class)) {
             $this->throwException(
                 "$className is not a valid token sub-class"
@@ -267,11 +263,11 @@ class State implements OptionInterface
      * @param $className
      * @param $pattern
      * @param null $modifiers
+     *
      * @return \Generator
      */
     public function scanToken($className, $pattern, $modifiers = null)
     {
-
         if (!$this->reader->match($pattern, $modifiers)) {
             return;
         }
@@ -297,18 +293,18 @@ class State implements OptionInterface
      * This method makes sure that all scanners given are turned into their respective instances.
      *
      * @param $scanners
+     *
      * @return array
      */
     private function filterScanners($scanners)
     {
-
         $scannerInstances = [];
         $scanners = is_array($scanners) ? $scanners : [$scanners];
         foreach ($scanners as $key => $scanner) {
             if (!is_a($scanner, ScannerInterface::class, true)) {
                 throw new \InvalidArgumentException(
                     "The passed scanner with key `$key` doesn't seem to be either a valid ".ScannerInterface::class.
-                    " instance or extended class"
+                    ' instance or extended class'
                 );
             }
 
@@ -332,7 +328,6 @@ class State implements OptionInterface
      */
     public function throwException($message)
     {
-
         $pattern = "Failed to lex: %s \nNear: %s \nLine: %s \nOffset: %s \nPosition: %s";
 
         if ($this->options['path']) {
@@ -344,7 +339,7 @@ class State implements OptionInterface
             $this->reader->peek(20),
             $this->reader->getLine(),
             $this->reader->getOffset(),
-            $this->reader->getPosition()
+            $this->reader->getPosition(),
         ]));
     }
 }

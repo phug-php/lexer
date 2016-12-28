@@ -8,7 +8,6 @@ use Phug\Test\AbstractLexerTest;
 
 class CodeScannerTest extends AbstractLexerTest
 {
-
     /**
      * @covers Phug\Lexer\Scanner\CodeScanner
      * @covers Phug\Lexer\Scanner\CodeScanner::scan
@@ -19,7 +18,7 @@ class CodeScannerTest extends AbstractLexerTest
         /** @var TextToken $tok */
         list(, $tok) = $this->assertTokens('- $someCode()', [
             CodeToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertEquals('$someCode()', $tok->getValue());

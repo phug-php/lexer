@@ -11,23 +11,22 @@ use Phug\Test\AbstractLexerTest;
 
 class DoScannerTest extends AbstractLexerTest
 {
-
     public function testSingleLine()
     {
 
-        /** @var DoToken $tok */
+        /* @var DoToken $tok */
         $this->assertTokens("do\n", [DoToken::class, NewLineToken::class]);
     }
-    
+
     public function testExpanded()
     {
 
-        /** @var DoToken $tok */
+        /* @var DoToken $tok */
         $this->assertTokens('do: p something', [
             DoToken::class,
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
     }
 }

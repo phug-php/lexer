@@ -11,22 +11,18 @@ use Phug\LexerException;
 
 class ConditionalScannerTest extends AbstractControlStatementScannerTest
 {
-
     protected function getTokenClassName()
     {
-
         return ConditionalToken::class;
     }
 
     protected function getStatementName()
     {
-
         return 'if';
     }
 
     public function provideIfElseExpressions()
     {
-
         $exprs = $this->provideExpressions();
 
         $data = [];
@@ -35,12 +31,11 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
             'else if',
             'else    if',
             "else\tif",
-            "else\t if"
+            "else\t if",
         ];
 
         foreach ($styles as $style) {
             foreach ($exprs as $expr) {
-
                 $data[] = [$expr[0], $style];
             }
         }
@@ -53,7 +48,7 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
 
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("else\n", [$this->getTokenClassName(), NewLineToken::class]);
-        
+
         self::assertEquals('else', $tok->getName());
         self::assertEquals(null, $tok->getSubject());
     }
@@ -66,7 +61,7 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
             $this->getTokenClassName(),
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertEquals('else', $tok->getName());
@@ -75,10 +70,9 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
 
     public function testThatElseStatementFailsWithSubject()
     {
-
         self::setExpectedException(LexerException::class);
 
-        /** @var ConditionalToken $tok */
+        /* @var ConditionalToken $tok */
         iterator_to_array($this->lexer->lex('else $someVar'));
     }
 
@@ -101,13 +95,12 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
     public function testElseIfExpandedExpressions($expr, $stmt)
     {
 
-
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("$stmt $expr: p Some Text", [
             $this->getTokenClassName(),
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertEquals('elseif', $tok->getName());

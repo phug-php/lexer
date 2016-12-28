@@ -2,7 +2,6 @@
 
 namespace Phug\Test\Lexer;
 
-use Phug\Lexer;
 use Phug\Lexer\Token\AssignmentToken;
 use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
@@ -11,7 +10,6 @@ use Phug\Lexer\TokenInterface;
 
 class TokenTest extends \PHPUnit_Framework_TestCase
 {
-
     /**
      * @covers Phug\Lexer\Token\AssignmentToken
      * @covers Phug\Lexer\Token\AssignmentToken::setName
@@ -46,7 +44,6 @@ class TokenTest extends \PHPUnit_Framework_TestCase
      */
     public function testAttributeTokens()
     {
-
         $this->createAndTestToken(AttributeStartToken::class);
 
         /** @var AttributeToken $tok */
@@ -57,12 +54,10 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $tok->setName('some name');
         self::assertEquals('some name', $tok->getName());
 
-
         self::assertNull($tok->getValue());
 
         $tok->setValue('some value');
         self::assertEquals('some value', $tok->getValue());
-
 
         self::assertFalse($tok->isEscaped());
 
@@ -91,7 +86,6 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 
     protected function createAndTestToken($className)
     {
-
         $line = mt_rand(0, 100);
         $offset = mt_rand(0, 100);
         $level = mt_rand(0, 8);

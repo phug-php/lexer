@@ -2,7 +2,6 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
@@ -10,7 +9,6 @@ use Phug\Lexer\Token\OutdentToken;
 
 class TextBlockScanner implements ScannerInterface
 {
-    
     public function scan(State $state)
     {
         $reader = $state->getReader();

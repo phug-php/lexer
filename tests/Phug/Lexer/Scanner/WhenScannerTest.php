@@ -9,16 +9,13 @@ use Phug\Lexer\Token\WhenToken;
 
 class WhenScannerTest extends AbstractControlStatementScannerTest
 {
-
     protected function getTokenClassName()
     {
-
         return WhenToken::class;
     }
 
     protected function getStatementName()
     {
-
         return 'when';
     }
 
@@ -30,7 +27,7 @@ class WhenScannerTest extends AbstractControlStatementScannerTest
             WhenToken::class,
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertEquals('default', $tok->getName());

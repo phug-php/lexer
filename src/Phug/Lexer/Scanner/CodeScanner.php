@@ -5,16 +5,12 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
-use Phug\Lexer\Token\CaseToken;
 use Phug\Lexer\Token\CodeToken;
-use Phug\Lexer\Token\ExpressionToken;
 
 class CodeScanner implements ScannerInterface
 {
-
     public function scan(State $state)
     {
-
         $reader = $state->getReader();
 
         if (!$reader->peekChar('-')) {
@@ -32,10 +28,10 @@ class CodeScanner implements ScannerInterface
             yield $token;
 
             if ($textToken instanceof Lexer\Token\TextToken) {
-
                 $textToken->setValue(trim($textToken->getValue()));
                 yield $textToken;
             }
+
             return;
         }
 

@@ -2,7 +2,6 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\TextToken;
@@ -11,7 +10,6 @@ class TextLineScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
-
         $reader = $state->getReader();
 
         if (!$reader->match('([!]?)\|')) {
@@ -23,7 +21,6 @@ class TextLineScanner implements ScannerInterface
         $reader->consume();
 
         foreach ($state->scan(TextScanner::class) as $token) {
-
             if ($escaped && $token instanceof TextToken) {
                 $token->escape();
             }

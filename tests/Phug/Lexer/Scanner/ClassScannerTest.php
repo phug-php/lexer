@@ -7,7 +7,6 @@ use Phug\Test\AbstractLexerTest;
 
 class ClassScannerTest extends AbstractLexerTest
 {
-
     /**
      * @covers Phug\Lexer\Scanner\AssignmentScanner
      * @covers Phug\Lexer\Scanner\AssignmentScanner::scan
@@ -17,7 +16,7 @@ class ClassScannerTest extends AbstractLexerTest
 
         /** @var ClassToken $tok */
         list($tok) = $this->assertTokens('.some-class', [
-            ClassToken::class
+            ClassToken::class,
         ]);
 
         self::assertEquals('some-class', $tok->getName());
@@ -31,7 +30,7 @@ class ClassScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var ClassToken $a
+         * @var ClassToken
          * @var ClassToken $b
          * @var ClassToken $c
          * @var ClassToken $d
@@ -40,7 +39,7 @@ class ClassScannerTest extends AbstractLexerTest
             ClassToken::class,
             ClassToken::class,
             ClassToken::class,
-            ClassToken::class
+            ClassToken::class,
         ]);
 
         self::assertEquals('a-class', $a->getName());
@@ -54,14 +53,14 @@ class ClassScannerTest extends AbstractLexerTest
 
         /** @var ClassToken $tok */
         list($tok) = $this->assertTokens('.--some-class', [
-            ClassToken::class
+            ClassToken::class,
         ]);
 
         self::assertEquals('--some-class', $tok->getName());
 
         /** @var ClassToken $tok */
         list($tok) = $this->assertTokens('.some--class__sub-element', [
-            ClassToken::class
+            ClassToken::class,
         ]);
 
         self::assertEquals('some--class__sub-element', $tok->getName());

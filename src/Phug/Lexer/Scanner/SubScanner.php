@@ -2,7 +2,6 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\TextToken;
@@ -11,7 +10,6 @@ class SubScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
-
         $reader = $state->getReader();
 
         //Text block on tags etc. (p. some text|p!. some text)

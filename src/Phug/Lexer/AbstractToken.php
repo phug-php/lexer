@@ -12,7 +12,6 @@ abstract class AbstractToken implements TokenInterface
 
     public function __construct($line = null, $offset = null, $level = null)
     {
-
         $this->line = $line ?: 0;
         $this->offset = $offset ?: 0;
         $this->level = $level ?: 0;

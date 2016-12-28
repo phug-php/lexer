@@ -10,7 +10,6 @@ use Phug\Test\AbstractLexerTest;
 
 class CommentScannerTest extends AbstractLexerTest
 {
-
     /**
      * @covers Phug\Lexer\Scanner\CommentScanner
      * @covers Phug\Lexer\Scanner\CommentScanner::scan
@@ -19,12 +18,12 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken $c
-         * @var TextToken $t
+         * @var CommentToken
+         * @var TextToken    $t
          */
         list($c, $t) = $this->assertTokens('// This is some comment text', [
             CommentToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertTrue($c->isVisible());
@@ -39,12 +38,12 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken $c
-         * @var TextToken $t
+         * @var CommentToken
+         * @var TextToken    $t
          */
         list($c, $t) = $this->assertTokens('//- This is some comment text', [
             CommentToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertFalse($c->isVisible());
@@ -59,10 +58,10 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken $c
-         * @var TextToken $t1
-         * @var TextToken $t2
-         * @var TextToken $t3
+         * @var CommentToken
+         * @var TextToken    $t1
+         * @var TextToken    $t2
+         * @var TextToken    $t3
          */
         list($c, , , $t1, , $t2, , $t3) = $this->assertTokens("//\n\tFirst line\n\tSecond line\n\tThird line", [
             CommentToken::class,
@@ -72,7 +71,7 @@ class CommentScannerTest extends AbstractLexerTest
             NewLineToken::class,
             TextToken::class,
             NewLineToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertTrue($c->isVisible());
@@ -89,10 +88,10 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken $c
-         * @var TextToken $t1
-         * @var TextToken $t2
-         * @var TextToken $t3
+         * @var CommentToken
+         * @var TextToken    $t1
+         * @var TextToken    $t2
+         * @var TextToken    $t3
          */
         list($c, , , $t1, , $t2, , $t3) = $this->assertTokens("//-\n\tFirst line\n\tSecond line\n\tThird line", [
             CommentToken::class,
@@ -102,7 +101,7 @@ class CommentScannerTest extends AbstractLexerTest
             NewLineToken::class,
             TextToken::class,
             NewLineToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         self::assertFalse($c->isVisible());

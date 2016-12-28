@@ -6,28 +6,25 @@ use Phug\Lexer;
 
 abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
 {
-
     /** @var Lexer */
     protected $lexer;
-    
+
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->lexer = $this->createLexer();
     }
-    
+
     protected function createLexer()
     {
-        
-        return new Lexer;
+        return new Lexer();
     }
-    
+
     protected function assertTokens($expression, array $classNames)
     {
-
         $tokens = iterator_to_array($this->lexer->lex($expression));
-        
+
         self::assertEquals(
             count($tokens),
             count($classNames),
@@ -42,7 +39,6 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($tokens as $i => $token) {
-
             $isset = isset($classNames[$i]);
             self::assertTrue($isset, "Classname at $i exists");
 

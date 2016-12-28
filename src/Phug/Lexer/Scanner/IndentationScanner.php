@@ -12,7 +12,6 @@ class IndentationScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
-
         $reader = $state->getReader();
 
         //There's no indentation if we're not at the start of a line
@@ -25,6 +24,7 @@ class IndentationScanner implements ScannerInterface
         //If this is an empty line, we ignore the indentation completely.
         foreach ($state->scan(NewLineScanner::class) as $token) {
             yield $token;
+
             return;
         }
 

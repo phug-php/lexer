@@ -10,7 +10,6 @@ use Phug\Test\AbstractLexerTest;
 
 class AssignmentScannerTest extends AbstractLexerTest
 {
-
     /**
      * @covers Phug\Lexer\Scanner\AssignmentScanner
      * @covers Phug\Lexer\Scanner\AssignmentScanner::scan
@@ -20,7 +19,7 @@ class AssignmentScannerTest extends AbstractLexerTest
 
         /** @var AssignmentToken $tok */
         list($tok) = $this->assertTokens('&test', [
-            AssignmentToken::class
+            AssignmentToken::class,
         ]);
 
         self::assertEquals('test', $tok->getName());
@@ -36,7 +35,7 @@ class AssignmentScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
-            AttributeEndToken::class
+            AttributeEndToken::class,
         ]);
 
         self::assertEquals('test', $tok->getName());

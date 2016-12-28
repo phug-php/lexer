@@ -11,20 +11,19 @@ use Phug\Util\Partial\SubjectTrait;
 
 abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
 {
-
     abstract protected function getTokenClassName();
+
     abstract protected function getStatementName();
 
     public function provideExpressions()
     {
-
         return [
             ['$someSubject'],
             ['$a ? $b : $c'],
             ['Foo::$bar'],
             ['Foo::bar()'],
             ['$a ? $b : ($c ? $d : $e)'],
-            ['($some ? $ternary : $operator)']
+            ['($some ? $ternary : $operator)'],
         ];
     }
 
@@ -33,11 +32,9 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
      */
     public function testCommonStatementExpressions($expr)
     {
-
         $stmt = $this->getStatementName();
 
         if (!method_exists($this->getTokenClassName(), 'getSubject')) {
-
             throw new \RuntimeException(
                 "Cant run control statement expression tests on a token class that doesn't use ".SubjectTrait::class
             );
@@ -47,7 +44,6 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
         list($tok) = $this->assertTokens("$stmt $expr", [$this->getTokenClassName()]);
 
         if (method_exists($tok, 'getName')) {
-
             self::assertEquals($stmt, $tok->getName());
         }
 
@@ -59,11 +55,9 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
      */
     public function testExpandedExpressions($expr)
     {
-
         $stmt = $this->getStatementName();
 
         if (!method_exists($this->getTokenClassName(), 'getSubject')) {
-
             throw new \RuntimeException(
                 "Cant run control statement expression tests on a token class that doesn't use ".SubjectTrait::class
             );
@@ -74,14 +68,13 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
             $this->getTokenClassName(),
             ExpansionToken::class,
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
 
         if (method_exists($tok, 'getName')) {
-
             self::assertEquals($stmt, $tok->getName());
         }
-        
+
         self::assertEquals($expr, $tok->getSubject());
     }
 }
