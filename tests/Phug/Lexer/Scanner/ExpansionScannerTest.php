@@ -5,6 +5,7 @@ namespace Phug\Test\Lexer\Scanner;
 use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\FilterToken;
 use Phug\Lexer\Token\TagToken;
+use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class ExpansionScannerTest extends AbstractLexerTest
@@ -42,6 +43,7 @@ class ExpansionScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @group i
      * @covers Phug\Lexer\Scanner\ExpansionScanner
      * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
      */
@@ -51,13 +53,15 @@ class ExpansionScannerTest extends AbstractLexerTest
         /** @var FilterToken $tok */
         list($tok) = $this->assertTokens(':some-filter:', [
             FilterToken::class,
-            ExpansionToken::class,
+            // @TODO Determine what would be the point to allow ExpansionToken here.
+            TextToken::class,
         ]);
         self::assertEquals('some-filter', $tok->getName());
 
         list($tok) = $this->assertTokens(':some:namespaced:filter:', [
             FilterToken::class,
-            ExpansionToken::class,
+            // @TODO Determine what would be the point to allow ExpansionToken here.
+            TextToken::class,
         ]);
         self::assertEquals('some:namespaced:filter', $tok->getName());
     }

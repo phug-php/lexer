@@ -19,7 +19,6 @@ class ConditionalScanner extends ControlStatementScanner
     {
         foreach (parent::scan($state) as $token) {
             if ($token instanceof ConditionalToken) {
-
                 //Make sure spaces are replaced from `elseif`/`else if` to make a final keyword, "elseif"
                 $token->setName(preg_replace('/[ \t]/', '', $token->getName()));
 

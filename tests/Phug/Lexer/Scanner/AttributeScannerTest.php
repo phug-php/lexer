@@ -36,14 +36,16 @@ class AttributeScannerTest extends AbstractLexerTest
             '(a=b
         c=d     e=f
         //ignored line
-    ,g=h        )', [
+    ,g=h        )',
+            [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeToken::class,
             AttributeEndToken::class,
-        ]);
+            ]
+        );
 
         $this->assertTokens(
             '(
@@ -54,7 +56,8 @@ class AttributeScannerTest extends AbstractLexerTest
                 e=//ignore
                 f//ignore
                 g=h//ignore
-            )', [
+            )',
+            [
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeToken::class,
@@ -62,7 +65,8 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeToken::class,
             AttributeEndToken::class,
-        ]);
+            ]
+        );
     }
 
     /**

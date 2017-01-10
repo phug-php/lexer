@@ -23,7 +23,6 @@ class CodeScanner implements ScannerInterface
 
         //Single-line code
         foreach ($state->scan(TextScanner::class) as $textToken) {
-
             //Trim the text as expressions usually would
             yield $token;
 
