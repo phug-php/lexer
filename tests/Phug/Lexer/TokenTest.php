@@ -28,6 +28,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers Phug\Lexer\AbstractToken::__construct
      * @covers Phug\Lexer\Token\AttributeStartToken
      * @covers Phug\Lexer\Token\AttributeToken
      * @covers Phug\Lexer\Token\AttributeToken::setName
