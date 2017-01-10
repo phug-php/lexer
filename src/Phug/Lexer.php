@@ -201,18 +201,12 @@ class Lexer implements OptionInterface
         }
 
         $scanners = [];
-        $added = false;
+        $scanners[$name] = $scanner;
+
         foreach ($this->options['scanners'] as $scannerName => $classNameOrInstance) {
-            if ($scannerName === $name) {
-                $scanners[$name] = $scanner;
-                $added = true;
+            if ($scannerName !== $name) {
+                $scanners[$scannerName] = $classNameOrInstance;
             }
-
-            $scanners[$scannerName] = $classNameOrInstance;
-        }
-
-        if (!$added) {
-            $scanners[$name] = $scanner;
         }
 
         $this->options['scanners'] = $scanners;
