@@ -211,4 +211,17 @@ class StateTest extends \PHPUnit_Framework_TestCase
         foreach ($state->scan($scanners) as $token) {
         }
     }
+
+    /**
+     * @covers                   ::loopScan
+     * @covers                   ::throwException
+     * @expectedException        \Phug\LexerException
+     * @expectedExceptionMessage Unexpected p Hello
+     */
+    public function testLoopScanException()
+    {
+        $state = new State('p Hello', []);
+        foreach ($state->loopScan([], true) as $token) {
+        }
+    }
 }
