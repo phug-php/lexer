@@ -112,7 +112,8 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers                   ::lex
      * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage state_class_name needs to be a valid Phug\Lexer\State sub class
+     * @expectedExceptionMessage state_class_name needs to be a valid
+     * @expectedExceptionMessage Phug\Lexer\State sub class
      */
     public function testBadStateClassName()
     {

@@ -2,6 +2,8 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Scanner\ExpansionScanner;
+use Phug\Lexer\State;
 use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\FilterToken;
 use Phug\Lexer\Token\TagToken;
@@ -43,7 +45,6 @@ class ExpansionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers Phug\Lexer\Scanner\ExpansionScanner
      * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
      */
@@ -64,5 +65,21 @@ class ExpansionScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
         self::assertSame('some:namespaced:filter', $tok->getName());
+    }
+
+    /**
+     * @group i
+     * @covers Phug\Lexer\Scanner\ExpansionScanner
+     * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
+     */
+    public function testExpansionQuit()
+    {
+
+        $state = new State('p', []);
+        $scanners = [
+            'tag' => ExpansionScanner::class,
+        ];
+        foreach ($state->loopScan($scanners) as $token) {
+        }
     }
 }

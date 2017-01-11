@@ -9,13 +9,17 @@ use Phug\Lexer\Token\TextToken;
 use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
 
-abstract class EachScannerTest extends AbstractLexerTest
+/**
+ * @coversDefaultClass \Phug\Lexer\Scanner\EachScanner
+ */
+class EachScannerTest extends AbstractLexerTest
 {
     public function provideExpressions()
     {
         return [
             ['$someSubject'],
             ['$a ? $b : $c'],
+            ['$a ?: $b'],
             ['Foo::$bar'],
             ['Foo::bar()'],
             ['$a ? $b : ($c ? $d : $e)'],
@@ -37,6 +41,7 @@ abstract class EachScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers ::scan
      * @dataProvider provideExpressions
      */
     public function testWithItemOnly($expr)
@@ -50,6 +55,7 @@ abstract class EachScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers ::scan
      * @dataProvider provideExpressions
      */
     public function testWithItemAndKey($expr)
@@ -64,6 +70,7 @@ abstract class EachScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers ::scan
      * @dataProvider provideExpressions
      */
     public function testExpandedWithItemOnly($expr)
@@ -82,6 +89,7 @@ abstract class EachScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers ::scan
      * @dataProvider provideExpressions
      */
     public function testExpandedWithItemAndKey($expr)
@@ -101,11 +109,24 @@ abstract class EachScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers ::scan
      * @dataProvider provideInvalidSyntaxStyles
      */
     public function testThatItFailsWithInvalidSyntax($syntax)
     {
         self::setExpectedException(LexerException::class);
-        $this->lexer->lex($syntax);
+        foreach ($this->lexer->lex($syntax) as $token) {
+        }
+    }
+
+    /**
+     * @covers                   ::scan
+     * @expectedException        Phug\LexerException
+     * @expectedExceptionMessage `each`-statement has no subject to operate on
+     */
+    public function testEachWithoutSubject()
+    {
+        foreach ($this->lexer->lex("each \$i in 0\n  p") as $token) {
+        }
     }
 }
