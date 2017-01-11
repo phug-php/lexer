@@ -4,8 +4,13 @@ namespace Phug\Test\Lexer;
 
 use Phug\Lexer;
 use Phug\Lexer\State;
+use Phug\Lexer\Scanner\TagScanner;
+use Phug\Lexer\Scanner\TextScanner;
 use Phug\Lexer\Token\BlockToken;
+use Phug\Lexer\Token\TagToken;
+use Phug\Lexer\Token\TextToken;
 use Phug\Reader;
+use Phug\Test\MockScanner;
 
 /**
  * @coversDefaultClass \Phug\Lexer\State
@@ -138,5 +143,72 @@ class StateTest extends \PHPUnit_Framework_TestCase
             'path' => 'foo',
         ]);
         $state->createToken('bar');
+    }
+
+    /**
+     * @covers ::scan
+     * @covers ::loopScan
+     * @covers ::scanToken
+     * @covers ::filterScanners
+     */
+    public function testScan()
+    {
+        $state = new State('p Hello', []);
+        $scanners = [
+            'tag'       => TagScanner::class,
+            'text_line' => TextScanner::class,
+        ];
+        $tokens = [];
+        foreach ($state->loopScan($scanners) as $token) {
+            $tokens[] = $token;
+        }
+
+        self::assertInstanceOf(TagToken::class, $tokens[0]);
+        self::assertSame('p', $tokens[0]->getName());
+        self::assertInstanceOf(TextToken::class, $tokens[1]);
+        self::assertSame('Hello', $tokens[1]->getValue());
+    }
+
+    /**
+     * @covers                   ::scan
+     * @covers                   ::filterScanners
+     * @covers                   ::throwException
+     * @expectedException        \InvalidArgumentException
+     * @expectedExceptionMessage The passed scanner with key `tag`
+     * @expectedExceptionMessage doesn't seem to be either a valid
+     * @expectedExceptionMessage Phug\Lexer\ScannerInterface
+     */
+    public function testFilterScanersException()
+    {
+        $state = new State('p Hello', []);
+        $scanners = [
+            'tag' => stdClass::class,
+        ];
+        foreach ($state->loopScan($scanners) as $token) {
+        }
+    }
+
+    /**
+     * @covers                   ::scan
+     * @covers                   ::filterScanners
+     * @covers                   ::throwException
+     * @expectedException        \Phug\LexerException
+     * @expectedExceptionMessage Scanner with key tag
+     * @expectedExceptionMessage generated a result that is not a
+     * @expectedExceptionMessage Phug\Lexer\TokenInterface
+     */
+    public function testScanException()
+    {
+        include_once __DIR__ . '/../MockScanner.php';
+
+        $mock = new MockScanner();
+        $mock->badTokens();
+
+        $state = new State('p Hello', []);
+        $scanners = [
+            'tag' => $mock,
+        ];
+        foreach ($state->scan($scanners) as $token) {
+        }
     }
 }

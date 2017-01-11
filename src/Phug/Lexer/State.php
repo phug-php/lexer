@@ -308,7 +308,7 @@ class State implements OptionInterface
                 );
             }
 
-            $scannerInstances[] = $scanner instanceof ScannerInterface
+            $scannerInstances[$key] = $scanner instanceof ScannerInterface
                 ? $scanner
                 : new $scanner();
         }

@@ -9,6 +9,7 @@ class MockScanner implements ScannerInterface
 {
     protected $state;
     protected $lexer;
+    protected $sendBadTokens = false;
 
     public function setLexer($lexer)
     {
@@ -17,7 +18,13 @@ class MockScanner implements ScannerInterface
 
     public function scan(State $state)
     {
-        $this->state = $this->lexer->getState();
+        if ($this->lexer) {
+            $this->state = $this->lexer->getState();
+        }
+
+        if ($this->sendBadTokens) {
+            return [(object) []];
+        }
 
         return [];
     }
@@ -25,5 +32,10 @@ class MockScanner implements ScannerInterface
     public function getState()
     {
         return $this->state;
+    }
+
+    public function badTokens()
+    {
+        $this->sendBadTokens = true;
     }
 }
