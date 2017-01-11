@@ -33,13 +33,13 @@ class ExpansionScannerTest extends AbstractLexerTest
             TagToken::class,
             ExpansionToken::class,
         ]);
-        self::assertEquals('some-tag', $tok->getName());
+        self::assertSame('some-tag', $tok->getName());
 
         list($tok) = $this->assertTokens('some:namespaced:tag:', [
             TagToken::class,
             ExpansionToken::class,
         ]);
-        self::assertEquals('some:namespaced:tag', $tok->getName());
+        self::assertSame('some:namespaced:tag', $tok->getName());
     }
 
     /**
@@ -56,13 +56,13 @@ class ExpansionScannerTest extends AbstractLexerTest
             // @TODO Determine what would be the point to allow ExpansionToken here.
             TextToken::class,
         ]);
-        self::assertEquals('some-filter', $tok->getName());
+        self::assertSame('some-filter', $tok->getName());
 
         list($tok) = $this->assertTokens(':some:namespaced:filter:', [
             FilterToken::class,
             // @TODO Determine what would be the point to allow ExpansionToken here.
             TextToken::class,
         ]);
-        self::assertEquals('some:namespaced:filter', $tok->getName());
+        self::assertSame('some:namespaced:filter', $tok->getName());
     }
 }

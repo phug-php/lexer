@@ -20,7 +20,7 @@ class TagScannerTest extends AbstractLexerTest
             TagToken::class,
         ]);
 
-        self::assertEquals('some-tag-name', $tok->getName());
+        self::assertSame('some-tag-name', $tok->getName());
     }
 
     public function testNamespacedTagName()
@@ -31,7 +31,7 @@ class TagScannerTest extends AbstractLexerTest
             TagToken::class,
         ]);
 
-        self::assertEquals('some-namespace:some-tag-name', $tok->getName());
+        self::assertSame('some-namespace:some-tag-name', $tok->getName());
     }
 
     public function testIfScannerConfusesExpansionWithNamespacedTagName()
@@ -47,7 +47,7 @@ class TagScannerTest extends AbstractLexerTest
             TagToken::class,
         ]);
 
-        self::assertEquals('some-outer-tag', $a->getName());
-        self::assertEquals('some-inner-tag', $b->getName());
+        self::assertSame('some-outer-tag', $a->getName());
+        self::assertSame('some-inner-tag', $b->getName());
     }
 }

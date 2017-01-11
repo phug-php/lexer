@@ -15,4 +15,16 @@ class ForScannerTest extends AbstractControlStatementScannerTest
     {
         return 'for';
     }
+
+    /**
+     * @covers Phug\Lexer\Scanner\ForScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @dataProvider provideExpressions
+     */
+    public function testExpandedExpressions($expr)
+    {
+        parent::testExpandedExpressions($expr);
+    }
 }

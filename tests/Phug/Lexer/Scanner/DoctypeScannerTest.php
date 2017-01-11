@@ -20,12 +20,12 @@ class DoctypeScannerTest extends AbstractLexerTest
             [DoctypeToken::class]
         );
 
-        self::assertEquals('5', $tok->getName());
+        self::assertSame('5', $tok->getName());
 
         list($tok) = $this->assertTokens(
             '!!! 5',
             [DoctypeToken::class]
         );
-        self::assertEquals('5', $tok->getName());
+        self::assertSame('5', $tok->getName());
     }
 }

@@ -27,7 +27,7 @@ class CommentScannerTest extends AbstractLexerTest
         ]);
 
         self::assertTrue($c->isVisible());
-        self::assertEquals('This is some comment text', $t->getValue());
+        self::assertSame('This is some comment text', $t->getValue());
     }
 
     /**
@@ -47,7 +47,7 @@ class CommentScannerTest extends AbstractLexerTest
         ]);
 
         self::assertFalse($c->isVisible());
-        self::assertEquals('This is some comment text', $t->getValue());
+        self::assertSame('This is some comment text', $t->getValue());
     }
 
     /**
@@ -75,9 +75,9 @@ class CommentScannerTest extends AbstractLexerTest
         ]);
 
         self::assertTrue($c->isVisible());
-        self::assertEquals('First line', $t1->getValue());
-        self::assertEquals('Second line', $t2->getValue());
-        self::assertEquals('Third line', $t3->getValue());
+        self::assertSame('First line', $t1->getValue());
+        self::assertSame('Second line', $t2->getValue());
+        self::assertSame('Third line', $t3->getValue());
     }
 
     /**
@@ -105,8 +105,8 @@ class CommentScannerTest extends AbstractLexerTest
         ]);
 
         self::assertFalse($c->isVisible());
-        self::assertEquals('First line', $t1->getValue());
-        self::assertEquals('Second line', $t2->getValue());
-        self::assertEquals('Third line', $t3->getValue());
+        self::assertSame('First line', $t1->getValue());
+        self::assertSame('Second line', $t2->getValue());
+        self::assertSame('Third line', $t3->getValue());
     }
 }

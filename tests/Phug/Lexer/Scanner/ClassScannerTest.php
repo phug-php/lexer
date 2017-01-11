@@ -8,8 +8,8 @@ use Phug\Test\AbstractLexerTest;
 class ClassScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\AssignmentScanner
-     * @covers Phug\Lexer\Scanner\AssignmentScanner::scan
+     * @covers Phug\Lexer\Scanner\ClassScanner
+     * @covers Phug\Lexer\Scanner\ClassScanner::scan
      */
     public function testSingleClass()
     {
@@ -19,12 +19,12 @@ class ClassScannerTest extends AbstractLexerTest
             ClassToken::class,
         ]);
 
-        self::assertEquals('some-class', $tok->getName());
+        self::assertSame('some-class', $tok->getName());
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\AssignmentScanner
-     * @covers Phug\Lexer\Scanner\AssignmentScanner::scan
+     * @covers Phug\Lexer\Scanner\ClassScanner
+     * @covers Phug\Lexer\Scanner\ClassScanner::scan
      */
     public function testMultipleClasses()
     {
@@ -42,10 +42,10 @@ class ClassScannerTest extends AbstractLexerTest
             ClassToken::class,
         ]);
 
-        self::assertEquals('a-class', $a->getName());
-        self::assertEquals('b-class', $b->getName());
-        self::assertEquals('c-class', $c->getName());
-        self::assertEquals('d-class', $d->getName());
+        self::assertSame('a-class', $a->getName());
+        self::assertSame('b-class', $b->getName());
+        self::assertSame('c-class', $c->getName());
+        self::assertSame('d-class', $d->getName());
     }
 
     public function testCommonNamingPatterns()
@@ -56,13 +56,13 @@ class ClassScannerTest extends AbstractLexerTest
             ClassToken::class,
         ]);
 
-        self::assertEquals('--some-class', $tok->getName());
+        self::assertSame('--some-class', $tok->getName());
 
         /** @var ClassToken $tok */
         list($tok) = $this->assertTokens('.some--class__sub-element', [
             ClassToken::class,
         ]);
 
-        self::assertEquals('some--class__sub-element', $tok->getName());
+        self::assertSame('some--class__sub-element', $tok->getName());
     }
 }

@@ -19,56 +19,56 @@ class BlockScannerTest extends AbstractLexerTest
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('replace', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('replace', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('block append some-block', [
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('append', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('append', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('block prepend some-block', [
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('prepend', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('prepend', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('block replace some-block', [
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('replace', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('replace', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('append some-block', [
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('append', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('append', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('prepend some-block', [
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('prepend', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('prepend', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('replace some-block', [
             BlockToken::class,
         ]);
 
-        self::assertEquals('some-block', $tok->getName());
-        self::assertEquals('replace', $tok->getMode());
+        self::assertSame('some-block', $tok->getName());
+        self::assertSame('replace', $tok->getMode());
 
         /** @var BlockToken $tok */
         list($tok) = $this->assertTokens('block', [
@@ -76,6 +76,6 @@ class BlockScannerTest extends AbstractLexerTest
         ]);
 
         self::assertNull($tok->getName());
-        self::assertEquals('replace', $tok->getMode());
+        self::assertSame('replace', $tok->getMode());
     }
 }

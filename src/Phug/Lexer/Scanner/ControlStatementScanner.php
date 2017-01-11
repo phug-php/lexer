@@ -5,7 +5,7 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 
-class ControlStatementScanner implements ScannerInterface
+abstract class ControlStatementScanner implements ScannerInterface
 {
     private $tokenClassName;
     private $names;

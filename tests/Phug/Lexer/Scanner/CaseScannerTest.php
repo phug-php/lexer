@@ -15,4 +15,16 @@ class CaseScannerTest extends AbstractControlStatementScannerTest
     {
         return 'case';
     }
+
+    /**
+     * @covers Phug\Lexer\Scanner\CaseScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @dataProvider provideExpressions
+     */
+    public function testExpandedExpressions($expr)
+    {
+        parent::testExpandedExpressions($expr);
+    }
 }

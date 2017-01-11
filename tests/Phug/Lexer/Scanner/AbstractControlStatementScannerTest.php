@@ -20,6 +20,7 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
         return [
             ['$someSubject'],
             ['$a ? $b : $c'],
+            ['$a ?: $b'],
             ['Foo::$bar'],
             ['Foo::bar()'],
             ['$a ? $b : ($c ? $d : $e)'],
@@ -44,10 +45,10 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
         list($tok) = $this->assertTokens("$stmt $expr", [$this->getTokenClassName()]);
 
         if (method_exists($tok, 'getName')) {
-            self::assertEquals($stmt, $tok->getName());
+            self::assertSame($stmt, $tok->getName());
         }
 
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame($expr, $tok->getSubject());
     }
 
     /**
@@ -72,9 +73,9 @@ abstract class AbstractControlStatementScannerTest extends AbstractLexerTest
         ]);
 
         if (method_exists($tok, 'getName')) {
-            self::assertEquals($stmt, $tok->getName());
+            self::assertSame($stmt, $tok->getName());
         }
 
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame($expr, $tok->getSubject());
     }
 }

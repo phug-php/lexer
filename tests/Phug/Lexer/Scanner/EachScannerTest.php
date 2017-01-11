@@ -45,8 +45,8 @@ abstract class EachScannerTest extends AbstractLexerTest
         /** @var EachToken $tok */
         list($tok) = $this->assertTokens("each \$item in $expr", [EachToken::class]);
 
-        self::assertEquals('item', $tok->getItem());
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame('item', $tok->getItem());
+        self::assertSame($expr, $tok->getSubject());
     }
 
     /**
@@ -58,9 +58,9 @@ abstract class EachScannerTest extends AbstractLexerTest
         /** @var EachToken $tok */
         list($tok) = $this->assertTokens("each \$someItem, \$someKey in $expr", [EachToken::class]);
 
-        self::assertEquals('someItem', $tok->getItem());
-        self::assertEquals('someKey', $tok->getKey());
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame('someItem', $tok->getItem());
+        self::assertSame('someKey', $tok->getKey());
+        self::assertSame($expr, $tok->getSubject());
     }
 
     /**
@@ -77,8 +77,8 @@ abstract class EachScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        self::assertEquals('item', $tok->getItem());
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame('item', $tok->getItem());
+        self::assertSame($expr, $tok->getSubject());
     }
 
     /**
@@ -95,9 +95,9 @@ abstract class EachScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        self::assertEquals('someItem', $tok->getItem());
-        self::assertEquals('someKey', $tok->getKey());
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame('someItem', $tok->getItem());
+        self::assertSame('someKey', $tok->getKey());
+        self::assertSame($expr, $tok->getSubject());
     }
 
     /**

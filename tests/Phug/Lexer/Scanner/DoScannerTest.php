@@ -11,6 +11,12 @@ use Phug\Test\AbstractLexerTest;
 
 class DoScannerTest extends AbstractLexerTest
 {
+    /**
+     * @covers Phug\Lexer\Scanner\DoScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     */
     public function testSingleLine()
     {
 
@@ -18,6 +24,12 @@ class DoScannerTest extends AbstractLexerTest
         $this->assertTokens("do\n", [DoToken::class, NewLineToken::class]);
     }
 
+    /**
+     * @covers Phug\Lexer\Scanner\DoScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     */
     public function testExpanded()
     {
 

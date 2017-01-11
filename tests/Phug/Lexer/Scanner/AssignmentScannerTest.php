@@ -22,7 +22,7 @@ class AssignmentScannerTest extends AbstractLexerTest
             AssignmentToken::class,
         ]);
 
-        self::assertEquals('test', $tok->getName());
+        self::assertSame('test', $tok->getName());
     }
 
     public function testScanWithAttributes()
@@ -38,6 +38,6 @@ class AssignmentScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
 
-        self::assertEquals('test', $tok->getName());
+        self::assertSame('test', $tok->getName());
     }
 }

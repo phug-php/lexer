@@ -92,10 +92,10 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeEndToken::class,
         ]);
-        $this->assertEquals('a', $attr->getName());
-        $this->assertEquals('b', $attr->getValue());
-        $this->assertEquals(true, $attr->isEscaped());
-        $this->assertEquals(true, $attr->isChecked());
+        $this->assertSame('a', $attr->getName());
+        $this->assertSame('b', $attr->getValue());
+        $this->assertSame(true, $attr->isEscaped());
+        $this->assertSame(true, $attr->isChecked());
 
         /** @var AttributeToken $attr */
         list(, $attr) = $this->assertTokens('(a!=b)', [
@@ -103,10 +103,10 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeEndToken::class,
         ]);
-        $this->assertEquals('a', $attr->getName());
-        $this->assertEquals('b', $attr->getValue());
-        $this->assertEquals(false, $attr->isEscaped());
-        $this->assertEquals(true, $attr->isChecked());
+        $this->assertSame('a', $attr->getName());
+        $this->assertSame('b', $attr->getValue());
+        $this->assertSame(false, $attr->isEscaped());
+        $this->assertSame(true, $attr->isChecked());
 
         /** @var AttributeToken $attr */
         list(, $attr) = $this->assertTokens('(a?=b)', [
@@ -114,10 +114,10 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeEndToken::class,
         ]);
-        $this->assertEquals('a', $attr->getName());
-        $this->assertEquals('b', $attr->getValue());
-        $this->assertEquals(true, $attr->isEscaped());
-        $this->assertEquals(false, $attr->isChecked());
+        $this->assertSame('a', $attr->getName());
+        $this->assertSame('b', $attr->getValue());
+        $this->assertSame(true, $attr->isEscaped());
+        $this->assertSame(false, $attr->isChecked());
 
         /** @var AttributeToken $attr */
         list(, $attr) = $this->assertTokens('(a?!=b)', [
@@ -125,9 +125,9 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeEndToken::class,
         ]);
-        $this->assertEquals('a', $attr->getName());
-        $this->assertEquals('b', $attr->getValue());
-        $this->assertEquals(false, $attr->isEscaped());
-        $this->assertEquals(false, $attr->isChecked());
+        $this->assertSame('a', $attr->getName());
+        $this->assertSame('b', $attr->getValue());
+        $this->assertSame(false, $attr->isEscaped());
+        $this->assertSame(false, $attr->isChecked());
     }
 }

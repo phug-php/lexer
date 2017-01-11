@@ -25,7 +25,7 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
     {
         $tokens = iterator_to_array($this->lexer->lex($expression));
 
-        self::assertEquals(
+        self::assertSame(
             count($tokens),
             count($classNames),
             "\n"

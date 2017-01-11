@@ -15,4 +15,16 @@ class WhileScannerTest extends AbstractControlStatementScannerTest
     {
         return 'while';
     }
+
+    /**
+     * @covers Phug\Lexer\Scanner\WhileScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @dataProvider provideExpressions
+     */
+    public function testExpandedExpressions($expr)
+    {
+        parent::testExpandedExpressions($expr);
+    }
 }

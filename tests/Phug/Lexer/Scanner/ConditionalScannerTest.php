@@ -21,6 +21,18 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         return 'if';
     }
 
+    /**
+     * @covers Phug\Lexer\Scanner\ConditionalScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @dataProvider provideExpressions
+     */
+    public function testExpandedExpressions($expr)
+    {
+        parent::testExpandedExpressions($expr);
+    }
+
     public function provideIfElseExpressions()
     {
         $exprs = $this->provideExpressions();
@@ -49,8 +61,8 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("else\n", [$this->getTokenClassName(), NewLineToken::class]);
 
-        self::assertEquals('else', $tok->getName());
-        self::assertEquals(null, $tok->getSubject());
+        self::assertSame('else', $tok->getName());
+        self::assertSame(null, $tok->getSubject());
     }
 
     public function testExpandedElseStatement()
@@ -64,8 +76,8 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
             TextToken::class,
         ]);
 
-        self::assertEquals('else', $tok->getName());
-        self::assertEquals(null, $tok->getSubject());
+        self::assertSame('else', $tok->getName());
+        self::assertSame(null, $tok->getSubject());
     }
 
     public function testThatElseStatementFailsWithSubject()
@@ -85,8 +97,8 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("$stmt $expr", [$this->getTokenClassName()]);
 
-        self::assertEquals('elseif', $tok->getName());
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame('elseif', $tok->getName());
+        self::assertSame($expr, $tok->getSubject());
     }
 
     /**
@@ -103,7 +115,7 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
             TextToken::class,
         ]);
 
-        self::assertEquals('elseif', $tok->getName());
-        self::assertEquals($expr, $tok->getSubject());
+        self::assertSame('elseif', $tok->getName());
+        self::assertSame($expr, $tok->getSubject());
     }
 }

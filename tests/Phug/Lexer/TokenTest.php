@@ -24,7 +24,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         self::assertNull($tok->getName());
 
         $tok->setName('some name');
-        self::assertEquals('some name', $tok->getName());
+        self::assertSame('some name', $tok->getName());
     }
 
     /**
@@ -53,12 +53,12 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         self::assertNull($tok->getName());
 
         $tok->setName('some name');
-        self::assertEquals('some name', $tok->getName());
+        self::assertSame('some name', $tok->getName());
 
         self::assertNull($tok->getValue());
 
         $tok->setValue('some value');
-        self::assertEquals('some value', $tok->getValue());
+        self::assertSame('some value', $tok->getValue());
 
         self::assertFalse($tok->isEscaped());
 
@@ -95,9 +95,9 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $tok = new $className($line, $offset, $level);
 
         self::assertInstanceOf($className, $tok, 'instance created');
-        self::assertEquals($line, $tok->getLine(), "{$className}->getLine");
-        self::assertEquals($offset, $tok->getOffset(), "{$className}->getOffset");
-        self::assertEquals($level, $tok->getLevel(), "{$className}->getLevel");
+        self::assertSame($line, $tok->getLine(), "{$className}->getLine");
+        self::assertSame($offset, $tok->getOffset(), "{$className}->getOffset");
+        self::assertSame($level, $tok->getLevel(), "{$className}->getLevel");
 
         return $tok;
     }

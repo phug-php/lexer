@@ -19,6 +19,18 @@ class WhenScannerTest extends AbstractControlStatementScannerTest
         return 'when';
     }
 
+    /**
+     * @covers Phug\Lexer\Scanner\WhenScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @dataProvider provideExpressions
+     */
+    public function testExpandedExpressions($expr)
+    {
+        parent::testExpandedExpressions($expr);
+    }
+
     public function testDefault()
     {
 
@@ -30,7 +42,7 @@ class WhenScannerTest extends AbstractControlStatementScannerTest
             TextToken::class,
         ]);
 
-        self::assertEquals('default', $tok->getName());
-        self::assertEquals(null, $tok->getSubject());
+        self::assertSame('default', $tok->getName());
+        self::assertSame(null, $tok->getSubject());
     }
 }
