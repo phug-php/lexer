@@ -176,7 +176,7 @@ class State implements OptionInterface
             foreach ($scanner->scan($this) as $token) {
                 if (!($token instanceof TokenInterface)) {
                     $this->throwException(
-                        "Scanner with key $key generated a result that is not a ".TokenInterface::class
+                        'Scanner '.get_class($scanner).' generated a result that is not a '.TokenInterface::class
                     );
                 }
 
@@ -308,7 +308,7 @@ class State implements OptionInterface
                 );
             }
 
-            $scannerInstances[$key] = $scanner instanceof ScannerInterface
+            $scannerInstances[] = $scanner instanceof ScannerInterface
                 ? $scanner
                 : new $scanner();
         }

@@ -68,7 +68,6 @@ class ExpansionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers Phug\Lexer\Scanner\ExpansionScanner
      * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
      */

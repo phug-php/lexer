@@ -12,7 +12,7 @@ class ExpressionScanner implements ScannerInterface
     {
         $reader = $state->getReader();
 
-        if (!$reader->match('[\t ]*[?]?[!]?=[\t ]*')) {
+        if (!$reader->match('[\t ]*(?:\?|\!|\?\!)?=[\t ]*')) {
             return;
         }
 
@@ -21,7 +21,7 @@ class ExpressionScanner implements ScannerInterface
         /** @var ExpressionToken $token */
         $token = $state->createToken(ExpressionToken::class);
 
-        if (mb_strpos($prefix, '!') !== false) {
+        if (mb_strpos($prefix, '!') === false) {
             $token->escape();
         }
 

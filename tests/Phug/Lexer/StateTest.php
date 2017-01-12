@@ -193,7 +193,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      * @covers                   ::filterScanners
      * @covers                   ::throwException
      * @expectedException        \Phug\LexerException
-     * @expectedExceptionMessage Scanner with key tag
+     * @expectedExceptionMessage Scanner Phug\Test\MockScanner
      * @expectedExceptionMessage generated a result that is not a
      * @expectedExceptionMessage Phug\Lexer\TokenInterface
      */
