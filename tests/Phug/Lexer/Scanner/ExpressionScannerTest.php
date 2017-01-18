@@ -15,13 +15,13 @@ use Phug\Test\AbstractLexerTest;
 class ExpressionScannerTest extends AbstractLexerTest
 {
     /**
+     * @group i
      * @covers Phug\Lexer\Scanner\ExpressionScanner
      * @covers Phug\Lexer\Scanner\ExpressionScanner::scan
      */
     public function testExpressionInTag()
     {
-        list(, $tok) = $this->assertTokens('p=$foo', [
-            TagToken::class,
+        list($tok) = $this->assertTokens('=$foo', [
             ExpressionToken::class,
         ]);
 
@@ -29,8 +29,7 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertTrue($tok->isEscaped());
         self::assertTrue($tok->isChecked());
 
-        list(, $tok) = $this->assertTokens('p!=42', [
-            TagToken::class,
+        list($tok) = $this->assertTokens('!=42', [
             ExpressionToken::class,
         ]);
 
@@ -38,17 +37,15 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
         self::assertTrue($tok->isChecked());
 
-        list(, $tok) = $this->assertTokens('p?=bar()', [
-            TagToken::class,
+        list($tok) = $this->assertTokens('?=bar()', [
             ExpressionToken::class,
         ]);
 
         self::assertSame('bar()', $tok->getValue());
-        self::assertFalse($tok->isEscaped());
-        self::assertTrue($tok->isChecked());
+        self::assertTrue($tok->isEscaped());
+        self::assertFalse($tok->isChecked());
 
-        list(, $tok) = $this->assertTokens('p?!=true', [
-            TagToken::class,
+        list($tok) = $this->assertTokens('?!=true', [
             ExpressionToken::class,
         ]);
 

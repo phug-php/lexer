@@ -12,7 +12,7 @@ class ExpressionScanner implements ScannerInterface
     {
         $reader = $state->getReader();
 
-        if (!$reader->match('[\t ]*(?:\?|\!|\?\!)?=[\t ]*')) {
+        if (!$reader->match('[\t ]*(?:\?|\!|\?\!|\!\?)?=[\t ]*')) {
             return;
         }
 
