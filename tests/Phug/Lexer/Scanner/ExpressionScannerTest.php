@@ -15,7 +15,6 @@ use Phug\Test\AbstractLexerTest;
 class ExpressionScannerTest extends AbstractLexerTest
 {
     /**
-     * @group i
      * @covers Phug\Lexer\Scanner\ExpressionScanner
      * @covers Phug\Lexer\Scanner\ExpressionScanner::scan
      */

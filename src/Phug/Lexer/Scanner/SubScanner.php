@@ -13,7 +13,7 @@ class SubScanner implements ScannerInterface
         $reader = $state->getReader();
 
         //Text block on tags etc. (p. some text|p!. some text)
-        if ($reader->match('([!]?)\.')) {
+        if ($reader->match('(\\!?)\\.(?=\\s)')) {
             $escape = $reader->getMatch(1) === '!';
             $reader->consume();
 
