@@ -118,7 +118,6 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testCommentQuit()
     {
-
         $state = new State('p', []);
         $scanners = [
             'comment' => CommentScanner::class,
