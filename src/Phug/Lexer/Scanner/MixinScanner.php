@@ -16,10 +16,6 @@ class MixinScanner implements ScannerInterface
         ) as $token) {
             yield $token;
 
-            foreach ($state->scan(ClassScanner::class) as $subToken) {
-                yield $subToken;
-            }
-
             foreach ($state->scan(SubScanner::class) as $subToken) {
                 yield $subToken;
             }
