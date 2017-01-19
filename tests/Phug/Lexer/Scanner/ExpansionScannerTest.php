@@ -78,7 +78,11 @@ class ExpansionScannerTest extends AbstractLexerTest
         $scanners = [
             'tag' => ExpansionScanner::class,
         ];
+        $tokens = [];
         foreach ($state->loopScan($scanners) as $token) {
+            $tokens[] = $token;
         }
+
+        self::assertSame(0, count($tokens));
     }
 }
