@@ -59,7 +59,6 @@ class ExpressionScannerTest extends AbstractLexerTest
      */
     public function testExpressionQuit()
     {
-
         $state = new State('p', []);
         $scanners = [
             'expression' => ExpressionScanner::class,
