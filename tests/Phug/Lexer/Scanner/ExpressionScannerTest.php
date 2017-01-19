@@ -4,12 +4,7 @@ namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Scanner\ExpressionScanner;
 use Phug\Lexer\State;
-use Phug\Lexer\Token\AssignementToken;
 use Phug\Lexer\Token\ExpressionToken;
-use Phug\Lexer\Token\ExpansionToken;
-use Phug\Lexer\Token\FilterToken;
-use Phug\Lexer\Token\TagToken;
-use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class ExpressionScannerTest extends AbstractLexerTest

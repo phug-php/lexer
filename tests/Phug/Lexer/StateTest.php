@@ -3,9 +3,9 @@
 namespace Phug\Test\Lexer;
 
 use Phug\Lexer;
-use Phug\Lexer\State;
 use Phug\Lexer\Scanner\TagScanner;
 use Phug\Lexer\Scanner\TextScanner;
+use Phug\Lexer\State;
 use Phug\Lexer\Token\BlockToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
@@ -199,7 +199,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testScanException()
     {
-        include_once __DIR__ . '/../MockScanner.php';
+        include_once __DIR__.'/../MockScanner.php';
 
         $mock = new MockScanner();
         $mock->badTokens();

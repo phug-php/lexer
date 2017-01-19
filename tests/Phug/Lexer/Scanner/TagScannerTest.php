@@ -2,8 +2,8 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
-use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\ClassToken;
+use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Test\AbstractLexerTest;
 
@@ -63,10 +63,10 @@ class TagScannerTest extends AbstractLexerTest
      */
     public function testTagNameAndClassName()
     {
-        /** @var TagToken $tok */
+        /* @var TagToken $tok */
         list($tag, $class) = $this->assertTokens('foo:bar.foo-bar', [
             TagToken::class,
-            ClassToken::class
+            ClassToken::class,
         ]);
 
         self::assertSame('foo:bar', $tag->getName());
