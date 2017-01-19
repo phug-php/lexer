@@ -2,11 +2,10 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\IndentationScanner;
-use Phug\Lexer\Scanner\NewLineScanner;
 use Phug\Lexer\Scanner\TagScanner;
 use Phug\Lexer\State;
-use Phug\Lexer;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;

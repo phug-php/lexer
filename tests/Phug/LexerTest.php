@@ -3,8 +3,8 @@
 namespace Phug\Test;
 
 use Phug\Lexer;
-use Phug\Lexer\State;
 use Phug\Lexer\Scanner\TextLineScanner;
+use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
 use Phug\Lexer\Token\AttributeToken;
@@ -53,7 +53,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetState()
     {
-        include_once __DIR__ . '/MockScanner.php';
+        include_once __DIR__.'/MockScanner.php';
 
         $mock = new MockScanner();
         $lexer = new Lexer([
@@ -74,7 +74,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
      */
     public function testAddScanner()
     {
-        include_once __DIR__ . '/MockScanner.php';
+        include_once __DIR__.'/MockScanner.php';
 
         $lexer = new Lexer();
         $self = $lexer->addScanner('foo', MockScanner::class);
