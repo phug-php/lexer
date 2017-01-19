@@ -2,11 +2,14 @@
 
 namespace Phug\Lexer\Scanner;
 
+use Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 
 abstract class ControlStatementScanner implements ScannerInterface
 {
+    use NamespaceAndTernaryTrait;
+
     private $tokenClassName;
     private $names;
 
@@ -37,35 +40,7 @@ abstract class ControlStatementScanner implements ScannerInterface
         }
 
         if (method_exists($token, 'setSubject')) {
-            $subject = $reader->readExpression(["\n", '?', ':']);
-
-            //Handle `if Foo::bar`
-            if ($reader->peekString('::')) {
-                $subject .= $reader->getLastPeekResult();
-                $reader->consume();
-
-                $subject .= $reader->readExpression(["\n", ':']);
-            } elseif ($reader->peekChar('?')) {
-                $subject .= ' '.$reader->getLastPeekResult();
-                $reader->consume();
-
-                //Ternary expression
-                if ($reader->peekChars('?:')) {
-                    $subject .= $reader->getLastPeekResult().' ';
-                    $reader->consume();
-                } else {
-                    $subject .= ' '.$reader->readExpression(["\n", ':']).' ';
-
-                    if ($reader->peekChar(':')) {
-                        $subject .= $reader->getLastPeekResult().' ';
-                        $reader->consume();
-                    }
-                }
-
-                $subject .= $reader->readExpression(["\n", ':']);
-            }
-
-            $subject = trim($subject);
+            $subject = $this->checkForNamespaceAndTernary($reader);
 
             $token->setSubject(!empty($subject) ? $subject : null);
         }

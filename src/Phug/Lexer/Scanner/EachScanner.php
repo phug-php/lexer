@@ -2,12 +2,15 @@
 
 namespace Phug\Lexer\Scanner;
 
+use Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\EachToken;
 
 class EachScanner implements ScannerInterface
 {
+    use NamespaceAndTernaryTrait;
+
     public function scan(State $state)
     {
         $reader = $state->getReader();
@@ -34,37 +37,7 @@ class EachScanner implements ScannerInterface
 
         $reader->consume();
 
-        $subject = $reader->readExpression(["\n", '?', ':']);
-
-        //TODO: [DRY] This is copied from `Phug\Lexer\Scanner\ControlStatementScanner->scan`
-        //Handle `if Foo::bar`
-        if ($reader->peekString('::')) {
-            $subject .= $reader->getLastPeekResult();
-            $reader->consume();
-
-            $subject .= $reader->readExpression(["\n", ':']);
-        } elseif ($reader->peekChar('?')) {
-            $subject .= ' '.$reader->getLastPeekResult();
-            $reader->consume();
-
-            //Ternary expression
-            if ($reader->peekChars('?:')) {
-                $subject .= $reader->getLastPeekResult().' ';
-                $reader->consume();
-            } else {
-                $subject .= ' '.$reader->readExpression(["\n", ':']).' ';
-
-                if ($reader->peekChar(':')) {
-                    $subject .= $reader->getLastPeekResult().' ';
-                    $reader->consume();
-                }
-            }
-
-            $subject .= $reader->readExpression(["\n", ':']);
-        }
-
-        $subject = trim($subject);
-        //Up to here (See TODO above)
+        $subject = $this->checkForNamespaceAndTernary($reader);
 
         if (empty($subject)) {
             $state->throwException(
