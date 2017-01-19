@@ -21,12 +21,26 @@ class IndentationScannerTest extends AbstractLexerTest
      */
     public function testIndentation()
     {
-
         $this->assertTokens('  ', [
             IndentToken::class,
         ]);
+
         $this->assertTokens("  \n", [
             NewLineToken::class,
+        ]);
+
+        $this->assertTokens("div\n  p\n    a\nfooter", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            OutdentToken::class,
+            TagToken::class,
         ]);
     }
 
@@ -36,7 +50,6 @@ class IndentationScannerTest extends AbstractLexerTest
      */
     public function testIndentationQuit()
     {
-
         $state = new State('p', []);
         $scanners = [
             'indent' => IndentationScanner::class,
@@ -66,9 +79,29 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers Phug\Lexer\Scanner\IndentationScanner
      * @covers Phug\Lexer\Scanner\IndentationScanner::scan
      */
+    public function testJumpIndentation()
+    {
+        $this->assertTokens("div\n  p\n      a\nfooter", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            OutdentToken::class,
+            TagToken::class,
+        ]);
+    }
+
+    /**
+     * @covers Phug\Lexer\Scanner\IndentationScanner
+     * @covers Phug\Lexer\Scanner\IndentationScanner::scan
+     */
     public function testMixedIndentation()
     {
-
         $this->assertTokens("div\n    \tp\n\t    a\nfooter", [
             TagToken::class,
             NewLineToken::class,

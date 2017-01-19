@@ -2,9 +2,14 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Scanner\AttributeScanner;
+use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
 use Phug\Lexer\Token\AttributeToken;
+use Phug\Lexer\Token\ClassToken;
+use Phug\Lexer\Token\IdToken;
+use Phug\Lexer\Token\TextToken;
 use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
 
@@ -16,6 +21,11 @@ class AttributeScannerTest extends AbstractLexerTest
      */
     public function testScan()
     {
+        $this->assertTokens('()', [
+            AttributeStartToken::class,
+            AttributeEndToken::class,
+        ]);
+
         $this->assertTokens('(a=b c=d e=f)', [
             AttributeStartToken::class,
             AttributeToken::class,
@@ -32,18 +42,45 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
 
+        $this->assertTokens('(a=b c=d e=f)#foo', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            IdToken::class,
+        ]);
+
+        $this->assertTokens('(a=b c=d e=f).foo', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            ClassToken::class,
+        ]);
+
+        $this->assertTokens('(a=b c=d e=f). foo', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            TextToken::class,
+        ]);
+
         $this->assertTokens(
             '(a=b
         c=d     e=f
         //ignored line
     ,g=h        )',
             [
-            AttributeStartToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeEndToken::class,
+                AttributeStartToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeEndToken::class,
             ]
         );
 
@@ -58,13 +95,13 @@ class AttributeScannerTest extends AbstractLexerTest
                 g=h//ignore
             )',
             [
-            AttributeStartToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeToken::class,
-            AttributeEndToken::class,
+                AttributeStartToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeToken::class,
+                AttributeEndToken::class,
             ]
         );
     }
@@ -85,7 +122,6 @@ class AttributeScannerTest extends AbstractLexerTest
      */
     public function testDetailedScan()
     {
-
         /** @var AttributeToken $attr */
         list(, $attr) = $this->assertTokens('(a=b)', [
             AttributeStartToken::class,
@@ -129,5 +165,23 @@ class AttributeScannerTest extends AbstractLexerTest
         $this->assertSame('b', $attr->getValue());
         $this->assertSame(false, $attr->isEscaped());
         $this->assertSame(false, $attr->isChecked());
+    }
+
+    /**
+     * @covers Phug\Lexer\Scanner\AttributeScanner
+     * @covers Phug\Lexer\Scanner\AttributeScanner::scan
+     */
+    public function testAttributeQuit()
+    {
+        $state = new State('p', []);
+        $scanners = [
+            'attribute' => AttributeScanner::class,
+        ];
+        $tokens = [];
+        foreach ($state->loopScan($scanners) as $token) {
+            $tokens[] = $token;
+        }
+
+        self::assertSame(0, count($tokens));
     }
 }

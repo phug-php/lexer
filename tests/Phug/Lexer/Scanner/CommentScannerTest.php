@@ -2,6 +2,8 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Scanner\CommentScanner;
+use Phug\Lexer\State;
 use Phug\Lexer\Token\CommentToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
@@ -108,5 +110,24 @@ class CommentScannerTest extends AbstractLexerTest
         self::assertSame('First line', $t1->getValue());
         self::assertSame('Second line', $t2->getValue());
         self::assertSame('Third line', $t3->getValue());
+    }
+
+    /**
+     * @covers Phug\Lexer\Scanner\CommentScanner
+     * @covers Phug\Lexer\Scanner\CommentScanner::scan
+     */
+    public function testCommentQuit()
+    {
+
+        $state = new State('p', []);
+        $scanners = [
+            'comment' => CommentScanner::class,
+        ];
+        $tokens = [];
+        foreach ($state->loopScan($scanners) as $token) {
+            $tokens[] = $token;
+        }
+
+        self::assertSame(0, count($tokens));
     }
 }

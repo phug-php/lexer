@@ -29,7 +29,6 @@ class ExpansionScannerTest extends AbstractLexerTest
      */
     public function testTagExpansion()
     {
-
         /** @var TagToken $tok */
         list($tok) = $this->assertTokens('some-tag:', [
             TagToken::class,
@@ -50,7 +49,6 @@ class ExpansionScannerTest extends AbstractLexerTest
      */
     public function testFilterExpansion()
     {
-
         /** @var FilterToken $tok */
         list($tok) = $this->assertTokens(':some-filter:', [
             FilterToken::class,
@@ -73,7 +71,6 @@ class ExpansionScannerTest extends AbstractLexerTest
      */
     public function testExpansionQuit()
     {
-
         $state = new State('p', []);
         $scanners = [
             'tag' => ExpansionScanner::class,

@@ -29,10 +29,6 @@ class BlockScanner implements ScannerInterface
             BlockToken::class,
             '(?<mode>append|prepend|replace)(?:[\t ]+(?<name>[a-zA-ZA-Z][a-zA-Z0-9\-_]*))'
         ) as $token) {
-            if ($token instanceof BlockToken && empty($token->getMode())) {
-                $token->setMode('replace');
-            }
-
             yield $token;
 
             foreach ($state->scan(SubScanner::class) as $subToken) {
