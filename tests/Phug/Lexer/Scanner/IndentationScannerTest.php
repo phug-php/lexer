@@ -16,7 +16,6 @@ use Phug\Test\AbstractLexerTest;
 class IndentationScannerTest extends AbstractLexerTest
 {
     /**
-     * @group i
      * @covers Phug\Lexer\Scanner\IndentationScanner
      * @covers Phug\Lexer\Scanner\IndentationScanner::scan
      */
@@ -32,7 +31,6 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers Phug\Lexer\Scanner\IndentationScanner
      * @covers Phug\Lexer\Scanner\IndentationScanner::scan
      */
@@ -65,7 +63,6 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers Phug\Lexer\Scanner\IndentationScanner
      * @covers Phug\Lexer\Scanner\IndentationScanner::scan
      */
@@ -84,16 +81,14 @@ class IndentationScannerTest extends AbstractLexerTest
             TagToken::class,
         ]);
 
-        /*
-        @todo continue here
         $lexer = new Lexer([
             'indent_style' => Lexer::INDENT_TAB,
             'indent_width' => 1,
         ]);
         $gen = $lexer->lex("div\n\t  p\n\t  a\nfooter");
-        $tokens = [];
+        $tokensClasses = [];
         foreach ($gen as $token) {
-            $tokens[] = $token;
+            $tokensClasses[] = get_class($token);
         }
 
         self::assertSame([
@@ -106,7 +101,6 @@ class IndentationScannerTest extends AbstractLexerTest
             NewLineToken::class,
             OutdentToken::class,
             TagToken::class,
-        ], $tokens);
-        */
+        ], $tokensClasses);
     }
 }

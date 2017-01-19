@@ -67,8 +67,8 @@ class State implements OptionInterface
             $input,
             $this->options['encoding']
         );
-        $this->indentStyle = $this->options['indent_width'];
-        $this->indentWidth = $this->options['indent_style'];
+        $this->indentStyle = $this->options['indent_style'];
+        $this->indentWidth = $this->options['indent_width'];
         $this->level = $this->options['level'];
 
         //This will strip \r, \0 etc. from the input
