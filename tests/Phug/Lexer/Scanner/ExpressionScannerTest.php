@@ -53,4 +53,23 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
         self::assertFalse($tok->isChecked());
     }
+
+    /**
+     * @covers Phug\Lexer\Scanner\ExpressionScanner
+     * @covers Phug\Lexer\Scanner\ExpressionScanner::scan
+     */
+    public function testExpressionQuit()
+    {
+
+        $state = new State('p', []);
+        $scanners = [
+            'expression' => ExpressionScanner::class,
+        ];
+        $tokens = [];
+        foreach ($state->loopScan($scanners) as $token) {
+            $tokens[] = $token;
+        }
+
+        self::assertSame(0, count($tokens));
+    }
 }
