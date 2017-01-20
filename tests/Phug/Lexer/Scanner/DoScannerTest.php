@@ -16,6 +16,8 @@ class DoScannerTest extends AbstractLexerTest
      * @covers Phug\Lexer\Scanner\ControlStatementScanner
      * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
      * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      */
     public function testSingleLine()
     {
@@ -29,6 +31,8 @@ class DoScannerTest extends AbstractLexerTest
      * @covers Phug\Lexer\Scanner\ControlStatementScanner
      * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
      * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      */
     public function testExpanded()
     {

@@ -14,14 +14,14 @@ class MixinCallScannerTest extends AbstractLexerTest
      */
     public function testMixinCall()
     {
-        /** @var MixinCallToken $tok */
+        /* @var MixinCallToken $tok */
         list($tok) = $this->assertTokens('+a', [
             MixinCallToken::class,
         ]);
 
         self::assertSame('a', $tok->getName());
 
-        /** @var MixinCallToken $tok */
+        /* @var MixinCallToken $tok */
         list($mixin, $class) = $this->assertTokens('+foo.bar', [
             MixinCallToken::class,
             ClassToken::class,
