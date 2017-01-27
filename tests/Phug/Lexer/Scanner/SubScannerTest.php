@@ -2,8 +2,6 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
-use Phug\Lexer\Token\AttributeStartToken;
-use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;

@@ -2,8 +2,8 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
-use Phug\Lexer\Token\VariableToken;
 use Phug\Lexer\Token\ExpressionToken;
+use Phug\Lexer\Token\VariableToken;
 use Phug\Test\AbstractLexerTest;
 
 class VariableScannerTest extends AbstractLexerTest

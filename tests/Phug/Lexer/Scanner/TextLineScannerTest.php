@@ -41,7 +41,7 @@ class TextLineScannerTest extends AbstractLexerTest
      */
     public function testScanQuit()
     {
-        $this->assertTokens("p Hello", [
+        $this->assertTokens('p Hello', [
             TagToken::class,
             TextToken::class,
         ]);
