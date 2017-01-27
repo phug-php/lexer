@@ -16,7 +16,7 @@ class TextLineScanner implements ScannerInterface
             return;
         }
 
-        $escaped = $reader->getMatch(1) === '!';
+        $escaped = $reader->getMatch(1) !== '!';
 
         $reader->consume();
 

@@ -70,6 +70,7 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::filterScanner
      * @covers ::addScanner
      */
     public function testAddScanner()

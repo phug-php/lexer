@@ -19,5 +19,15 @@ class TextScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame('foo', $tok->getValue());
+        self::assertTrue($tok->isEscaped());
+    }
+
+    /**
+     * @covers Phug\Lexer\Scanner\TextScanner
+     * @covers Phug\Lexer\Scanner\TextScanner::scan
+     */
+    public function testTextQuit()
+    {
+        $this->assertTokens('|', []);
     }
 }
