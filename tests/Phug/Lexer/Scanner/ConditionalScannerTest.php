@@ -23,6 +23,7 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
 
     /**
      * @covers Phug\Lexer\Scanner\ConditionalScanner::__construct
+     * @covers Phug\Lexer\Scanner\ConditionalScanner::scan
      * @covers Phug\Lexer\Scanner\ControlStatementScanner
      * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
      * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
@@ -59,7 +60,6 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
 
     public function testElseStatement()
     {
-
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("else\n", [$this->getTokenClassName(), NewLineToken::class]);
 
@@ -69,7 +69,6 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
 
     public function testExpandedElseStatement()
     {
-
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens('else: p Do something', [
             $this->getTokenClassName(),
@@ -95,7 +94,6 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
      */
     public function testElseIfCommonStatementExpressions($expr, $stmt)
     {
-
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("$stmt $expr", [$this->getTokenClassName()]);
 
@@ -108,7 +106,6 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
      */
     public function testElseIfExpandedExpressions($expr, $stmt)
     {
-
         /** @var ConditionalToken $tok */
         list($tok) = $this->assertTokens("$stmt $expr: p Some Text", [
             $this->getTokenClassName(),
@@ -119,5 +116,16 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
 
         self::assertSame('elseif', $tok->getName());
         self::assertSame($expr, $tok->getSubject());
+    }
+
+    /**
+     * @covers                   Phug\Lexer\Scanner\ConditionalScanner::scan
+     * @expectedException        Phug\LexerException
+     * @expectedExceptionMessage The `else`-conditional statement can't have a subject
+     */
+    public function testElseWithSubject()
+    {
+        foreach ($this->lexer->lex('else 42') as $token) {
+        }
     }
 }
