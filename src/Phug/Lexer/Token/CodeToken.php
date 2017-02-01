@@ -10,6 +10,4 @@ use Phug\Util\Partial\EscapeTrait;
 class CodeToken extends AbstractToken
 {
     use BlockTrait;
-    use EscapeTrait;
-    use CheckTrait;
 }
