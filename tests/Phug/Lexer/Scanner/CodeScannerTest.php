@@ -29,7 +29,7 @@ class CodeScannerTest extends AbstractLexerTest
         self::assertSame('$someCode()', $tok->getValue());
 
         // attached to a tag
-        $this->assertTokens("div- foo();", [
+        $this->assertTokens('div- foo();', [
             TagToken::class,
             CodeToken::class,
             TextToken::class,
