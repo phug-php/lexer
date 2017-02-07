@@ -46,7 +46,7 @@ class State implements OptionInterface
      */
     public function __construct($input, array $options)
     {
-        $this->options = array_replace([
+        $this->setOptionsRecursive(([
             'reader_class_name' => Reader::class,
             'encoding'          => null,
             'level'             => 0,
@@ -55,7 +55,7 @@ class State implements OptionInterface
             'path'              => null,
         ], $options ?: []);
 
-        $readerClassName = $this->options['reader_class_name'];
+        $readerClassName = $this->getOption('reader_class_name');
         if (!is_a($readerClassName, Reader::class, true)) {
             throw new \InvalidArgumentException(
                 'Configuration option `reader_class_name` needs to be a valid FQCN of a class that extends '.
@@ -65,11 +65,11 @@ class State implements OptionInterface
 
         $this->reader = new $readerClassName(
             $input,
-            $this->options['encoding']
+            $this->getOption('encoding')
         );
-        $this->indentStyle = $this->options['indent_style'];
-        $this->indentWidth = $this->options['indent_width'];
-        $this->level = $this->options['level'];
+        $this->indentStyle = $this->getOption('indent_style');
+        $this->indentWidth = $this->getOption('indent_width');
+        $this->level = $this->getOption('level');
 
         //This will strip \r, \0 etc. from the input
         $this->reader->normalize();
@@ -329,9 +329,10 @@ class State implements OptionInterface
     public function throwException($message)
     {
         $pattern = "Failed to lex: %s \nNear: %s \nLine: %s \nOffset: %s \nPosition: %s";
+        $path = $this->getOption('path');
 
-        if ($this->options['path']) {
-            $pattern .= "\nPath: {$this->options['path']}";
+        if ($path) {
+            $pattern .= "\nPath: $path";
         }
 
         throw new LexerException(vsprintf($pattern, [

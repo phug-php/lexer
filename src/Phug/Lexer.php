@@ -158,7 +158,7 @@ class Lexer implements OptionInterface
      */
     public function getScanners()
     {
-        return $this->options['scanners'];
+        return $this->getOption('scanners');
     }
 
     /**
@@ -195,7 +195,7 @@ class Lexer implements OptionInterface
 
         //Quick return if we don't want to prepend
         if (!$before) {
-            $this->options['scanners'][$name] = $scanner;
+            $this->setOption(['scanners', $name], $scanner);
 
             return $this;
         }
@@ -203,13 +203,13 @@ class Lexer implements OptionInterface
         $scanners = [];
         $scanners[$name] = $scanner;
 
-        foreach ($this->options['scanners'] as $scannerName => $classNameOrInstance) {
+        foreach ($this->getOption('scanners') as $scannerName => $classNameOrInstance) {
             if ($scannerName !== $name) {
                 $scanners[$scannerName] = $classNameOrInstance;
             }
         }
 
-        $this->options['scanners'] = $scanners;
+        $this->setOption('scanners', $scanners);
 
         return $this;
     }
@@ -231,7 +231,7 @@ class Lexer implements OptionInterface
      */
     public function lex($input, $path = null)
     {
-        $stateClassName = $this->options['state_class_name'];
+        $stateClassName = $this->getOption('state_class_name');
 
         if (!is_a($stateClassName, State::class, true)) {
             throw new \InvalidArgumentException(
@@ -241,14 +241,14 @@ class Lexer implements OptionInterface
 
         //Put together our initial state
         $this->state = new State($input, [
-            'encoding'     => $this->options['encoding'],
-            'indent_style' => $this->options['indent_style'],
-            'indent_width' => $this->options['indent_width'],
-            'level'        => $this->options['level'],
+            'encoding'     => $this->getOption('encoding'),
+            'indent_style' => $this->getOption('indent_style'),
+            'indent_width' => $this->getOption('indent_width'),
+            'level'        => $this->getOption('level'),
             'path'         => $path,
         ]);
 
-        $scanners = $this->options['scanners'];
+        $scanners = $this->getOption('scanners');
 
         //We always scan for text at the very end.
         $scanners['final_plain_text'] = TextScanner::class;
