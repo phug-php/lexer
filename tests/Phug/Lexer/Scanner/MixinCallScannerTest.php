@@ -9,8 +9,8 @@ use Phug\Test\AbstractLexerTest;
 class MixinCallScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\MixinCallScanner
-     * @covers Phug\Lexer\Scanner\MixinCallScanner::scan
+     * @covers \Phug\Lexer\Scanner\MixinCallScanner
+     * @covers \Phug\Lexer\Scanner\MixinCallScanner::scan
      */
     public function testMixinCall()
     {

@@ -8,8 +8,8 @@ use Phug\Test\AbstractLexerTest;
 class DoctypeScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\DoctypeScanner
-     * @covers Phug\Lexer\Scanner\DoctypeScanner::scan
+     * @covers \Phug\Lexer\Scanner\DoctypeScanner
+     * @covers \Phug\Lexer\Scanner\DoctypeScanner::scan
      */
     public function testCommonDoctypes()
     {

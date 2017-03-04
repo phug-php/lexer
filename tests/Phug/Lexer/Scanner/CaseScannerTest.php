@@ -17,12 +17,12 @@ class CaseScannerTest extends AbstractControlStatementScannerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\CaseScanner::__construct
-     * @covers Phug\Lexer\Scanner\ControlStatementScanner
-     * @covers Phug\Lexer\Scanner\ControlStatementScanner::__construct
-     * @covers Phug\Lexer\Scanner\ControlStatementScanner::scan
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
+     * @covers \Phug\Lexer\Scanner\CaseScanner::__construct
+     * @covers \Phug\Lexer\Scanner\ControlStatementScanner
+     * @covers \Phug\Lexer\Scanner\ControlStatementScanner::__construct
+     * @covers \Phug\Lexer\Scanner\ControlStatementScanner::scan
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      * @dataProvider provideExpressions
      */
     public function testExpandedExpressions($expr)

@@ -42,7 +42,7 @@ abstract class ControlStatementScanner implements ScannerInterface
         if (method_exists($token, 'setSubject')) {
             $subject = $this->checkForNamespaceAndTernary($reader);
 
-            $token->setSubject(!empty($subject) ? $subject : null);
+            $token->setSubject($subject !== '' ? $subject : null);
         }
 
         yield $token;

@@ -10,8 +10,8 @@ use Phug\Test\AbstractLexerTest;
 class NewLineScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\NewLineScanner
-     * @covers Phug\Lexer\Scanner\NewLineScanner::scan
+     * @covers \Phug\Lexer\Scanner\NewLineScanner
+     * @covers \Phug\Lexer\Scanner\NewLineScanner::scan
      */
     public function testNewLine()
     {
@@ -21,8 +21,8 @@ class NewLineScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\NewLineScanner
-     * @covers Phug\Lexer\Scanner\NewLineScanner::scan
+     * @covers \Phug\Lexer\Scanner\NewLineScanner
+     * @covers \Phug\Lexer\Scanner\NewLineScanner::scan
      */
     public function testNewLineQuit()
     {

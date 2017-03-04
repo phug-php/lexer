@@ -12,8 +12,8 @@ use Phug\Test\AbstractLexerTest;
 class TextBlockScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\TextBlockScanner
-     * @covers Phug\Lexer\Scanner\TextBlockScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      */
     public function testScan()
     {

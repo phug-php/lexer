@@ -11,8 +11,8 @@ use Phug\Test\AbstractLexerTest;
 class AssignmentScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\AssignmentScanner
-     * @covers Phug\Lexer\Scanner\AssignmentScanner::scan
+     * @covers \Phug\Lexer\Scanner\AssignmentScanner
+     * @covers \Phug\Lexer\Scanner\AssignmentScanner::scan
      */
     public function testScan()
     {

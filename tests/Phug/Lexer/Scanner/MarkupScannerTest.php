@@ -10,8 +10,8 @@ use Phug\Test\AbstractLexerTest;
 class MarkupScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\MarkupScanner
-     * @covers Phug\Lexer\Scanner\MarkupScanner::scan
+     * @covers \Phug\Lexer\Scanner\MarkupScanner
+     * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
      */
     public function testRawMarkup()
     {
@@ -25,8 +25,8 @@ class MarkupScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\MarkupScanner
-     * @covers Phug\Lexer\Scanner\MarkupScanner::scan
+     * @covers \Phug\Lexer\Scanner\MarkupScanner
+     * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
      */
     public function testRawMarkupQuit()
     {

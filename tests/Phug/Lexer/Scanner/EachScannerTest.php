@@ -42,8 +42,8 @@ class EachScannerTest extends AbstractLexerTest
 
     /**
      * @covers ::scan
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      * @dataProvider provideExpressions
      */
     public function testWithItemOnly($expr)
@@ -58,8 +58,8 @@ class EachScannerTest extends AbstractLexerTest
 
     /**
      * @covers ::scan
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      * @dataProvider provideExpressions
      */
     public function testWithItemAndKey($expr)
@@ -125,12 +125,12 @@ class EachScannerTest extends AbstractLexerTest
 
     /**
      * @covers                   ::scan
-     * @expectedException        Phug\LexerException
+     * @expectedException        \Phug\LexerException
      * @expectedExceptionMessage `each`-statement has no subject to operate on
      */
     public function testEachWithoutSubject()
     {
-        foreach ($this->lexer->lex("each \$i in 0\n  p") as $token) {
+        foreach ($this->lexer->lex("each \$i in \n  p") as $token) {
         }
     }
 }

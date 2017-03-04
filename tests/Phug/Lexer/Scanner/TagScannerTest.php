@@ -10,8 +10,8 @@ use Phug\Test\AbstractLexerTest;
 class TagScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\TagScanner
-     * @covers Phug\Lexer\Scanner\TagScanner::scan
+     * @covers \Phug\Lexer\Scanner\TagScanner
+     * @covers \Phug\Lexer\Scanner\TagScanner::scan
      */
     public function testUsualTagName()
     {
@@ -24,8 +24,8 @@ class TagScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\TagScanner
-     * @covers Phug\Lexer\Scanner\TagScanner::scan
+     * @covers \Phug\Lexer\Scanner\TagScanner
+     * @covers \Phug\Lexer\Scanner\TagScanner::scan
      */
     public function testNamespacedTagName()
     {
@@ -38,8 +38,8 @@ class TagScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\TagScanner
-     * @covers Phug\Lexer\Scanner\TagScanner::scan
+     * @covers \Phug\Lexer\Scanner\TagScanner
+     * @covers \Phug\Lexer\Scanner\TagScanner::scan
      */
     public function testIfScannerConfusesExpansionWithNamespacedTagName()
     {
@@ -58,8 +58,8 @@ class TagScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\TagScanner
-     * @covers Phug\Lexer\Scanner\TagScanner::scan
+     * @covers \Phug\Lexer\Scanner\TagScanner
+     * @covers \Phug\Lexer\Scanner\TagScanner::scan
      */
     public function testTagNameAndClassName()
     {

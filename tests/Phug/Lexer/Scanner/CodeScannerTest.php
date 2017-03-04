@@ -14,8 +14,8 @@ use Phug\Test\AbstractLexerTest;
 class CodeScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\CodeScanner
-     * @covers Phug\Lexer\Scanner\CodeScanner::scan
+     * @covers \Phug\Lexer\Scanner\CodeScanner
+     * @covers \Phug\Lexer\Scanner\CodeScanner::scan
      */
     public function testSingleLineCode()
     {
@@ -37,8 +37,8 @@ class CodeScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\CodeScanner
-     * @covers Phug\Lexer\Scanner\CodeScanner::scan
+     * @covers \Phug\Lexer\Scanner\CodeScanner
+     * @covers \Phug\Lexer\Scanner\CodeScanner::scan
      */
     public function testCodeBlock()
     {

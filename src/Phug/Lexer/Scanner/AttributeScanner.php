@@ -87,7 +87,7 @@ class AttributeScanner implements ScannerInterface
                 $reader->consume();
             }
 
-            if (empty($expr)) {
+            if ($expr === null || $expr === '') {
                 //An empty attribute would mean we did something like
                 //,, or had a space before a comma (since space is also a valid
                 //separator

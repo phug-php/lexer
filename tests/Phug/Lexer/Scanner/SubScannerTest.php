@@ -10,8 +10,8 @@ use Phug\Test\AbstractLexerTest;
 class SubScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\SubScanner
-     * @covers Phug\Lexer\Scanner\SubScanner::scan
+     * @covers \Phug\Lexer\Scanner\SubScanner
+     * @covers \Phug\Lexer\Scanner\SubScanner::scan
      */
     public function testScan()
     {

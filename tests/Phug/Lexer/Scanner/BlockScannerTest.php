@@ -8,8 +8,8 @@ use Phug\Test\AbstractLexerTest;
 class BlockScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\BlockScanner
-     * @covers Phug\Lexer\Scanner\BlockScanner::scan
+     * @covers \Phug\Lexer\Scanner\BlockScanner
+     * @covers \Phug\Lexer\Scanner\BlockScanner::scan
      */
     public function testScan()
     {

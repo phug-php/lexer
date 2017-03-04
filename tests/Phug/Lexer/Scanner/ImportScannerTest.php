@@ -8,8 +8,8 @@ use Phug\Test\AbstractLexerTest;
 class ImportScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\ImportScanner
-     * @covers Phug\Lexer\Scanner\ImportScanner::scan
+     * @covers \Phug\Lexer\Scanner\ImportScanner
+     * @covers \Phug\Lexer\Scanner\ImportScanner::scan
      */
     public function testImport()
     {
