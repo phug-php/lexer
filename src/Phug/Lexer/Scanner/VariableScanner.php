@@ -12,7 +12,7 @@ class VariableScanner implements ScannerInterface
     {
         return $state->scanToken(
             VariableToken::class,
-            '\$(?<name>[a-zA-Z_][a-zA-Z0-9_]*)'
+            '\$(?<name>[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]**)'
         );
     }
 }
