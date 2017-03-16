@@ -39,7 +39,7 @@ class EachScanner implements ScannerInterface
 
         $subject = $this->checkForNamespaceAndTernary($reader);
 
-        if (empty($subject)) {
+        if ($subject === '') {
             $state->throwException(
                 '`each`-statement has no subject to operate on'
             );
