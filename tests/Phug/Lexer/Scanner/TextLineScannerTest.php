@@ -11,8 +11,8 @@ use Phug\Test\AbstractLexerTest;
 class TextLineScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\TextLineScanner
-     * @covers Phug\Lexer\Scanner\TextLineScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextLineScanner
+     * @covers \Phug\Lexer\Scanner\TextLineScanner::scan
      */
     public function testScan()
     {
@@ -36,8 +36,8 @@ class TextLineScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\TextLineScanner
-     * @covers Phug\Lexer\Scanner\TextLineScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextLineScanner
+     * @covers \Phug\Lexer\Scanner\TextLineScanner::scan
      */
     public function testScanQuit()
     {

@@ -42,8 +42,8 @@ class EachScannerTest extends AbstractLexerTest
 
     /**
      * @covers ::scan
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      * @dataProvider provideExpressions
      */
     public function testWithItemOnly($expr)
@@ -58,8 +58,8 @@ class EachScannerTest extends AbstractLexerTest
 
     /**
      * @covers ::scan
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
-     * @covers Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForTernary
+     * @covers \Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait::checkForNamespaceAndTernary
      * @dataProvider provideExpressions
      */
     public function testWithItemAndKey($expr)

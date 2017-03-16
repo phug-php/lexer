@@ -7,4 +7,6 @@ use Phug\Util\DocumentLocationInterface;
 interface TokenInterface extends DocumentLocationInterface
 {
     public function getLevel();
+
+    public function getIndent();
 }

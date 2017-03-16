@@ -8,8 +8,8 @@ use Phug\Test\AbstractLexerTest;
 class ClassScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\ClassScanner
-     * @covers Phug\Lexer\Scanner\ClassScanner::scan
+     * @covers \Phug\Lexer\Scanner\ClassScanner
+     * @covers \Phug\Lexer\Scanner\ClassScanner::scan
      */
     public function testSingleClass()
     {
@@ -23,8 +23,8 @@ class ClassScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\ClassScanner
-     * @covers Phug\Lexer\Scanner\ClassScanner::scan
+     * @covers \Phug\Lexer\Scanner\ClassScanner
+     * @covers \Phug\Lexer\Scanner\ClassScanner::scan
      */
     public function testMultipleClasses()
     {

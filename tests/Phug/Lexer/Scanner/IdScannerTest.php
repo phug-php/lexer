@@ -10,8 +10,8 @@ use Phug\Test\AbstractLexerTest;
 class IdScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\IdScanner
-     * @covers Phug\Lexer\Scanner\IdScanner::scan
+     * @covers \Phug\Lexer\Scanner\IdScanner
+     * @covers \Phug\Lexer\Scanner\IdScanner::scan
      */
     public function testId()
     {

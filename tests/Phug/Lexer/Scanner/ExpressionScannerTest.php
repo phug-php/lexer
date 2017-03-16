@@ -10,8 +10,8 @@ use Phug\Test\AbstractLexerTest;
 class ExpressionScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\ExpressionScanner
-     * @covers Phug\Lexer\Scanner\ExpressionScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner::scan
      */
     public function testExpressionInTag()
     {
@@ -49,8 +49,8 @@ class ExpressionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\ExpressionScanner
-     * @covers Phug\Lexer\Scanner\ExpressionScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner::scan
      */
     public function testExpressionQuit()
     {

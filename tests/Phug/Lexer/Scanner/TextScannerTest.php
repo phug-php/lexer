@@ -2,14 +2,17 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class TextScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\TextScanner
-     * @covers Phug\Lexer\Scanner\TextScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextScanner
+     * @covers \Phug\Lexer\Scanner\TextScanner::scan
      */
     public function testText()
     {
@@ -23,8 +26,24 @@ class TextScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\TextScanner
-     * @covers Phug\Lexer\Scanner\TextScanner::scan
+     * @covers \Phug\Lexer\AbstractToken::getIndent
+     */
+    public function testTextIndent()
+    {
+        /* @var TextToken $tok */
+        list(, , , $tok) = $this->assertTokens('p.'."\n".'  foo', [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+        ]);
+
+        self::assertSame('  ', $tok->getIndent());
+    }
+
+    /**
+     * @covers \Phug\Lexer\Scanner\TextScanner
+     * @covers \Phug\Lexer\Scanner\TextScanner::scan
      */
     public function testTextQuit()
     {

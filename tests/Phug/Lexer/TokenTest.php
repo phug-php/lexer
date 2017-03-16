@@ -11,13 +11,12 @@ use Phug\Lexer\TokenInterface;
 class TokenTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers Phug\Lexer\Token\AssignmentToken
-     * @covers Phug\Lexer\Token\AssignmentToken::setName
-     * @covers Phug\Lexer\Token\AssignmentToken::getName
+     * @covers \Phug\Lexer\Token\AssignmentToken
+     * @covers \Phug\Lexer\Token\AssignmentToken::setName
+     * @covers \Phug\Lexer\Token\AssignmentToken::getName
      */
     public function testAssignmentToken()
     {
-
         /** @var AssignmentToken $tok */
         $tok = $this->createAndTestToken(AssignmentToken::class);
 
@@ -28,20 +27,20 @@ class TokenTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Phug\Lexer\AbstractToken::__construct
-     * @covers Phug\Lexer\Token\AttributeStartToken
-     * @covers Phug\Lexer\Token\AttributeToken
-     * @covers Phug\Lexer\Token\AttributeToken::setName
-     * @covers Phug\Lexer\Token\AttributeToken::getName
-     * @covers Phug\Lexer\Token\AttributeToken::setValue
-     * @covers Phug\Lexer\Token\AttributeToken::getValue
-     * @covers Phug\Lexer\Token\AttributeToken::escape
-     * @covers Phug\Lexer\Token\AttributeToken::unescape
-     * @covers Phug\Lexer\Token\AttributeToken::setIsEscaped
-     * @covers Phug\Lexer\Token\AttributeToken::check
-     * @covers Phug\Lexer\Token\AttributeToken::uncheck
-     * @covers Phug\Lexer\Token\AttributeToken::setIsChecked
-     * @covers Phug\Lexer\Token\AttributeEndToken
+     * @covers \Phug\Lexer\AbstractToken::__construct
+     * @covers \Phug\Lexer\Token\AttributeStartToken
+     * @covers \Phug\Lexer\Token\AttributeToken
+     * @covers \Phug\Lexer\Token\AttributeToken::setName
+     * @covers \Phug\Lexer\Token\AttributeToken::getName
+     * @covers \Phug\Lexer\Token\AttributeToken::setValue
+     * @covers \Phug\Lexer\Token\AttributeToken::getValue
+     * @covers \Phug\Lexer\Token\AttributeToken::escape
+     * @covers \Phug\Lexer\Token\AttributeToken::unescape
+     * @covers \Phug\Lexer\Token\AttributeToken::setIsEscaped
+     * @covers \Phug\Lexer\Token\AttributeToken::check
+     * @covers \Phug\Lexer\Token\AttributeToken::uncheck
+     * @covers \Phug\Lexer\Token\AttributeToken::setIsChecked
+     * @covers \Phug\Lexer\Token\AttributeEndToken
      */
     public function testAttributeTokens()
     {

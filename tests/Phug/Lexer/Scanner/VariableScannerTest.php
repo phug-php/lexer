@@ -9,8 +9,8 @@ use Phug\Test\AbstractLexerTest;
 class VariableScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\VariableScanner
-     * @covers Phug\Lexer\Scanner\VariableScanner::scan
+     * @covers \Phug\Lexer\Scanner\VariableScanner
+     * @covers \Phug\Lexer\Scanner\VariableScanner::scan
      */
     public function testVariable()
     {

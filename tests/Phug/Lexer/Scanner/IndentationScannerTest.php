@@ -15,8 +15,8 @@ use Phug\Test\AbstractLexerTest;
 class IndentationScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\IndentationScanner
-     * @covers Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      */
     public function testIndentation()
     {
@@ -44,8 +44,8 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\IndentationScanner
-     * @covers Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      */
     public function testIndentationQuit()
     {
@@ -75,8 +75,8 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\IndentationScanner
-     * @covers Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      */
     public function testJumpIndentation()
     {
@@ -96,8 +96,8 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\IndentationScanner
-     * @covers Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      */
     public function testMixedIndentation()
     {

@@ -13,8 +13,8 @@ use Phug\Test\AbstractLexerTest;
 class ExpansionScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers Phug\Lexer\Scanner\ExpansionScanner
-     * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner::scan
      */
     public function testStandaloneExpansion()
     {
@@ -24,8 +24,8 @@ class ExpansionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\ExpansionScanner
-     * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner::scan
      */
     public function testTagExpansion()
     {
@@ -44,8 +44,8 @@ class ExpansionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\ExpansionScanner
-     * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner::scan
      */
     public function testFilterExpansion()
     {
@@ -66,8 +66,8 @@ class ExpansionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers Phug\Lexer\Scanner\ExpansionScanner
-     * @covers Phug\Lexer\Scanner\ExpansionScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner
+     * @covers \Phug\Lexer\Scanner\ExpansionScanner::scan
      */
     public function testExpansionQuit()
     {

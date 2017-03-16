@@ -46,7 +46,7 @@ class State implements OptionInterface
      */
     public function __construct($input, array $options)
     {
-        $this->setOptionsRecursive(([
+        $this->setOptionsRecursive([
             'reader_class_name' => Reader::class,
             'encoding'          => null,
             'level'             => 0,
@@ -244,7 +244,8 @@ class State implements OptionInterface
         return new $className(
             $this->getReader()->getLine(),
             $this->getReader()->getOffset(),
-            $this->level
+            $this->level,
+            str_repeat($this->getIndentStyle(), $this->getIndentWidth())
         );
     }
 
