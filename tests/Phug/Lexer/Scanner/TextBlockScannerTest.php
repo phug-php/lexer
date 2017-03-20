@@ -12,6 +12,7 @@ use Phug\Test\AbstractLexerTest;
 class TextBlockScannerTest extends AbstractLexerTest
 {
     /**
+     * @group i
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      */
@@ -35,10 +36,8 @@ class TextBlockScannerTest extends AbstractLexerTest
             IndentToken::class,
             TextToken::class,
             NewLineToken::class,
-            IndentToken::class,
             TextToken::class,
             NewLineToken::class,
-            OutdentToken::class,
             TextToken::class,
             NewLineToken::class,
             OutdentToken::class,
