@@ -43,7 +43,7 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
             self::assertTrue($isset, "Classname at $i exists");
 
             if ($isset) {
-                self::assertInstanceOf($classNames[$i], $token, "token is {$classNames[$i]}");
+                self::assertInstanceOf($classNames[$i], $token, "token[$i] should be {$classNames[$i]}");
             }
         }
 

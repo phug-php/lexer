@@ -107,12 +107,13 @@ class Lexer implements OptionInterface
     public function __construct(array $options = null)
     {
         $this->setOptionsRecursive([
-            'state_class_name' => State::class,
-            'level'            => 0,
-            'indent_style'     => null,
-            'indent_width'     => null,
-            'encoding'         => null,
-            'scanners'         => [
+            'state_class_name'   => State::class,
+            'level'              => 0,
+            'indent_style'       => null,
+            'indent_width'       => null,
+            'allow_mixed_indent' => true,
+            'encoding'           => null,
+            'scanners'           => [
                 //TODO: Several of these are non-standard and need to be capsulated into extensions
                 //Namely: ForScanner, DoScanner, VariableScanner
                 'new_line'    => NewLineScanner::class,
@@ -241,11 +242,12 @@ class Lexer implements OptionInterface
 
         //Put together our initial state
         $this->state = new State($input, [
-            'encoding'     => $this->getOption('encoding'),
-            'indent_style' => $this->getOption('indent_style'),
-            'indent_width' => $this->getOption('indent_width'),
-            'level'        => $this->getOption('level'),
-            'path'         => $path,
+            'encoding'           => $this->getOption('encoding'),
+            'indent_style'       => $this->getOption('indent_style'),
+            'indent_width'       => $this->getOption('indent_width'),
+            'allow_mixed_indent' => $this->getOption('allow_mixed_indent'),
+            'level'              => $this->getOption('level'),
+            'path'               => $path,
         ]);
 
         $scanners = $this->getOption('scanners');

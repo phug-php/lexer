@@ -7,58 +7,83 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\OutdentToken;
+use Phug\LexerException;
 
 class IndentationScanner implements ScannerInterface
 {
-    protected function setStateLevel(State $state, $indent)
+    protected function getLevelFromIndent(State $state, $indent)
     {
-        $oldLevel = $state->getLevel();
-        if ($indent === null) {
-            $state->setLevel(0);
+        return intval(floor(mb_strlen($indent) / ($state->getIndentWidth() ?: INF)));
+    }
 
-            return -$oldLevel;
+    public function getIndentLevel(State $state, $maxLevel = INF, callable $getIndentChar = null)
+    {
+        $reader = $state->getReader();
+        $indent = '';
+
+        if (is_null($getIndentChar)) {
+            $getIndentChar = [$reader, 'peekIndentation'];
         }
 
-        $spaces = mb_strpos($indent, ' ') !== false;
-        $tabs = mb_strpos($indent, "\t") !== false;
-        $mixed = $spaces && $tabs;
+        while ($indentChar = call_user_func($getIndentChar, $reader)) {
+            $reader->consume(1);
+            $isTab = $indentChar === Lexer::INDENT_TAB;
+            $indentStyle = $isTab ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE;
+            //Update the indentation style
+            if (!$state->getIndentStyle()) {
+                $state->setIndentStyle($indentStyle);
+            }
+            if ($state->getIndentStyle() !== $indentStyle) {
+                if (!$state->getOption('allow_mixed_indent')) {
+                    throw new LexerException(
+                        'Invalid indentation, you can use tabs or spaces but not both'
+                    );
+                }
 
-        if ($mixed) {
-            switch ($state->getIndentStyle()) {
-                case Lexer::INDENT_SPACE:
-                default:
-                    //Convert tabs to spaces based on indentWidth
-                    $indent = str_replace(Lexer::INDENT_TAB, str_repeat(
+                $indentChar = $isTab
+                    ? str_repeat(
                         Lexer::INDENT_SPACE,
                         $state->getIndentWidth() ?: 4
-                    ), $spaces);
-                    $tabs = false;
-                    $mixed = false;
-                    break;
-                case Lexer::INDENT_TAB:
-                    //Convert spaces to tabs based on indentWidth
-                    $indent = str_replace(Lexer::INDENT_SPACE, str_repeat(
+                    )
+                    : str_repeat(
                         Lexer::INDENT_TAB,
                         $state->getIndentWidth() ?: 1
-                    ), $spaces);
-                    $spaces = false;
-                    $mixed = false;
-                    break;
+                    );
+            }
+            $indent .= $indentChar;
+            $indentWidth = $state->getIndentWidth();
+            if (
+                $state->getIndentWidth() &&
+                $this->getLevelFromIndent($state, $indent) >= $maxLevel
+            ) {
+                break;
             }
         }
 
-        //Update the indentation style
-        if (!$state->getIndentStyle()) {
-            $state->setIndentStyle($tabs ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE);
-        }
-
         //Update the indentation width
-        if (!$state->getIndentWidth()) {
+        $length = mb_strlen($indent);
+        if ($length && !$state->getIndentWidth()) {
             //We will use the pretty first indentation as our indent width
-            $state->setIndentWidth(mb_strlen($indent));
+            $state->setIndentWidth($length);
         }
 
-        $state->setLevel(intval(round(mb_strlen($indent) / $state->getIndentWidth())));
+        return $this->getLevelFromIndent($state, $indent);
+    }
+
+    protected function setStateLevel(State $state, $indent)
+    {
+        $oldLevel = $state->getLevel();
+
+        $state->setLevel($this->getIndentLevel($state, INF, function () use (&$indent) {
+            if (mb_strlen($indent)) {
+                $char = mb_substr($indent, 0, 1);
+                $indent = mb_substr($indent, 1);
+
+                return $char;
+            }
+
+            return null;
+        }));
 
         if ($state->getLevel() > $oldLevel + 1) {
             $state->setLevel($oldLevel + 1);

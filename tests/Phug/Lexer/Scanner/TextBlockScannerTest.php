@@ -30,18 +30,21 @@ class TextBlockScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        $this->assertTokens("p.\n  Hello\n    world\n  bye\ndiv", [
+        $tokens = $this->assertTokens("p.\n  Hello\n    world\n  bye\ndiv", [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
             TextToken::class,
             NewLineToken::class,
-            TextToken::class,
-            NewLineToken::class,
-            TextToken::class,
-            NewLineToken::class,
             OutdentToken::class,
             TagToken::class,
         ]);
+
+        $tokens = array_filter($tokens, function ($token) {
+            return $token instanceof TextToken;
+        });
+        $token = reset($tokens);
+
+        self::assertSame("Hello\n  world\nbye", $token->getValue());
     }
 }
