@@ -60,26 +60,21 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken
-         * @var TextToken    $t1
-         * @var TextToken    $t2
-         * @var TextToken    $t3
+         * @var CommentToken $c
+         * @var TextToken    $t
          */
-        list($c, , , $t1, , $t2, , $t3) = $this->assertTokens("//\n\tFirst line\n\tSecond line\n\tThird line", [
+        list($c, , , $t) = $this->assertTokens("//\n\tFirst line\n\tSecond line\n\tThird line", [
             CommentToken::class,
             NewLineToken::class,
             IndentToken::class,
             TextToken::class,
-            NewLineToken::class,
-            TextToken::class,
-            NewLineToken::class,
-            TextToken::class,
         ]);
 
         self::assertTrue($c->isVisible());
-        self::assertSame('First line', $t1->getValue());
-        self::assertSame('Second line', $t2->getValue());
-        self::assertSame('Third line', $t3->getValue());
+        self::assertSame(
+            "First line\nSecond line\nThird line",
+            $t->getValue()
+        );
     }
 
     /**
@@ -90,26 +85,21 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken
-         * @var TextToken    $t1
-         * @var TextToken    $t2
-         * @var TextToken    $t3
+         * @var CommentToken $c
+         * @var TextToken    $t
          */
-        list($c, , , $t1, , $t2, , $t3) = $this->assertTokens("//-\n\tFirst line\n\tSecond line\n\tThird line", [
+        list($c, , , $t) = $this->assertTokens("//-\n\tFirst line\n\tSecond line\n\tThird line", [
             CommentToken::class,
             NewLineToken::class,
             IndentToken::class,
             TextToken::class,
-            NewLineToken::class,
-            TextToken::class,
-            NewLineToken::class,
-            TextToken::class,
         ]);
 
         self::assertFalse($c->isVisible());
-        self::assertSame('First line', $t1->getValue());
-        self::assertSame('Second line', $t2->getValue());
-        self::assertSame('Third line', $t3->getValue());
+        self::assertSame(
+            "First line\nSecond line\nThird line",
+            $t->getValue()
+        );
     }
 
     /**
