@@ -19,15 +19,17 @@ class TextBlockScanner implements ScannerInterface
             yield $token;
         }
 
-        foreach ($state->scan(NewLineScanner::class) as $token) {
-            yield $token;
-        }
-
         $level = $state->getLevel() + 1;
         $lines = [];
         while ($reader->hasLength()) {
             $indentationScanner = new IndentationScanner();
             if ($indentationScanner->getIndentLevel($state, $level) < $level) {
+                if ($reader->match('[ \t]*\n')) {
+                    $reader->consume(mb_strlen($reader->getMatch(0)));
+                    $lines[] = '';
+
+                    continue;
+                }
                 break;
             }
 
@@ -40,6 +42,9 @@ class TextBlockScanner implements ScannerInterface
         if (count($lines)) {
             yield $state->createToken(IndentToken::class);
 
+            /**
+             * @var TextToken $token
+             */
             $token = $state->createToken(TextToken::class);
             $token->setValue(implode("\n", $lines));
 

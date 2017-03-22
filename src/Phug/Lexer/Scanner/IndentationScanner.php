@@ -8,6 +8,7 @@ use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\OutdentToken;
 use Phug\LexerException;
+use Phug\Reader;
 
 class IndentationScanner implements ScannerInterface
 {
@@ -16,22 +17,25 @@ class IndentationScanner implements ScannerInterface
         return intval(floor(mb_strlen($indent) / ($state->getIndentWidth() ?: INF)));
     }
 
+    protected function getIndentChar(Reader $reader)
+    {
+        $char = null;
+
+        if ($reader->peekIndentation()) {
+            $char = $reader->getLastPeekResult();
+            $reader->consume();
+        }
+
+        return $char;
+    }
+
     public function getIndentLevel(State $state, $maxLevel = INF, callable $getIndentChar = null)
     {
         $reader = $state->getReader();
         $indent = '';
 
         if (is_null($getIndentChar)) {
-            $getIndentChar = function () use ($reader) {
-                $char = null;
-
-                if ($reader->peekIndentation()) {
-                    $char = $reader->getLastPeekResult();
-                    $reader->consume();
-                }
-
-                return $char;
-            };
+            $getIndentChar = [$this, 'getIndentChar'];
         }
 
         while ($indentChar = call_user_func($getIndentChar, $reader)) {
