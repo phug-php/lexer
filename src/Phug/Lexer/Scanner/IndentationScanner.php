@@ -59,8 +59,7 @@ class IndentationScanner implements ScannerInterface
                     );
             }
             $indent .= $indentChar;
-            if (
-                $state->getIndentWidth() &&
+            if ($state->getIndentWidth() &&
                 $this->getLevelFromIndent($state, $indent) >= $maxLevel
             ) {
                 break;

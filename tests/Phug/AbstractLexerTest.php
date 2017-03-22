@@ -2,6 +2,7 @@
 
 namespace Phug\Test;
 
+use Exception;
 use Phug\Lexer;
 
 abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
@@ -20,8 +21,10 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
     {
         if (method_exists($this, 'expectExceptionMessage')) {
             $this->expectExceptionMessage($message);
+
             return;
         }
+
         $this->setExpectedException(Exception::class, $message, null);
     }
 

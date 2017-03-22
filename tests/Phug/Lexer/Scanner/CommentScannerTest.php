@@ -20,7 +20,7 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken
+         * @var CommentToken $c
          * @var TextToken    $t
          */
         list($c, $t) = $this->assertTokens('// This is some comment text', [
@@ -40,7 +40,7 @@ class CommentScannerTest extends AbstractLexerTest
     {
 
         /**
-         * @var CommentToken
+         * @var CommentToken $c
          * @var TextToken    $t
          */
         list($c, $t) = $this->assertTokens('//- This is some comment text', [

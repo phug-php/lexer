@@ -148,7 +148,6 @@ class IndentationScannerTest extends AbstractLexerTest
         ], $tokensClasses);
     }
 
-
     /**
      * @covers            \Phug\Lexer\State::indent
      * @covers            \Phug\Lexer\State::outdent
