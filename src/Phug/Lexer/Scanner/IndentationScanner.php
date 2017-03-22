@@ -22,11 +22,19 @@ class IndentationScanner implements ScannerInterface
         $indent = '';
 
         if (is_null($getIndentChar)) {
-            $getIndentChar = [$reader, 'peekIndentation'];
+            $getIndentChar = function () use ($reader) {
+                $char = null;
+
+                if ($reader->peekIndentation()) {
+                    $char = $reader->getLastPeekResult();
+                    $reader->consume();
+                }
+
+                return $char;
+            };
         }
 
         while ($indentChar = call_user_func($getIndentChar, $reader)) {
-            $reader->consume(1);
             $isTab = $indentChar === Lexer::INDENT_TAB;
             $indentStyle = $isTab ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE;
             //Update the indentation style
@@ -72,21 +80,18 @@ class IndentationScanner implements ScannerInterface
     protected function setStateLevel(State $state, $indent)
     {
         $oldLevel = $state->getLevel();
+        $newLevel = $this->getIndentLevel($state, INF, function () use (&$indent) {
+            $char = null;
 
-        $state->setLevel($this->getIndentLevel($state, INF, function () use (&$indent) {
             if (mb_strlen($indent)) {
                 $char = mb_substr($indent, 0, 1);
                 $indent = mb_substr($indent, 1);
-
-                return $char;
             }
 
-            return null;
-        }));
+            return $char;
+        });
 
-        if ($state->getLevel() > $oldLevel + 1) {
-            $state->setLevel($oldLevel + 1);
-        }
+        $state->setLevel($newLevel);
 
         return $state->getLevel() - $oldLevel;
     }
@@ -109,19 +114,30 @@ class IndentationScanner implements ScannerInterface
             return;
         }
 
-        $levels = $this->setStateLevel($state, $indent);
+        //We create a token for each indentation/outdentation
+        if ($this->setStateLevel($state, $indent) > 0) {
+            $state->indent();
 
-        //Unchanged levels
-        if ($levels === 0) {
+            yield $state->createToken(IndentToken::class);
+
             return;
         }
 
-        //We create a token for each indentation/outdentation
-        $type = $levels > 0 ? IndentToken::class : OutdentToken::class;
-        $levels = abs($levels);
+        while ($state->getLevel() < $state->getIndentLevel()) {
+            $oldLevel = $state->getIndentLevel();
+            $newLevel = $state->outdent();
+            if ($newLevel < $state->getLevel()) {
+                throw new LexerException(
+                    'Inconsistent indentation. '.
+                    'Expecting either '.
+                    ($newLevel * $state->getIndentWidth()).
+                    ' or '.
+                    ($oldLevel * $state->getIndentWidth()).
+                    ' spaces/tabs.'
+                );
+            }
 
-        while ($levels--) {
-            yield $state->createToken($type);
+            yield $state->createToken(OutdentToken::class);
         }
     }
 }

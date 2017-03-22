@@ -16,9 +16,33 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
         $this->lexer = $this->createLexer();
     }
 
+    protected function expectMessageToBeThrown($message)
+    {
+        if (method_exists($this, 'expectExceptionMessage')) {
+            $this->expectExceptionMessage($message);
+            return;
+        }
+        $this->setExpectedException(Exception::class, $message, null);
+    }
+
     protected function createLexer()
     {
         return new Lexer();
+    }
+
+    protected function filterTokenClass($className)
+    {
+        $className = ltrim($className, '\\');
+        switch ($className) {
+            case 'Phug\\Lexer\\Token\\IndentToken':
+                return '[->]';
+            case 'Phug\\Lexer\\Token\\OutdentToken':
+                return '[<-]';
+            case 'Phug\\Lexer\\Token\\NewLineToken':
+                return '[\\n]';
+            default:
+                return preg_replace('/^(Phug\\\\.+)Token$/', '[$1]', $className);
+        }
     }
 
     protected function assertTokens($expression, array $classNames)
@@ -30,11 +54,11 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
             count($classNames),
             "\n"
             .'expected ('
-            .implode(', ', $classNames)
+            .implode(', ', array_map([$this, 'filterTokenClass'], $classNames))
             .'), '
             ."\n"
             .'got      ('
-            .implode(', ', array_map([$this->lexer, 'dump'], $tokens))
+            .implode(', ', array_map('trim', array_map([$this->lexer, 'dump'], $tokens)))
             .')'
         );
 

@@ -39,6 +39,13 @@ class State implements OptionInterface
     private $indentWidth;
 
     /**
+     * Contains the stack of indent steps.
+     *
+     * @var array
+     */
+    private $indentStack;
+
+    /**
      * Creates a new instance of the state.
      *
      * @param $input
@@ -70,6 +77,7 @@ class State implements OptionInterface
         );
         $this->indentStyle = $this->getOption('indent_style');
         $this->indentWidth = $this->getOption('indent_width');
+        $this->indentStack = [];
         $this->level = $this->getOption('level');
 
         //This will strip \r, \0 etc. from the input
@@ -94,6 +102,41 @@ class State implements OptionInterface
     public function getIndentStyle()
     {
         return $this->indentStyle;
+    }
+
+    /**
+     * Returns the currently used indentation style.
+     *
+     * @return int
+     */
+    public function getIndentLevel()
+    {
+        return end($this->indentStack) ?: 0;
+    }
+
+    /**
+     * Outdent and return the new level.
+     *
+     * @return int
+     */
+    public function outdent()
+    {
+        array_pop($this->indentStack);
+
+        return $this->getIndentLevel();
+    }
+
+    /**
+     * Indent and return the new level.
+     *
+     * @return int
+     */
+    public function indent($level = null)
+    {
+        $level = $level ?: $this->getLevel();
+        array_push($this->indentStack, $level);
+
+        return $level;
     }
 
     /**
