@@ -179,4 +179,25 @@ class IndentationScannerTest extends AbstractLexerTest
             $tokens[] = $token;
         }
     }
+
+    /**
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
+     * @expectedException \Phug\LexerException
+     */
+    public function testNotAllowedMixedIndent()
+    {
+        $this->expectMessageToBeThrown(
+            'Invalid indentation, '.
+            'you can use tabs or spaces but not both'
+        );
+
+        $lexer = new Lexer([
+            'allow_mixed_indent' => false,
+        ]);
+        $gen = $lexer->lex("div\n\t  div");
+        $tokens = [];
+        foreach ($gen as $token) {
+            $tokens[] = $token;
+        }
+    }
 }

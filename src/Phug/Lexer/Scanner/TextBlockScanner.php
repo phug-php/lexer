@@ -13,6 +13,7 @@ class TextBlockScanner implements ScannerInterface
 {
     protected function createBlockTokens(State $state, array $lines)
     {
+        $reader = $state->getReader();
         /**
          * @var TextToken $token
          */
@@ -21,13 +22,7 @@ class TextBlockScanner implements ScannerInterface
 
         yield $token;
 
-        foreach ($state->scan(NewLineScanner::class) as $token) {
-            yield $token;
-
-            return;
-        }
-
-        if ($state->getReader()->getLength()) {
+        if ($reader->getLength()) {
             yield $state->createToken(NewLineToken::class);
 
             foreach ($state->getIndentsStepsDown() as $level) {
@@ -46,11 +41,7 @@ class TextBlockScanner implements ScannerInterface
             yield $token;
         }
 
-        foreach ($state->scan(NewLineScanner::class) as $token) {
-            yield $token;
-        }
-
-        foreach ($state->scan(IndentationScanner::class) as $token) {
+        foreach ($state->loopScan([NewLineScanner::class, IndentationScanner::class]) as $token) {
             yield $token;
 
             if ($token instanceof OutdentToken) {
@@ -69,13 +60,16 @@ class TextBlockScanner implements ScannerInterface
 
         while ($level && $reader->hasLength()) {
             $indentationScanner = new IndentationScanner();
-            if ($indentationScanner->getIndentLevel($state, $level) < $level) {
+            $newLevel = $indentationScanner->getIndentLevel($state, $level);
+            if ($newLevel < $level) {
                 if ($reader->match('[ \t]*\n')) {
                     $reader->consume(mb_strlen($reader->getMatch(0)));
                     $lines[] = '';
 
                     continue;
                 }
+
+                $state->setLevel($newLevel);
 
                 break;
             }

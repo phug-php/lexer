@@ -12,7 +12,11 @@ use Phug\Test\AbstractLexerTest;
 class TextBlockScannerTest extends AbstractLexerTest
 {
     /**
+     * @group i
      * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
@@ -31,6 +35,60 @@ class TextBlockScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
+        $this->assertTokens("section\n  div\n    p.\n      Hello\n  article", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            OutdentToken::class,
+            TagToken::class,
+        ]);
+
+        $this->assertTokens("p.\n\n\n  Hello", [
+            TagToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+        ]);
+
+        $this->assertTokens("p.\ndiv", [
+            TagToken::class,
+            NewLineToken::class,
+            TagToken::class,
+        ]);
+
+        $this->assertTokens("section\n  p.\ndiv", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+        ]);
+    }
+
+    /**
+     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
+     */
+    public function testScanWhiteSpaces()
+    {
         $tokens = $this->assertTokens("p.\n  Hello\n    world\n  bye\ndiv", [
             TagToken::class,
             NewLineToken::class,

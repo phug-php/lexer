@@ -37,7 +37,6 @@ class CodeScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\CodeScanner
      * @covers \Phug\Lexer\Scanner\CodeScanner::scan
      */
