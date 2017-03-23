@@ -29,6 +29,35 @@ class IndentationScanner implements ScannerInterface
         return $char;
     }
 
+    protected function formatIndentChar(State $state, $indentChar)
+    {
+        $isTab = $indentChar === Lexer::INDENT_TAB;
+        $indentStyle = $isTab ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE;
+        //Update the indentation style
+        if (!$state->getIndentStyle()) {
+            $state->setIndentStyle($indentStyle);
+        }
+        if ($state->getIndentStyle() !== $indentStyle) {
+            if (!$state->getOption('allow_mixed_indent')) {
+                throw new LexerException(
+                    'Invalid indentation, you can use tabs or spaces but not both'
+                );
+            }
+
+            $indentChar = $isTab
+                ? str_repeat(
+                    Lexer::INDENT_SPACE,
+                    $state->getIndentWidth() ?: 4
+                )
+                : str_repeat(
+                    Lexer::INDENT_TAB,
+                    $state->getIndentWidth() ?: 1
+                );
+        }
+
+        return $indentChar;
+    }
+
     public function getIndentLevel(State $state, $maxLevel = INF, callable $getIndentChar = null)
     {
         $reader = $state->getReader();
@@ -39,30 +68,7 @@ class IndentationScanner implements ScannerInterface
         }
 
         while ($indentChar = call_user_func($getIndentChar, $reader)) {
-            $isTab = $indentChar === Lexer::INDENT_TAB;
-            $indentStyle = $isTab ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE;
-            //Update the indentation style
-            if (!$state->getIndentStyle()) {
-                $state->setIndentStyle($indentStyle);
-            }
-            if ($state->getIndentStyle() !== $indentStyle) {
-                if (!$state->getOption('allow_mixed_indent')) {
-                    throw new LexerException(
-                        'Invalid indentation, you can use tabs or spaces but not both'
-                    );
-                }
-
-                $indentChar = $isTab
-                    ? str_repeat(
-                        Lexer::INDENT_SPACE,
-                        $state->getIndentWidth() ?: 4
-                    )
-                    : str_repeat(
-                        Lexer::INDENT_TAB,
-                        $state->getIndentWidth() ?: 1
-                    );
-            }
-            $indent .= $indentChar;
+            $indent .= $this->formatIndentChar($state, $indentChar);
             if ($state->getIndentWidth() &&
                 $this->getLevelFromIndent($state, $indent) >= $maxLevel
             ) {

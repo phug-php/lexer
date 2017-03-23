@@ -62,7 +62,6 @@ class TextBlockScanner implements ScannerInterface
 
     public function scan(State $state)
     {
-        $level = null;
         $reader = $state->getReader();
         $lines = [];
 

@@ -15,6 +15,7 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @group i
      * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @covers \Phug\Lexer\Scanner\TextBlockScanner

@@ -117,6 +117,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      */
     public function testMixedIndentation()
@@ -162,6 +163,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers            \Phug\Lexer\State::getIndentLevel
      * @covers            \Phug\Lexer\State::nextOutdent
      * @covers            \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
      * @covers            \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @expectedException \Phug\LexerException
      */
@@ -181,6 +183,7 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
      * @covers            \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @expectedException \Phug\LexerException
      */
