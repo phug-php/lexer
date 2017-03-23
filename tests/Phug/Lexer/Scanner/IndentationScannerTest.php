@@ -18,7 +18,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\State::indent
      * @covers \Phug\Lexer\State::outdent
      * @covers \Phug\Lexer\State::getIndentLevel
-     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
@@ -52,7 +52,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\State::indent
      * @covers \Phug\Lexer\State::outdent
      * @covers \Phug\Lexer\State::getIndentLevel
-     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
@@ -88,7 +88,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\State::indent
      * @covers \Phug\Lexer\State::outdent
      * @covers \Phug\Lexer\State::getIndentLevel
-     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
@@ -114,7 +114,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\State::indent
      * @covers \Phug\Lexer\State::outdent
      * @covers \Phug\Lexer\State::getIndentLevel
-     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
@@ -160,7 +160,7 @@ class IndentationScannerTest extends AbstractLexerTest
      * @covers            \Phug\Lexer\State::indent
      * @covers            \Phug\Lexer\State::outdent
      * @covers            \Phug\Lexer\State::getIndentLevel
-     * @covers            \Phug\Lexer\State::getIndentsStepsDown
+     * @covers            \Phug\Lexer\State::nextOutdent
      * @covers            \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers            \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @expectedException \Phug\LexerException

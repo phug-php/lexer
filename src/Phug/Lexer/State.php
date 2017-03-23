@@ -127,16 +127,19 @@ class State implements OptionInterface
     }
 
     /**
-     * Returns levels from current indent to expected level.
+     * Return new outdent level if current above expected,
+     * or false if expected level reached.
      *
-     * @return array
+     * @return int
      */
-    public function getIndentsStepsDown()
+    public function nextOutdent()
     {
-        while ($this->getLevel() < $this->getIndentLevel()) {
-            $oldLevel = $this->getIndentLevel();
+        $oldLevel = $this->getIndentLevel();
+        $expected = $this->getLevel();
+
+        if ($expected < $oldLevel) {
             $newLevel = $this->outdent();
-            if ($newLevel < $this->getLevel()) {
+            if ($newLevel < $expected) {
                 throw new LexerException(
                     'Inconsistent indentation. '.
                     'Expecting either '.
@@ -147,8 +150,10 @@ class State implements OptionInterface
                 );
             }
 
-            yield $newLevel;
+            return $newLevel;
         }
+
+        return false;
     }
 
     /**

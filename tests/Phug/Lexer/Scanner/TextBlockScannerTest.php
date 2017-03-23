@@ -13,7 +13,7 @@ class TextBlockScannerTest extends AbstractLexerTest
 {
     /**
      * @group i
-     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
@@ -79,7 +79,7 @@ class TextBlockScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers \Phug\Lexer\State::getIndentsStepsDown
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel

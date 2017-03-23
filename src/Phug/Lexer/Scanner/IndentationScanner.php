@@ -126,7 +126,7 @@ class IndentationScanner implements ScannerInterface
             return;
         }
 
-        foreach ($state->getIndentsStepsDown() as $level) {
+        while ($state->nextOutdent() !== false) {
             yield $state->createToken(OutdentToken::class);
         }
     }
