@@ -18,7 +18,7 @@ use Phug\Lexer\Token\TextToken;
 /**
  * @coversDefaultClass \Phug\Lexer
  */
-class LexerTest extends \PHPUnit_Framework_TestCase
+class LexerTest extends AbstractLexerTest
 {
     /**
      * @covers ::__construct
@@ -37,12 +37,16 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers                   ::getState
-     * @expectedException        \RuntimeException
-     * @expectedExceptionMessage Failed to get state: No lexing process active. Use the `lex()`-method
+     * @covers            ::getState
+     * @expectedException \RuntimeException
      */
     public function testGetStateException()
     {
+        $this->expectMessageToBeThrown(
+            'Failed to get state: No lexing process active. '.
+            'Use the `lex()`-method'
+        );
+
         $lexer = new Lexer();
         $lexer->getState();
     }
@@ -96,14 +100,17 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers                   ::filterScanner
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage Scanner NotAValidClassName is not a valid
-     * @expectedExceptionMessage Phug\Lexer\ScannerInterface instance or extended class
-     * @expectedExceptionMessage instance or extended class
+     * @covers            ::filterScanner
+     * @expectedException \InvalidArgumentException
      */
     public function testFilterScanner()
     {
+        $this->expectMessageToBeThrown(
+            'Scanner NotAValidClassName is not a valid '.
+            'Phug\\Lexer\\ScannerInterface '.
+            'instance or extended class'
+        );
+
         $lexer = new Lexer();
         $lexer->addScanner('foo', 'NotAValidClassName');
         foreach ($lexer->lex('p') as $token) {
@@ -111,13 +118,16 @@ class LexerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers                   ::lex
-     * @expectedException        \InvalidArgumentException
-     * @expectedExceptionMessage state_class_name needs to be a valid
-     * @expectedExceptionMessage Phug\Lexer\State sub class
+     * @covers            ::lex
+     * @expectedException \InvalidArgumentException
      */
     public function testBadStateClassName()
     {
+        $this->expectMessageToBeThrown(
+            'state_class_name needs to be a valid '.
+            'Phug\\Lexer\\State sub class'
+        );
+
         $lexer = new Lexer([
             'state_class_name' => 'NotAValidClassName',
         ]);

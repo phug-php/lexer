@@ -5,41 +5,89 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
+use Phug\Lexer\Token\TextToken;
 
 class TextBlockScanner implements ScannerInterface
 {
+    protected function createBlockTokens(State $state, array $lines)
+    {
+        $reader = $state->getReader();
+        /**
+         * @var TextToken $token
+         */
+        $token = $state->createToken(TextToken::class);
+        $token->setValue(implode("\n", $lines));
+
+        yield $token;
+
+        if ($reader->getLength()) {
+            yield $state->createToken(NewLineToken::class);
+
+            while ($state->nextOutdent() !== false) {
+                yield $state->createToken(OutdentToken::class);
+            }
+        }
+    }
+
+    public function appendBlockLines(array &$lines, State $state)
+    {
+        $reader = $state->getReader();
+        $level = $state->getLevel();
+
+        while ($reader->hasLength()) {
+            $indentationScanner = new IndentationScanner();
+            $newLevel = $indentationScanner->getIndentLevel($state, $level);
+            if ($newLevel < $level) {
+                if ($reader->match('[ \t]*\n')) {
+                    $reader->consume(mb_strlen($reader->getMatch(0)));
+                    $lines[] = '';
+
+                    continue;
+                }
+
+                $state->setLevel($newLevel);
+
+                break;
+            }
+
+            $lines[] = $reader->readUntilNewLine();
+
+            if ($reader->peekNewLine()) {
+                $reader->consume(1);
+            }
+        }
+    }
+
     public function scan(State $state)
     {
         $reader = $state->getReader();
+        $lines = [];
 
         foreach ($state->scan(TextScanner::class) as $token) {
             yield $token;
         }
 
-        foreach ($state->scan(NewLineScanner::class) as $token) {
+        foreach ($state->loopScan([NewLineScanner::class, IndentationScanner::class]) as $token) {
             yield $token;
-        }
 
-        $level = 0;
-        while ($reader->hasLength()) {
-            foreach ($state->loopScan([IndentationScanner::class, NewLineScanner::class]) as $token) {
-                if ($token instanceof IndentToken) {
-                    $level++;
-                }
-
-                if ($token instanceof OutdentToken) {
-                    $level--;
-                }
-
-                yield $token;
-            }
-
-            if ($level <= 0) {
+            if ($token instanceof OutdentToken) {
                 break;
             }
+            if ($token instanceof IndentToken) {
+                $lines[] = $reader->readUntilNewLine();
+                if ($reader->peekNewLine()) {
+                    $reader->consume(1);
+                }
 
-            foreach ($state->scan(TextScanner::class) as $token) {
+                break;
+            }
+        }
+
+        if (count($lines)) {
+            $this->appendBlockLines($lines, $state);
+            foreach ($this->createBlockTokens($state, $lines) as $token) {
                 yield $token;
             }
         }

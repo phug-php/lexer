@@ -15,8 +15,13 @@ use Phug\Test\AbstractLexerTest;
 class IndentationScannerTest extends AbstractLexerTest
 {
     /**
+     * @covers \Phug\Lexer\State::indent
+     * @covers \Phug\Lexer\State::outdent
+     * @covers \Phug\Lexer\State::getIndentLevel
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      */
     public function testIndentation()
     {
@@ -44,8 +49,13 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers \Phug\Lexer\State::indent
+     * @covers \Phug\Lexer\State::outdent
+     * @covers \Phug\Lexer\State::getIndentLevel
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      */
     public function testIndentationQuit()
     {
@@ -75,8 +85,13 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers \Phug\Lexer\State::indent
+     * @covers \Phug\Lexer\State::outdent
+     * @covers \Phug\Lexer\State::getIndentLevel
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      */
     public function testJumpIndentation()
     {
@@ -96,8 +111,14 @@ class IndentationScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers \Phug\Lexer\State::indent
+     * @covers \Phug\Lexer\State::outdent
+     * @covers \Phug\Lexer\State::getIndentLevel
+     * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
+     * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      */
     public function testMixedIndentation()
     {
@@ -134,5 +155,52 @@ class IndentationScannerTest extends AbstractLexerTest
             OutdentToken::class,
             TagToken::class,
         ], $tokensClasses);
+    }
+
+    /**
+     * @covers            \Phug\Lexer\State::indent
+     * @covers            \Phug\Lexer\State::outdent
+     * @covers            \Phug\Lexer\State::getIndentLevel
+     * @covers            \Phug\Lexer\State::nextOutdent
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::scan
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
+     * @expectedException \Phug\LexerException
+     */
+    public function testInconsistentIndent()
+    {
+        $this->expectMessageToBeThrown(
+            'Inconsistent indentation. '.
+            'Expecting either 2 or 6 spaces/tabs.'
+        );
+
+        $lexer = new Lexer();
+        $gen = $lexer->lex("div\n  div\n      a\n    footer");
+        $tokens = [];
+        foreach ($gen as $token) {
+            $tokens[] = $token;
+        }
+    }
+
+    /**
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
+     * @covers            \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
+     * @expectedException \Phug\LexerException
+     */
+    public function testNotAllowedMixedIndent()
+    {
+        $this->expectMessageToBeThrown(
+            'Invalid indentation, '.
+            'you can use tabs or spaces but not both'
+        );
+
+        $lexer = new Lexer([
+            'allow_mixed_indent' => false,
+        ]);
+        $gen = $lexer->lex("div\n\t  div");
+        $tokens = [];
+        foreach ($gen as $token) {
+            $tokens[] = $token;
+        }
     }
 }

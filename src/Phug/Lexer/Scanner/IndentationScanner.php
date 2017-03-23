@@ -7,62 +7,100 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\OutdentToken;
+use Phug\LexerException;
+use Phug\Reader;
 
 class IndentationScanner implements ScannerInterface
 {
-    protected function setStateLevel(State $state, $indent)
+    protected function getLevelFromIndent(State $state, $indent)
     {
-        $oldLevel = $state->getLevel();
-        if ($indent === null) {
-            $state->setLevel(0);
+        return intval(mb_strlen($indent) / ($state->getIndentWidth() ?: INF));
+    }
 
-            return -$oldLevel;
+    protected function getIndentChar(Reader $reader)
+    {
+        $char = null;
+
+        if ($reader->peekIndentation()) {
+            $char = $reader->getLastPeekResult();
+            $reader->consume();
         }
 
-        $spaces = mb_strpos($indent, ' ') !== false;
-        $tabs = mb_strpos($indent, "\t") !== false;
-        $mixed = $spaces && $tabs;
+        return $char;
+    }
 
-        if ($mixed) {
-            switch ($state->getIndentStyle()) {
-                case Lexer::INDENT_SPACE:
-                default:
-                    //Convert tabs to spaces based on indentWidth
-                    $indent = str_replace(Lexer::INDENT_TAB, str_repeat(
-                        Lexer::INDENT_SPACE,
-                        $state->getIndentWidth() ?: 4
-                    ), $spaces);
-                    $tabs = false;
-                    $mixed = false;
-                    break;
-                case Lexer::INDENT_TAB:
-                    //Convert spaces to tabs based on indentWidth
-                    $indent = str_replace(Lexer::INDENT_SPACE, str_repeat(
-                        Lexer::INDENT_TAB,
-                        $state->getIndentWidth() ?: 1
-                    ), $spaces);
-                    $spaces = false;
-                    $mixed = false;
-                    break;
+    protected function formatIndentChar(State $state, $indentChar)
+    {
+        $isTab = $indentChar === Lexer::INDENT_TAB;
+        $indentStyle = $isTab ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE;
+        //Update the indentation style
+        if (!$state->getIndentStyle()) {
+            $state->setIndentStyle($indentStyle);
+        }
+        if ($state->getIndentStyle() !== $indentStyle) {
+            if (!$state->getOption('allow_mixed_indent')) {
+                throw new LexerException(
+                    'Invalid indentation, you can use tabs or spaces but not both'
+                );
+            }
+
+            $indentChar = $isTab
+                ? str_repeat(
+                    Lexer::INDENT_SPACE,
+                    $state->getIndentWidth() ?: 4
+                )
+                : str_repeat(
+                    Lexer::INDENT_TAB,
+                    $state->getIndentWidth() ?: 1
+                );
+        }
+
+        return $indentChar;
+    }
+
+    public function getIndentLevel(State $state, $maxLevel = INF, callable $getIndentChar = null)
+    {
+        $reader = $state->getReader();
+        $indent = '';
+
+        if (is_null($getIndentChar)) {
+            $getIndentChar = [$this, 'getIndentChar'];
+        }
+
+        while ($indentChar = call_user_func($getIndentChar, $reader)) {
+            $indent .= $this->formatIndentChar($state, $indentChar);
+            if ($state->getIndentWidth() &&
+                $this->getLevelFromIndent($state, $indent) >= $maxLevel
+            ) {
+                break;
             }
         }
 
-        //Update the indentation style
-        if (!$state->getIndentStyle()) {
-            $state->setIndentStyle($tabs ? Lexer::INDENT_TAB : Lexer::INDENT_SPACE);
-        }
-
         //Update the indentation width
-        if (!$state->getIndentWidth()) {
+        $length = mb_strlen($indent);
+        if ($length && !$state->getIndentWidth()) {
             //We will use the pretty first indentation as our indent width
-            $state->setIndentWidth(mb_strlen($indent));
+            $state->setIndentWidth($length);
         }
 
-        $state->setLevel(intval(round(mb_strlen($indent) / $state->getIndentWidth())));
+        return $this->getLevelFromIndent($state, $indent);
+    }
 
-        if ($state->getLevel() > $oldLevel + 1) {
-            $state->setLevel($oldLevel + 1);
-        }
+    protected function setStateLevel(State $state, $indent)
+    {
+        $oldLevel = $state->getLevel();
+        $newLevel = $this->getIndentLevel($state, INF, function () use (&$indent) {
+            $char = null;
+
+            if (mb_strlen($indent)) {
+                $char = mb_substr($indent, 0, 1);
+                $indent = mb_substr($indent, 1);
+            }
+
+            return $char;
+        });
+
+        $state->setLevel($newLevel);
 
         return $state->getLevel() - $oldLevel;
     }
@@ -85,19 +123,17 @@ class IndentationScanner implements ScannerInterface
             return;
         }
 
-        $levels = $this->setStateLevel($state, $indent);
+        //We create a token for each indentation/outdentation
+        if ($this->setStateLevel($state, $indent) > 0) {
+            $state->indent();
 
-        //Unchanged levels
-        if ($levels === 0) {
+            yield $state->createToken(IndentToken::class);
+
             return;
         }
 
-        //We create a token for each indentation/outdentation
-        $type = $levels > 0 ? IndentToken::class : OutdentToken::class;
-        $levels = abs($levels);
-
-        while ($levels--) {
-            yield $state->createToken($type);
+        while ($state->nextOutdent() !== false) {
+            yield $state->createToken(OutdentToken::class);
         }
     }
 }

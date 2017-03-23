@@ -49,11 +49,9 @@ class CodeScannerTest extends AbstractLexerTest
             NewLineToken::class,
             IndentToken::class,
             TextToken::class,
-            NewLineToken::class,
-            TextToken::class,
         ]);
 
-        self::assertSame('foo();', $tok->getValue());
+        self::assertSame("foo();\n\$bar = 1;", $tok->getValue());
 
         $state = new State('p', []);
         $scanners = [
@@ -71,8 +69,6 @@ class CodeScannerTest extends AbstractLexerTest
             CodeToken::class,
             NewLineToken::class,
             IndentToken::class,
-            TextToken::class,
-            NewLineToken::class,
             TextToken::class,
         ]);
     }

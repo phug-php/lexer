@@ -16,6 +16,9 @@ class TextLineScannerTest extends AbstractLexerTest
      */
     public function testScan()
     {
+        /**
+         * @var TextToken $tok
+         */
         list(, , , $tok) = $this->assertTokens("p\n  | Hello", [
             TagToken::class,
             NewLineToken::class,
@@ -25,6 +28,9 @@ class TextLineScannerTest extends AbstractLexerTest
 
         self::assertTrue($tok->isEscaped());
 
+        /**
+         * @var TextToken $tok
+         */
         list(, , , $tok) = $this->assertTokens("p\n  !| Hello", [
             TagToken::class,
             NewLineToken::class,

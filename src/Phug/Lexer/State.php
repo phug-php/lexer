@@ -39,6 +39,13 @@ class State implements OptionInterface
     private $indentWidth;
 
     /**
+     * Contains the stack of indent steps.
+     *
+     * @var array
+     */
+    private $indentStack;
+
+    /**
      * Creates a new instance of the state.
      *
      * @param $input
@@ -47,12 +54,13 @@ class State implements OptionInterface
     public function __construct($input, array $options)
     {
         $this->setOptionsRecursive([
-            'reader_class_name' => Reader::class,
-            'encoding'          => null,
-            'level'             => 0,
-            'indent_width'      => null,
-            'indent_style'      => null,
-            'path'              => null,
+            'reader_class_name'  => Reader::class,
+            'encoding'           => null,
+            'level'              => 0,
+            'indent_width'       => null,
+            'indent_style'       => null,
+            'allow_mixed_indent' => null,
+            'path'               => null,
         ], $options ?: []);
 
         $readerClassName = $this->getOption('reader_class_name');
@@ -69,6 +77,7 @@ class State implements OptionInterface
         );
         $this->indentStyle = $this->getOption('indent_style');
         $this->indentWidth = $this->getOption('indent_width');
+        $this->indentStack = [];
         $this->level = $this->getOption('level');
 
         //This will strip \r, \0 etc. from the input
@@ -93,6 +102,71 @@ class State implements OptionInterface
     public function getIndentStyle()
     {
         return $this->indentStyle;
+    }
+
+    /**
+     * Returns the currently used indentation style.
+     *
+     * @return int
+     */
+    public function getIndentLevel()
+    {
+        return end($this->indentStack) ?: 0;
+    }
+
+    /**
+     * Outdent and return the new level.
+     *
+     * @return int
+     */
+    public function outdent()
+    {
+        array_pop($this->indentStack);
+
+        return $this->getIndentLevel();
+    }
+
+    /**
+     * Return new outdent level if current above expected,
+     * or false if expected level reached.
+     *
+     * @return int
+     */
+    public function nextOutdent()
+    {
+        $oldLevel = $this->getIndentLevel();
+        $expected = $this->getLevel();
+
+        if ($expected < $oldLevel) {
+            $newLevel = $this->outdent();
+            if ($newLevel < $expected) {
+                throw new LexerException(
+                    'Inconsistent indentation. '.
+                    'Expecting either '.
+                    ($newLevel * $this->getIndentWidth()).
+                    ' or '.
+                    ($oldLevel * $this->getIndentWidth()).
+                    ' spaces/tabs.'
+                );
+            }
+
+            return $newLevel;
+        }
+
+        return false;
+    }
+
+    /**
+     * Indent and return the new level.
+     *
+     * @return int
+     */
+    public function indent($level = null)
+    {
+        $level = $level ?: $this->getLevel();
+        array_push($this->indentStack, $level);
+
+        return $level;
     }
 
     /**
