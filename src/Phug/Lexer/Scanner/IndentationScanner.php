@@ -14,7 +14,7 @@ class IndentationScanner implements ScannerInterface
 {
     protected function getLevelFromIndent(State $state, $indent)
     {
-        return intval(floor(mb_strlen($indent) / ($state->getIndentWidth() ?: INF)));
+        return intval(mb_strlen($indent) / ($state->getIndentWidth() ?: INF));
     }
 
     protected function getIndentChar(Reader $reader)
@@ -126,20 +126,7 @@ class IndentationScanner implements ScannerInterface
             return;
         }
 
-        while ($state->getLevel() < $state->getIndentLevel()) {
-            $oldLevel = $state->getIndentLevel();
-            $newLevel = $state->outdent();
-            if ($newLevel < $state->getLevel()) {
-                throw new LexerException(
-                    'Inconsistent indentation. '.
-                    'Expecting either '.
-                    ($newLevel * $state->getIndentWidth()).
-                    ' or '.
-                    ($oldLevel * $state->getIndentWidth()).
-                    ' spaces/tabs.'
-                );
-            }
-
+        foreach ($state->getIndentsStepsDown() as $level) {
             yield $state->createToken(OutdentToken::class);
         }
     }

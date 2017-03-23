@@ -11,17 +11,63 @@ use Phug\Lexer\Token\TextToken;
 
 class TextBlockScanner implements ScannerInterface
 {
+    protected function createBlockTokens(State $state, array $lines)
+    {
+        /**
+         * @var TextToken $token
+         */
+        $token = $state->createToken(TextToken::class);
+        $token->setValue(implode("\n", $lines));
+
+        yield $token;
+
+        foreach ($state->scan(NewLineScanner::class) as $token) {
+            yield $token;
+
+            return;
+        }
+
+        if ($state->getReader()->getLength()) {
+            yield $state->createToken(NewLineToken::class);
+
+            foreach ($state->getIndentsStepsDown() as $level) {
+                yield $state->createToken(OutdentToken::class);
+            }
+        }
+    }
+
     public function scan(State $state)
     {
         $reader = $state->getReader();
+        $level = null;
+        $lines = [];
 
         foreach ($state->scan(TextScanner::class) as $token) {
             yield $token;
         }
 
-        $level = $state->getLevel() + 1;
-        $lines = [];
-        while ($reader->hasLength()) {
+        foreach ($state->scan(NewLineScanner::class) as $token) {
+            yield $token;
+        }
+
+        foreach ($state->scan(IndentationScanner::class) as $token) {
+            yield $token;
+
+            if ($token instanceof OutdentToken) {
+                break;
+            }
+            if ($token instanceof IndentToken) {
+                $level = $state->getLevel();
+                $lines[] = $reader->readUntilNewLine();
+                if ($reader->peekNewLine()) {
+                    $reader->consume(1);
+                }
+
+                break;
+            }
+        }
+
+        while ($level && $reader->hasLength()) {
             $indentationScanner = new IndentationScanner();
             if ($indentationScanner->getIndentLevel($state, $level) < $level) {
                 if ($reader->match('[ \t]*\n')) {
@@ -30,6 +76,7 @@ class TextBlockScanner implements ScannerInterface
 
                     continue;
                 }
+
                 break;
             }
 
@@ -40,30 +87,8 @@ class TextBlockScanner implements ScannerInterface
         }
 
         if (count($lines)) {
-            yield $state->createToken(IndentToken::class);
-
-            /**
-             * @var TextToken $token
-             */
-            $token = $state->createToken(TextToken::class);
-            $token->setValue(implode("\n", $lines));
-
-            yield $token;
-
-            foreach ($state->scan(NewLineScanner::class) as $token) {
+            foreach ($this->createBlockTokens($state, $lines) as $token) {
                 yield $token;
-
-                return;
-            }
-
-            if ($reader->getLength()) {
-                yield $state->createToken(NewLineToken::class);
-
-                while ($level > $state->getLevel()) {
-                    yield $state->createToken(OutdentToken::class);
-
-                    $level--;
-                }
             }
         }
     }

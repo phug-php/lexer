@@ -12,7 +12,9 @@ use Phug\Test\AbstractLexerTest;
 class TextBlockScannerTest extends AbstractLexerTest
 {
     /**
+     * @covers \Phug\Lexer\State::getIndentsStepsDown
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      */
     public function testScan()
