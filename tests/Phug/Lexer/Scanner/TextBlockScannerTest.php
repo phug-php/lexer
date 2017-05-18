@@ -12,7 +12,6 @@ use Phug\Test\AbstractLexerTest;
 class TextBlockScannerTest extends AbstractLexerTest
 {
     /**
-     * @group i
      * @covers \Phug\Lexer\State::nextOutdent
      * @covers \Phug\Lexer\Scanner\IndentationScanner::scan
      * @covers \Phug\Lexer\Scanner\IndentationScanner::formatIndentChar
