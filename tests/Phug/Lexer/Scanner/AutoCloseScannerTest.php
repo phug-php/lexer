@@ -18,6 +18,14 @@ class AutoCloseScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\AutoCloseScanner
      * @covers \Phug\Lexer\Scanner\AutoCloseScanner::scan
+     * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @covers \Phug\Lexer\Scanner\ClassScanner
+     * @covers \Phug\Lexer\Scanner\ClassScanner::scan
+     * @covers \Phug\Lexer\Scanner\IdScanner
+     * @covers \Phug\Lexer\Scanner\IdScanner::scan
+     * @covers \Phug\Lexer\Scanner\TagScanner
+     * @covers \Phug\Lexer\Scanner\TagScanner::scan
      */
     public function testScan()
     {
@@ -58,6 +66,15 @@ class AutoCloseScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
             ClassToken::class,
             IdToken::class,
+            AutoCloseToken::class,
+        ]);
+        $this->assertTokens('div#bar.foo(foo="bar")/', [
+            TagToken::class,
+            IdToken::class,
+            ClassToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
             AutoCloseToken::class,
         ]);
 
