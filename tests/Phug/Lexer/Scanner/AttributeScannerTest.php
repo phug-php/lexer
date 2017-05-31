@@ -17,6 +17,8 @@ class AttributeScannerTest extends AbstractLexerTest
 {
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testScan()
@@ -108,6 +110,8 @@ class AttributeScannerTest extends AbstractLexerTest
 
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testFailsOnUnclosedBracket()
@@ -118,6 +122,8 @@ class AttributeScannerTest extends AbstractLexerTest
 
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testDetailedScan()
@@ -169,6 +175,8 @@ class AttributeScannerTest extends AbstractLexerTest
 
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testAttributeQuit()
