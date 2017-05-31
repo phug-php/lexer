@@ -18,6 +18,14 @@ class ClassScanner implements ScannerInterface
                 yield $subToken;
             }
 
+            foreach ($state->scan(IdScanner::class) as $subToken) {
+                yield $subToken;
+            }
+
+            foreach ($state->scan(AutoCloseScanner::class) as $subToken) {
+                yield $subToken;
+            }
+
             foreach ($state->scan(SubScanner::class) as $subToken) {
                 yield $subToken;
             }
