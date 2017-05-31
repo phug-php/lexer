@@ -24,20 +24,20 @@ class AutoCloseScannerTest extends AbstractLexerTest
     {
         $this->assertTokens('link/', [
             TagToken::class,
-            AutoCloseToken::class
+            AutoCloseToken::class,
         ]);
         $this->assertTokens('div()/', [
             TagToken::class,
             AttributeStartToken::class,
             AttributeEndToken::class,
-            AutoCloseToken::class
+            AutoCloseToken::class,
         ]);
         $this->assertTokens('div(foo="bar")/', [
             TagToken::class,
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeEndToken::class,
-            AutoCloseToken::class
+            AutoCloseToken::class,
         ]);
         $this->assertTokens('div&attributes($foo)/', [
             TagToken::class,
@@ -45,12 +45,12 @@ class AutoCloseScannerTest extends AbstractLexerTest
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeEndToken::class,
-            AutoCloseToken::class
+            AutoCloseToken::class,
         ]);
         $this->assertTokens('div.foo/', [
             TagToken::class,
             ClassToken::class,
-            AutoCloseToken::class
+            AutoCloseToken::class,
         ]);
         $this->assertTokens('div(foo="bar").foo#bar/', [
             TagToken::class,
@@ -59,25 +59,25 @@ class AutoCloseScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
             ClassToken::class,
             IdToken::class,
-            AutoCloseToken::class
+            AutoCloseToken::class,
         ]);
 
         $this->assertTokens('link /', [
             TagToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
         $this->assertTokens('div() /', [
             TagToken::class,
             AttributeStartToken::class,
             AttributeEndToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
         $this->assertTokens('div(foo="bar") /', [
             TagToken::class,
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeEndToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
         $this->assertTokens('div&attributes($foo) /', [
             TagToken::class,
@@ -85,12 +85,12 @@ class AutoCloseScannerTest extends AbstractLexerTest
             AttributeStartToken::class,
             AttributeToken::class,
             AttributeEndToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
         $this->assertTokens('div.foo /', [
             TagToken::class,
             ClassToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
         $this->assertTokens('div(foo="bar").foo#bar /', [
             TagToken::class,
@@ -99,7 +99,7 @@ class AutoCloseScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
             ClassToken::class,
             IdToken::class,
-            TextToken::class
+            TextToken::class,
         ]);
     }
 }
