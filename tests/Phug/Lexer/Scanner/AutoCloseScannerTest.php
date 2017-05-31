@@ -16,9 +16,8 @@ use Phug\Test\AbstractLexerTest;
 class AutoCloseScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers \Phug\Lexer\Scanner\BlockScanner
-     * @covers \Phug\Lexer\Scanner\BlockScanner::scan
-     * @group i
+     * @covers \Phug\Lexer\Scanner\AutoCloseScanner
+     * @covers \Phug\Lexer\Scanner\AutoCloseScanner::scan
      */
     public function testScan()
     {
