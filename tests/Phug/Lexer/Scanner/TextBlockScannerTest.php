@@ -3,6 +3,8 @@
 namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\InterpolationEndToken;
+use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TagToken;
@@ -18,8 +20,10 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
+     * @covers \Phug\Lexer\Scanner\TextBlockScanner::getTextLinesAsTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
+     * @group i
      */
     public function testScan()
     {
@@ -32,6 +36,30 @@ class TextBlockScannerTest extends AbstractLexerTest
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
+            TextToken::class,
+        ]);
+
+        $this->assertTokens("p.\n  Hello\n  text #[strong foo] bar\n  bar", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            InterpolationStartToken::class,
+            TagToken::class,
+            TextToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+        ]);
+
+        $this->assertTokens("p.\n  Hello\n    #[strong foo] bar\n  bar", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            InterpolationStartToken::class,
+            TagToken::class,
+            TextToken::class,
+            InterpolationEndToken::class,
             TextToken::class,
         ]);
 

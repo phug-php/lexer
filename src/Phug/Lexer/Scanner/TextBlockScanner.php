@@ -11,16 +11,41 @@ use Phug\Lexer\Token\TextToken;
 
 class TextBlockScanner implements ScannerInterface
 {
+    protected function getTextLinesAsTokens(State $state, array &$textLines)
+    {
+        if (count($textLines)) {
+            /**
+             * @var TextToken $token
+             */
+            $token = $state->createToken(TextToken::class);
+            $token->setValue(implode("\n", $textLines));
+
+            yield $token;
+
+            $textLines = [];
+        }
+    }
+
     protected function createBlockTokens(State $state, array $lines)
     {
         $reader = $state->getReader();
-        /**
-         * @var TextToken $token
-         */
-        $token = $state->createToken(TextToken::class);
-        $token->setValue(implode("\n", $lines));
+        $textLines = [];
+        foreach ($lines as $line) {
+            if (is_string($line)) {
+                $textLines[] = $line;
+                continue;
+            }
 
-        yield $token;
+            foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
+                yield $token;
+            }
+
+            yield $line;
+        }
+
+        foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
+            yield $token;
+        }
 
         if ($reader->getLength()) {
             yield $state->createToken(NewLineToken::class);
@@ -31,7 +56,7 @@ class TextBlockScanner implements ScannerInterface
         }
     }
 
-    public function appendBlockLines(array &$lines, State $state)
+    protected function appendBlockLines(array &$lines, State $state)
     {
         $reader = $state->getReader();
         $level = $state->getLevel();
@@ -52,11 +77,19 @@ class TextBlockScanner implements ScannerInterface
                 break;
             }
 
+            $this->interpolateLines($state, $lines);
             $lines[] = $reader->readUntilNewLine();
 
             if ($reader->peekNewLine()) {
                 $reader->consume(1);
             }
+        }
+    }
+
+    protected function interpolateLines(State $state, array &$lines)
+    {
+        foreach ($state->scan(InterpolationScanner::class) as $subToken) {
+            $lines[] = $subToken instanceof TextToken ? $subToken->getValue() : $subToken;
         }
     }
 
@@ -76,6 +109,8 @@ class TextBlockScanner implements ScannerInterface
                 break;
             }
             if ($token instanceof IndentToken) {
+                $this->interpolateLines($state, $lines);
+
                 $lines[] = $reader->readUntilNewLine();
                 if ($reader->peekNewLine()) {
                     $reader->consume(1);

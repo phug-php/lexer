@@ -46,6 +46,8 @@ class TextLineScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\TextLineScanner
      * @covers \Phug\Lexer\Scanner\TextLineScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextScanner
+     * @covers \Phug\Lexer\Scanner\TextScanner::scan
      * @covers \Phug\Lexer\Scanner\InterpolationScanner
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scan
      */

@@ -92,7 +92,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::getIndentWidth
+     * @covers ::getLexer
      */
     public function testGetLexer()
     {
