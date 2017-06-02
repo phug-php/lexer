@@ -5,10 +5,10 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\ExpressionToken;
-use Phug\Lexer\Token\TagInterpolationEndToken;
-use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
+use Phug\Lexer\Token\TagInterpolationEndToken;
+use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TextToken;
 
 class InterpolationScanner implements ScannerInterface

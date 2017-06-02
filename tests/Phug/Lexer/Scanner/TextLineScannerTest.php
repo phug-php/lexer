@@ -3,9 +3,9 @@
 namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
-use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
