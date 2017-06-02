@@ -27,7 +27,7 @@ class SubScanner implements ScannerInterface
         }
 
         //Escaped text after e.g. tags, classes (p! some text)
-        if ($reader->peekChar('!')) {
+        if ($reader->match('!(?!=)')) {
             $reader->consume();
 
             foreach ($state->scan(TextScanner::class) as $token) {
