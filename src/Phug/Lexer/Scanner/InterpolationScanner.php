@@ -14,7 +14,6 @@ class InterpolationScanner implements ScannerInterface
     {
         $reader = $state->getReader();
 
-        /** @var TextToken $token */
         while ($reader->match(
             '(?<text>.*?)'.
             '#\\[(?<interpolation>'.

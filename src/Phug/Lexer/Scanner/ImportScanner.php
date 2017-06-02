@@ -12,7 +12,7 @@ class ImportScanner implements ScannerInterface
     {
         return $state->scanToken(
             ImportToken::class,
-            '(?<name>extends|include)(?:\:(?<filter>[a-zA-Z_][a-zA-Z0-9_-]*))?[\t ]+(?<path>[a-zA-Z0-9_\\\\\\/. -]+)'
+            '(?<name>extend|include)s?(?:\:(?<filter>[a-zA-Z_][a-zA-Z0-9_-]*))?[\t ]+(?<path>[a-zA-Z0-9_\\\\\\/. -]+)'
         );
     }
 }
