@@ -3,6 +3,8 @@
 namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\InterpolationEndToken;
+use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
@@ -44,11 +46,21 @@ class TextLineScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\TextLineScanner
      * @covers \Phug\Lexer\Scanner\TextLineScanner::scan
+     * @group i
      */
     public function testScanQuit()
     {
         $this->assertTokens('p Hello', [
             TagToken::class,
+            TextToken::class,
+        ]);
+        $this->assertTokens('p Hello #[strong world]!', [
+            TagToken::class,
+            TextToken::class,
+            InterpolationStartToken::class,
+            TagToken::class,
+            TextToken::class,
+            InterpolationEndToken::class,
             TextToken::class,
         ]);
     }

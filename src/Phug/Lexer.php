@@ -248,7 +248,7 @@ class Lexer implements OptionInterface
             'allow_mixed_indent' => $this->getOption('allow_mixed_indent'),
             'level'              => $this->getOption('level'),
             'path'               => $path,
-        ]);
+        ], $this);
 
         $scanners = $this->getOption('scanners');
 

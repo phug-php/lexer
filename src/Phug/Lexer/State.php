@@ -25,6 +25,13 @@ class State implements OptionInterface
     private $reader;
 
     /**
+     * Contains the current `Phug\Lexer` instance linked to the state.
+     *
+     * @var Lexer
+     */
+    private $lexer;
+
+    /**
      * Contains the currently detected indentation style.
      *
      * @var string
@@ -48,11 +55,13 @@ class State implements OptionInterface
     /**
      * Creates a new instance of the state.
      *
-     * @param $input
-     * @param array $options
+     * @param string $input   pug string input
+     * @param array  $options indent settings, errors info and reader class name
+     * @param Lexer  $lexer   optional linked lexer
      */
-    public function __construct($input, array $options)
+    public function __construct($input, array $options, Lexer $lexer = null)
     {
+        $this->lexer = $lexer;
         $this->setOptionsRecursive([
             'reader_class_name'  => Reader::class,
             'encoding'           => null,
@@ -82,6 +91,16 @@ class State implements OptionInterface
 
         //This will strip \r, \0 etc. from the input
         $this->reader->normalize();
+    }
+
+    /**
+     * Returns the current lexer instance linked.
+     *
+     * @return Lexer|null
+     */
+    public function getLexer()
+    {
+        return $this->lexer;
     }
 
     /**
