@@ -13,18 +13,35 @@ class ImportScannerTest extends AbstractLexerTest
      */
     public function testImport()
     {
+        /** @var ImportToken $tok */
+        list($tok) = $this->assertTokens('extend foo/bar.pug', [
+            ImportToken::class,
+        ]);
+
+        self::assertSame('extend', $tok->getName());
+        self::assertSame('', $tok->getFilter());
+        self::assertSame('foo/bar.pug', $tok->getPath());
 
         /** @var ImportToken $tok */
         list($tok) = $this->assertTokens('extends foo/bar.pug', [
             ImportToken::class,
         ]);
 
-        self::assertSame('extends', $tok->getName());
+        self::assertSame('extend', $tok->getName());
         self::assertSame('', $tok->getFilter());
         self::assertSame('foo/bar.pug', $tok->getPath());
 
         /** @var ImportToken $tok */
         list($tok) = $this->assertTokens('include:markdown-it _foo\\bar', [
+            ImportToken::class,
+        ]);
+
+        self::assertSame('include', $tok->getName());
+        self::assertSame('markdown-it', $tok->getFilter());
+        self::assertSame('_foo\\bar', $tok->getPath());
+
+        /** @var ImportToken $tok */
+        list($tok) = $this->assertTokens('includes:markdown-it _foo\\bar', [
             ImportToken::class,
         ]);
 

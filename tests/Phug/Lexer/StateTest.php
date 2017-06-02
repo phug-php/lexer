@@ -92,6 +92,21 @@ class StateTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::getIndentWidth
+     */
+    public function testGetLexer()
+    {
+        $state = new State('p Hello', []);
+        $lexer = new Lexer();
+
+        self::assertSame(null, $state->getLexer());
+        foreach ($lexer->lex('p Hello') as $token) {
+            self::assertSame($lexer, $lexer->getState()->getLexer());
+            break;
+        }
+    }
+
+    /**
      * @covers ::setIndentWidth
      */
     public function testSetIndentWidth()
