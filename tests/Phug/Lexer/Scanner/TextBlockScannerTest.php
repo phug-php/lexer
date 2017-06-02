@@ -23,7 +23,6 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::getTextLinesAsTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
-     * @group i
      */
     public function testScan()
     {
