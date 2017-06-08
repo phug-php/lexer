@@ -132,10 +132,7 @@ class AttributeScanner implements ScannerInterface
 
             if ($hasValue) {
                 $expr = '';
-                if (
-                    $reader->peekString('new ') ||
-                    $reader->peekString('clone ')
-                ) {
+                if ($reader->peekString('new ') || $reader->peekString('clone ')) {
                     $expr .= $reader->getLastPeekResult();
                     $reader->consume();
                 }
