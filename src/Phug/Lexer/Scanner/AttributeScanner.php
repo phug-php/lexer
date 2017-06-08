@@ -131,7 +131,15 @@ class AttributeScanner implements ScannerInterface
             $reader->readSpaces();
 
             if ($hasValue) {
-                $expr = $reader->readExpression([
+                $expr = '';
+                if (
+                    $reader->peekString('new ') ||
+                    $reader->peekString('clone ')
+                ) {
+                    $expr .= $reader->getLastPeekResult();
+                    $reader->consume();
+                }
+                $expr .= $reader->readExpression([
                     ' ', "\t", "\n", ',',  ')', '//',
                 ]);
                 $token->setValue($expr);

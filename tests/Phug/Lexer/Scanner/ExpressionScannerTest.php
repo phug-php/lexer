@@ -4,6 +4,9 @@ namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Scanner\ExpressionScanner;
 use Phug\Lexer\State;
+use Phug\Lexer\Token\AttributeEndToken;
+use Phug\Lexer\Token\AttributeStartToken;
+use Phug\Lexer\Token\AttributeToken;
 use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Test\AbstractLexerTest;
@@ -54,6 +57,20 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertSame('true', $tok->getValue());
         self::assertFalse($tok->isEscaped());
         self::assertFalse($tok->isChecked());
+    }
+
+    /**
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner::scan
+     */
+    public function testExpressionInAttribute()
+    {
+        list($start, $attribute) = $this->assertTokens('(foo=new Date(0))', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        self::assertSame('new Date(0)', trim($attribute->getValue()));
     }
 
     /**
