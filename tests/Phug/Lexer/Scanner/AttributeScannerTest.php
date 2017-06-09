@@ -44,6 +44,14 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
 
+        $this->assertTokens('(a=b c=clone $foo e=new Date())', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
         $this->assertTokens('(a=b c=d e=f)#foo', [
             AttributeStartToken::class,
             AttributeToken::class,

@@ -41,7 +41,9 @@ use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Lexer\TokenInterface;
+use Phug\Util\ModulesContainerInterface;
 use Phug\Util\OptionInterface;
+use Phug\Util\Partial\ModuleTrait;
 use Phug\Util\Partial\OptionTrait;
 
 /**
@@ -69,8 +71,9 @@ use Phug\Util\Partial\OptionTrait;
  *
  * </code>
  */
-class Lexer implements OptionInterface
+class Lexer implements ModulesContainerInterface, OptionInterface
 {
+    use ModuleTrait;
     use OptionTrait;
 
     const INDENT_SPACE = ' ';
@@ -113,6 +116,7 @@ class Lexer implements OptionInterface
             'indent_width'       => null,
             'allow_mixed_indent' => true,
             'encoding'           => null,
+            'modules'            => [],
             'scanners'           => [
                 //TODO: Several of these are non-standard and need to be capsulated into extensions
                 //Namely: ForScanner, DoScanner, VariableScanner
@@ -150,6 +154,9 @@ class Lexer implements OptionInterface
         ], $options ?: []);
 
         $this->state = null;
+
+        $this->setExpectedModuleType(LexerModuleInterface::class);
+        $this->addModules($this->getOption('modules'));
     }
 
     /**
