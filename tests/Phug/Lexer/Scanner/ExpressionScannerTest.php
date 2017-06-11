@@ -19,6 +19,7 @@ class ExpressionScannerTest extends AbstractLexerTest
      */
     public function testExpressionInTag()
     {
+        /** @var ExpressionToken $exp */
         list($tag, $exp) = $this->assertTokens('script!= \'foo()\'', [
             TagToken::class,
             ExpressionToken::class,
@@ -26,6 +27,7 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertSame('\'foo()\'', trim($exp->getValue()));
         self::assertFalse($exp->isEscaped());
 
+        /** @var ExpressionToken $tok */
         list($tok) = $this->assertTokens('=$foo', [
             ExpressionToken::class,
         ]);
@@ -34,6 +36,7 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertTrue($tok->isEscaped());
         self::assertTrue($tok->isChecked());
 
+        /** @var ExpressionToken $tok */
         list($tok) = $this->assertTokens('!=42', [
             ExpressionToken::class,
         ]);
@@ -42,6 +45,7 @@ class ExpressionScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
         self::assertTrue($tok->isChecked());
 
+        /** @var ExpressionToken $tok */
         list($tok) = $this->assertTokens('?=bar()', [
             ExpressionToken::class,
         ]);
@@ -60,11 +64,23 @@ class ExpressionScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @group i
      * @covers \Phug\Lexer\Scanner\ExpressionScanner
      * @covers \Phug\Lexer\Scanner\ExpressionScanner::scan
      */
     public function testExpressionInAttribute()
     {
+        /** @var AttributeToken $second */
+        list($tag, $open, $first, $second) = $this->assertTokens('a(foo=\'((foo))\' bar= (1) ? 1 : 0 )', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        self::assertSame('(1) ? 1 : 0', trim($second->getValue()));
+
+        /** @var AttributeToken $attribute */
         list($start, $attribute) = $this->assertTokens('(foo=new Date(0))', [
             AttributeStartToken::class,
             AttributeToken::class,

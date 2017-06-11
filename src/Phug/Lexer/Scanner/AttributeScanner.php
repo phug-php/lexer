@@ -19,6 +19,25 @@ class AttributeScanner implements ScannerInterface
         }
     }
 
+    private function isTruncatedExpression(Reader $reader, &$expr)
+    {
+        if (substr($expr, -3) === 'new' || substr($expr, -5) === 'clone') {
+            $expr .= $reader->getLastPeekResult();
+            $reader->consume();
+
+            return true;
+        }
+
+        if ($reader->match('[\t ]*[?:+\\/*%-]')) {
+            $expr .= $reader->getMatch(0).$reader->readSpaces();
+            $reader->consume();
+
+            return !$reader->peekChar(')');
+        }
+
+        return false;
+    }
+
     private function scanParenthesesContent(State $state)
     {
         $reader = $state->getReader();
@@ -131,14 +150,17 @@ class AttributeScanner implements ScannerInterface
             $reader->readSpaces();
 
             if ($hasValue) {
-                $expr = '';
-                if ($reader->peekString('new ') || $reader->peekString('clone ')) {
-                    $expr .= $reader->getLastPeekResult();
-                    $reader->consume();
-                }
-                $expr .= $reader->readExpression([
-                    ' ', "\t", "\n", ',',  ')', '//',
+                $expr = $reader->readExpression([
+                    ' ', "\t", "\n", ',', ')', '//',
                 ]);
+                while ($this->isTruncatedExpression($reader, $expr)) {
+                    $reader->readSpaces();
+                    $this->skipComments($reader);
+                    $reader->readSpaces();
+                    $expr .= $reader->readExpression([
+                        ' ', "\t", "\n", ',', ')', '//',
+                    ]);
+                }
                 $token->setValue($expr);
 
                 //Ignore a comma if found
