@@ -64,9 +64,9 @@ class ExpressionScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\ExpressionScanner
      * @covers \Phug\Lexer\Scanner\ExpressionScanner::scan
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::isTruncatedExpression
      */
     public function testExpressionInAttribute()
     {

@@ -36,7 +36,9 @@ class AttributeScanner implements ScannerInterface
             return !$reader->peekChar(')');
         }
 
-        if ($reader->match('[\\t ]*(\\?(?:(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\?\\:\'"]++|(?-1))*+)\\:)')) {
+        if ($reader->match('[\\t ]*(\\?'.
+            '(?:(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\?\\:\'"]++|(?-1))*+)'.
+        '\\:)')) {
             $expr .= $reader->getMatch(0);
             $reader->consume();
             $expr .= $reader->readSpaces();
