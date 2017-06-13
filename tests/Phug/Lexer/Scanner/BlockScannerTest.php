@@ -86,15 +86,16 @@ class BlockScannerTest extends AbstractLexerTest
         self::assertNull($tok->getName());
         self::assertSame('replace', $tok->getMode());
     }
+
     /**
      * @covers \Phug\Lexer\Scanner\BlockScanner
      * @covers \Phug\Lexer\Scanner\BlockScanner::scan
      */
     public function testCodeBlock()
     {
-        $code = "-
-  list = [\"uno\", \"dos\", \"tres\",
-          \"cuatro\", \"cinco\", \"seis\"];
+        $code = '-
+  list = ["uno", "dos", "tres",
+          "cuatro", "cinco", "seis"];
 //- Without a block, the element is accepted and no code is generated
 -
 each item in list
@@ -103,7 +104,7 @@ each item in list
     
       .toUpperCase() +
     item.slice(1);
-  li= string";
+  li= string';
 
         $this->assertTokens($code, [
             CodeToken::class,
