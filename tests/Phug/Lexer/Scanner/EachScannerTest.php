@@ -30,11 +30,11 @@ class EachScannerTest extends AbstractLexerTest
     public function provideInvalidSyntaxStyles()
     {
         return [
-            ['each item, key in $something'],
-            ['each item in $something'],
-            ['each anything'],
+            ['each #item, #key in $something'],
+            ['each #item in $something'],
+            ['each #anything'],
             ['each $something'],
-            ['each $item, anything in $something'],
+            ['each $item, #anything in $something'],
             ['each $item, $key'],
             ['each $item, $key in'],
         ];

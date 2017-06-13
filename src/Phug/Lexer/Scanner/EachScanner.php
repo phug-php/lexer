@@ -24,8 +24,8 @@ class EachScanner implements ScannerInterface
         $reader->consume();
 
         if (!$reader->match(
-            "\\$(?<itemName>[a-zA-Z_][a-zA-Z0-9_]*)(?:[\t ]*,[\t ]*".
-            "\\$(?<keyName>[a-zA-Z_][a-zA-Z0-9_]*))?[\t ]+in[\t ]+"
+            "\\$?(?<itemName>[a-zA-Z_][a-zA-Z0-9_]*)(?:[\t ]*,[\t ]*".
+            "\\$?(?<keyName>[a-zA-Z_][a-zA-Z0-9_]*))?[\t ]+in[\t ]+"
         )) {
             $state->throwException(
                 'The syntax for each is `each $itemName[, $keyName]] in {{subject}}`'
