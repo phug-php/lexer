@@ -28,7 +28,7 @@ class TextLineScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        self::assertTrue($tok->isEscaped());
+        self::assertFalse($tok->isEscaped());
 
         /**
          * @var TextToken $tok
@@ -40,7 +40,7 @@ class TextLineScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        self::assertFalse($tok->isEscaped());
+        self::assertTrue($tok->isEscaped());
     }
 
     /**

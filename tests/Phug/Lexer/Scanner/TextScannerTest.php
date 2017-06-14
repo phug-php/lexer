@@ -22,7 +22,7 @@ class TextScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame('foo', $tok->getValue());
-        self::assertTrue($tok->isEscaped());
+        self::assertFalse($tok->isEscaped());
     }
 
     /**
