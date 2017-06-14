@@ -86,7 +86,7 @@ class TagScannerTest extends AbstractLexerTest
         $template = "figure\n".
             "  blockquote\n".
             "    | Try to define yourself by what you do, and you&#8217;ll burnout every time. You are.\n".
-            "  figcaption from @thefray at 1:43pm on May 10";
+            '  figcaption from @thefray at 1:43pm on May 10';
 
         $this->assertTokens($template, [
             TagToken::class,
