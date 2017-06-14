@@ -78,7 +78,6 @@ class TagScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\TagScanner
      * @covers \Phug\Lexer\Scanner\TagScanner::scan
      */

@@ -14,7 +14,7 @@ class SubScanner implements ScannerInterface
 
         //Text block on tags etc. (p. some text|p!. some text)
         if ($reader->match('(\\!?)\\.(?=\\s)')) {
-            $escape = $reader->getMatch(1) !== '!';
+            $escape = $reader->getMatch(1) === '!';
             $reader->consume();
 
             foreach ($state->scan(TextBlockScanner::class) as $token) {

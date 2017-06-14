@@ -32,10 +32,12 @@ class TextBlockScannerTest extends AbstractLexerTest
      */
     public function testScan()
     {
-        $this->assertTokens('p. Hello', [
+        /** @var TextToken $text */
+        list(, $text) = $this->assertTokens('p. Hello', [
             TagToken::class,
             TextToken::class,
         ]);
+        self::assertFalse($text->isEscaped());
 
         $this->assertTokens("p.\n  Hello", [
             TagToken::class,
