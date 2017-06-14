@@ -12,7 +12,8 @@ class BlockScanner implements ScannerInterface
     {
         foreach ($state->scanToken(
             BlockToken::class,
-            '(?:block|yield)(?:[\t ]+(?<mode>append|prepend|replace))?(?:[\t ]+(?<name>[a-zA-Z_][a-zA-Z0-9\-_]*))?'
+            '(?:block|yield)(?:[\t ]+(?<mode>append|prepend|replace))?'.
+            '(?:[\t ]+(?<name>[a-zA-Z_][a-zA-Z0-9\-_]*))?(?![a-zA-Z0-9\-_])'
         ) as $token) {
             if ($token instanceof BlockToken && empty($token->getMode())) {
                 $token->setMode('replace');
@@ -27,7 +28,8 @@ class BlockScanner implements ScannerInterface
 
         foreach ($state->scanToken(
             BlockToken::class,
-            '(?<mode>append|prepend|replace)(?:[\t ]+(?<name>[a-zA-ZA-Z][a-zA-Z0-9\-_]*))'
+            '(?<mode>append|prepend|replace)'.
+            '(?:[\t ]+(?<name>[a-zA-ZA-Z][a-zA-Z0-9\-_]*))(?![a-zA-Z0-9\-_])'
         ) as $token) {
             yield $token;
 

@@ -4,7 +4,11 @@ namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Token\ClassToken;
 use Phug\Lexer\Token\ExpansionToken;
+use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TagToken;
+use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class TagScannerTest extends AbstractLexerTest
@@ -71,5 +75,32 @@ class TagScannerTest extends AbstractLexerTest
 
         self::assertSame('foo:bar', $tag->getName());
         self::assertSame('foo-bar', $class->getName());
+    }
+
+    /**
+     * @group i
+     * @covers \Phug\Lexer\Scanner\TagScanner
+     * @covers \Phug\Lexer\Scanner\TagScanner::scan
+     */
+    public function testBlockQuoteTag()
+    {
+        $template = "figure\n".
+            "  blockquote\n".
+            "    | Try to define yourself by what you do, and you&#8217;ll burnout every time. You are.\n".
+            "  figcaption from @thefray at 1:43pm on May 10";
+
+        $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+            TextToken::class,
+        ]);
     }
 }
