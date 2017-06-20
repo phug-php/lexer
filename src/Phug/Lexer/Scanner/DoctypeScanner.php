@@ -10,6 +10,6 @@ class DoctypeScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
-        return $state->scanToken(DoctypeToken::class, "(doctype|!!!) (?<name>[^\n]*)");
+        return $state->scanToken(DoctypeToken::class, "(doctype|!!!)(?!\S)(?: (?<name>[^\n]*))?");
     }
 }
