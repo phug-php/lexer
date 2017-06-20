@@ -78,6 +78,7 @@ class Lexer implements ModulesContainerInterface, OptionInterface
 
     const INDENT_SPACE = ' ';
     const INDENT_TAB = "\t";
+    const DEFAULT_TAB_WIDTH = 4;
 
     /**
      * The state of the current lexing process.

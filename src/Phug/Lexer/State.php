@@ -162,9 +162,9 @@ class State implements OptionInterface
                 throw new LexerException(
                     'Inconsistent indentation. '.
                     'Expecting either '.
-                    ($newLevel * $this->getIndentWidth()).
+                    $newLevel.
                     ' or '.
-                    ($oldLevel * $this->getIndentWidth()).
+                    $oldLevel.
                     ' spaces/tabs.'
                 );
             }

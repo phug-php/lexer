@@ -14,7 +14,11 @@ class IndentationScanner implements ScannerInterface
 {
     protected function getLevelFromIndent(State $state, $indent)
     {
-        return intval(mb_strlen($indent) / ($state->getIndentWidth() ?: INF));
+        return mb_strlen(str_replace(
+            Lexer::INDENT_TAB,
+            str_repeat(Lexer::INDENT_SPACE, Lexer::DEFAULT_TAB_WIDTH),
+            $indent
+        ));
     }
 
     protected function getIndentChar(Reader $reader)
@@ -37,22 +41,10 @@ class IndentationScanner implements ScannerInterface
         if (!$state->getIndentStyle()) {
             $state->setIndentStyle($indentStyle);
         }
-        if ($state->getIndentStyle() !== $indentStyle) {
-            if (!$state->getOption('allow_mixed_indent')) {
-                throw new LexerException(
-                    'Invalid indentation, you can use tabs or spaces but not both'
-                );
-            }
-
-            $indentChar = $isTab
-                ? str_repeat(
-                    Lexer::INDENT_SPACE,
-                    $state->getIndentWidth() ?: 4
-                )
-                : str_repeat(
-                    Lexer::INDENT_TAB,
-                    $state->getIndentWidth() ?: 1
-                );
+        if ($state->getIndentStyle() !== $indentStyle && !$state->getOption('allow_mixed_indent')) {
+            throw new LexerException(
+                'Invalid indentation, you can use tabs or spaces but not both'
+            );
         }
 
         return $indentChar;
@@ -76,14 +68,21 @@ class IndentationScanner implements ScannerInterface
             }
         }
 
+        if (!$state->getIndentWidth() &&
+            strpos($indent, Lexer::INDENT_SPACE) !== false &&
+            strpos($indent, Lexer::INDENT_TAB) !== false
+        ) {
+            $state->setIndentWidth(Lexer::DEFAULT_TAB_WIDTH);
+        }
+
         //Update the indentation width
-        $length = mb_strlen($indent);
+        $length = $this->getLevelFromIndent($state, $indent);
         if ($length && !$state->getIndentWidth()) {
             //We will use the pretty first indentation as our indent width
             $state->setIndentWidth($length);
         }
 
-        return $this->getLevelFromIndent($state, $indent);
+        return $length;
     }
 
     protected function setStateLevel(State $state, $indent)
