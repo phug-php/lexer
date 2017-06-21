@@ -13,7 +13,7 @@ use Phug\Lexer\Token\TextToken;
 
 class InterpolationScanner implements ScannerInterface
 {
-    protected function scanInterpolation(State $state, $tagInterpolation, $interpolation)
+    protected function scanInterpolation(State $state, $tagInterpolation, $interpolation, $escape)
     {
         if ($tagInterpolation) {
             yield $state->createToken(TagInterpolationStartToken::class);
@@ -30,6 +30,9 @@ class InterpolationScanner implements ScannerInterface
         /** @var ExpressionToken $token */
         $token = $state->createToken(ExpressionToken::class);
         $token->setValue($interpolation);
+        if ($escape === '#') {
+            $token->escape();
+        }
         yield $token;
         yield $state->createToken(InterpolationEndToken::class);
     }
@@ -40,7 +43,7 @@ class InterpolationScanner implements ScannerInterface
 
         while ($reader->match(
             '(?<text>.*?)'.
-            '#(?<wrap>'.
+            '(?<escape>#|!(?=\{))(?<wrap>'.
                 '\\[(?<tagInterpolation>'.
                     '(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\[\\]\'"]++|(?-3))*+'.
                 ')\\]|'.
@@ -61,7 +64,8 @@ class InterpolationScanner implements ScannerInterface
             foreach ($this->scanInterpolation(
                 $state,
                 $reader->getMatch('tagInterpolation'),
-                $reader->getMatch('interpolation')
+                $reader->getMatch('interpolation'),
+                $reader->getMatch('escape')
             ) as $token) {
                 yield $token;
             }

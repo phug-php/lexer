@@ -70,7 +70,7 @@ class TextBlockScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        $this->assertTokens("p.\n  Hello\n    #{\$foo} bar\n  bar", [
+        $tokens = $this->assertTokens("p.\n  Hello\n    #{\$foo} bar\n  bar", [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
@@ -80,6 +80,23 @@ class TextBlockScannerTest extends AbstractLexerTest
             InterpolationEndToken::class,
             TextToken::class,
         ]);
+        /** @var ExpressionToken $token */
+        $token = $tokens[5];
+        self::assertTrue($token->isEscaped());
+
+        $tokens = $this->assertTokens("p.\n  Hello\n    !{\$foo} bar\n  bar", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+        ]);
+        /** @var ExpressionToken $token */
+        $token = $tokens[5];
+        self::assertFalse($token->isEscaped());
 
         $this->assertTokens("section\n  div\n    p.\n      Hello\n  article", [
             TagToken::class,
