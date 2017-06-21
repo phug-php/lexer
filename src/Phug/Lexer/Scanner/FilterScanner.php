@@ -16,6 +16,10 @@ class FilterScanner implements ScannerInterface
         ) as $token) {
             yield $token;
 
+            foreach ($state->scan(AttributeScanner::class) as $subToken) {
+                yield $subToken;
+            }
+
             foreach ($state->scan(TextBlockScanner::class) as $subToken) {
                 yield $subToken;
             }

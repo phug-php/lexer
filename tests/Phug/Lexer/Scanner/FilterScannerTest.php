@@ -2,6 +2,9 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Token\AttributeEndToken;
+use Phug\Lexer\Token\AttributeStartToken;
+use Phug\Lexer\Token\AttributeToken;
 use Phug\Lexer\Token\FilterToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
@@ -31,5 +34,14 @@ class FilterScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame('foo:bar', $tok->getName());
+
+        $this->assertTokens(':foo(opt1=1 opt2=2) bar', [
+            FilterToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            TextToken::class,
+        ]);
     }
 }
