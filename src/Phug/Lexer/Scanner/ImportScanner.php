@@ -5,14 +5,39 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\ImportToken;
+use Phug\Lexer\Token\TextToken;
 
 class ImportScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
-        return $state->scanToken(
+        /** @var ImportToken $token */
+        foreach ($state->scanToken(
             ImportToken::class,
-            '(?<name>extend|include)s?(?:\:(?<filter>[a-zA-Z_][a-zA-Z0-9_-]*))?[\t ]+(?<path>[a-zA-Z0-9_\\\\\\/. -]+)'
-        );
+            '(?<name>extend|include)s?(?= |:)'
+        ) as $token) {
+            yield $token;
+
+            $reader = $state->getReader();
+
+            if ($reader->match('[\t ]+(?<path>[a-zA-Z0-9_\\\\\\/. -]+)')) {
+                $token->setPath($reader->getMatch('path'));
+                $reader->consume();
+
+                break;
+            }
+
+            foreach ($state->scan(FilterScanner::class) as $subToken) {
+                if ($subToken instanceof TextToken) {
+                    $token->setPath($subToken->getValue());
+
+                    break;
+                }
+
+                yield $subToken;
+            }
+
+            break;
+        }
     }
 }

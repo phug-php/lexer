@@ -2,6 +2,10 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Token\AttributeEndToken;
+use Phug\Lexer\Token\AttributeStartToken;
+use Phug\Lexer\Token\AttributeToken;
+use Phug\Lexer\Token\FilterToken;
 use Phug\Lexer\Token\ImportToken;
 use Phug\Test\AbstractLexerTest;
 
@@ -19,7 +23,6 @@ class ImportScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame('extend', $tok->getName());
-        self::assertSame('', $tok->getFilter());
         self::assertSame('foo/bar.pug', $tok->getPath());
 
         /** @var ImportToken $tok */
@@ -28,25 +31,40 @@ class ImportScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame('extend', $tok->getName());
-        self::assertSame('', $tok->getFilter());
         self::assertSame('foo/bar.pug', $tok->getPath());
 
         /** @var ImportToken $tok */
         list($tok) = $this->assertTokens('include:markdown-it _foo\\bar', [
             ImportToken::class,
+            FilterToken::class,
         ]);
 
         self::assertSame('include', $tok->getName());
-        self::assertSame('markdown-it', $tok->getFilter());
         self::assertSame('_foo\\bar', $tok->getPath());
 
         /** @var ImportToken $tok */
-        list($tok) = $this->assertTokens('includes:markdown-it _foo\\bar', [
+        /** @var FilterToken $filter */
+        list($tok, $filter) = $this->assertTokens('includes:markdown-it _foo\\bar', [
             ImportToken::class,
+            FilterToken::class,
         ]);
 
         self::assertSame('include', $tok->getName());
-        self::assertSame('markdown-it', $tok->getFilter());
+        self::assertSame('markdown-it', $filter->getName());
+        self::assertSame('_foo\\bar', $tok->getPath());
+
+        /** @var ImportToken $tok */
+        /** @var FilterToken $filter */
+        list($tok, $filter) = $this->assertTokens('includes:markdown-it(option="(aa)") _foo\\bar', [
+            ImportToken::class,
+            FilterToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
+        self::assertSame('include', $tok->getName());
+        self::assertSame('markdown-it', $filter->getName());
         self::assertSame('_foo\\bar', $tok->getPath());
     }
 }
