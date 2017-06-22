@@ -21,8 +21,8 @@ class MarkupScanner extends TextBlockScanner
             $indentationScanner = new IndentationScanner();
             $newLevel = $indentationScanner->getIndentLevel($state, $level);
 
-            if (!$reader->peekChars(['<', ' ', "\t"])) {
-                return;
+            if (!$reader->peekChars(['<', ' ', "\t", "\n"])) {
+                break;
             }
 
             if ($newLevel < $level) {
