@@ -11,12 +11,14 @@ class ImportScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
+        $tokens = [];
+
         /** @var ImportToken $token */
         foreach ($state->scanToken(
             ImportToken::class,
             '(?<name>extend|include)s?(?= |:)'
         ) as $token) {
-            yield $token;
+            $tokens[] = $token;
 
             $reader = $state->getReader();
 
@@ -34,10 +36,14 @@ class ImportScanner implements ScannerInterface
                     break;
                 }
 
-                yield $subToken;
+                $tokens[] = $subToken;
             }
 
             break;
+        }
+
+        foreach ($tokens as $token) {
+            yield $token;
         }
     }
 }
