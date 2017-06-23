@@ -21,7 +21,7 @@ class AttributeScanner implements ScannerInterface
 
     private function isTruncatedExpression(Reader $reader, &$expr)
     {
-        if (substr($expr, -3) === 'new' || substr($expr, -5) === 'clone') {
+        if (mb_substr($expr, -3) === 'new' || mb_substr($expr, -5) === 'clone') {
             $expr .= $reader->getLastPeekResult();
             $reader->consume();
 

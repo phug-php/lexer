@@ -26,7 +26,7 @@ class TextScanner implements ScannerInterface
 
         //Always omit the very first space in basically every text (if there is one)
         if ($text[0] === ' ') {
-            $text = substr($text, 1);
+            $text = mb_substr($text, 1);
         }
 
         $token->setValue($text);

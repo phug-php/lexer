@@ -73,8 +73,8 @@ class IndentationScanner implements ScannerInterface
         }
 
         if (!$state->getIndentWidth() &&
-            strpos($indent, Lexer::INDENT_SPACE) !== false &&
-            strpos($indent, Lexer::INDENT_TAB) !== false
+            mb_strpos($indent, Lexer::INDENT_SPACE) !== false &&
+            mb_strpos($indent, Lexer::INDENT_TAB) !== false
         ) {
             $state->setIndentWidth(Lexer::DEFAULT_TAB_WIDTH);
         }
