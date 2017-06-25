@@ -14,9 +14,7 @@ class TextBlockScanner implements ScannerInterface
     protected function getTextLinesAsTokens(State $state, array &$textLines)
     {
         if (count($textLines)) {
-            /**
-             * @var TextToken $token
-             */
+            /** @var TextToken $token */
             $token = $state->createToken(TextToken::class);
             $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', implode("\n", $textLines));
             $token->setValue($text);
@@ -34,18 +32,26 @@ class TextBlockScanner implements ScannerInterface
         foreach ($lines as $line) {
             if (is_string($line)) {
                 $textLines[] = $line;
+
                 continue;
             }
 
-            foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
-                yield $token;
+            if (count($textLines)) {
+                foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
+                    yield $token;
+                }
+
+                $textLines = [];
             }
 
             yield $line;
+
         }
 
-        foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
-            yield $token;
+        if (count($textLines)) {
+            foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
+                yield $token;
+            }
         }
 
         if ($reader->getLength()) {
@@ -82,6 +88,7 @@ class TextBlockScanner implements ScannerInterface
             $lines[] = $reader->readUntilNewLine();
 
             if ($reader->peekNewLine()) {
+                $lines[] = '';
                 $reader->consume(1);
             }
         }
@@ -106,6 +113,9 @@ class TextBlockScanner implements ScannerInterface
         foreach ($state->loopScan([NewLineScanner::class, IndentationScanner::class]) as $token) {
             yield $token;
 
+            if ($token instanceof NewLineToken && count($lines)) {
+                $lines[] = '';
+            }
             if ($token instanceof OutdentToken) {
                 break;
             }
