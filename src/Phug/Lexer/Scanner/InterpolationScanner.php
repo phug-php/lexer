@@ -6,10 +6,12 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\ClassToken;
+use Phug\Lexer\Token\CodeToken;
 use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\IdToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
+use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TagToken;
@@ -81,13 +83,14 @@ class InterpolationScanner implements ScannerInterface
                 /** @var TextToken $token */
                 $token = $state->createToken(TextToken::class);
                 if (in_array(mb_substr($text, 0, 1), [' ', "\t"])) {
-                    $previous = $state->getLastToken();
-                    if (
-                        $previous instanceof TagToken ||
-                        $previous instanceof AttributeEndToken ||
-                        $previous instanceof ClassToken ||
-                        $previous instanceof IdToken
-                    ) {
+                    if ($state->lastTokenIs([
+                        TagToken::class,
+                        AttributeEndToken::class,
+                        ClassToken::class,
+                        IdToken::class,
+                        CodeToken::class,
+                        NewLineToken::class,
+                    ])) {
                         $text = mb_substr($text, 1);
                     }
                 }

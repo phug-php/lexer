@@ -104,6 +104,21 @@ class State implements OptionInterface
     }
 
     /**
+     * @return bool
+     */
+    public function lastTokenIs($classNames)
+    {
+        $token = $this->getLastToken();
+        foreach ($classNames as $className) {
+            if ($token instanceof $className) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the current lexer instance linked.
      *
      * @return Lexer|null
