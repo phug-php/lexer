@@ -4,11 +4,15 @@ namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
+use Phug\Lexer\Token\AttributeEndToken;
+use Phug\Lexer\Token\ClassToken;
 use Phug\Lexer\Token\ExpressionToken;
+use Phug\Lexer\Token\IdToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
+use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 
 class InterpolationScanner implements ScannerInterface
@@ -16,25 +20,43 @@ class InterpolationScanner implements ScannerInterface
     protected function scanInterpolation(State $state, $tagInterpolation, $interpolation, $escape)
     {
         if ($tagInterpolation) {
-            yield $state->createToken(TagInterpolationStartToken::class);
+            /** @var TagInterpolationStartToken $start */
+            $start = $state->createToken(TagInterpolationStartToken::class);
+            /** @var TagInterpolationEndToken $end */
+            $end = $state->createToken(TagInterpolationEndToken::class);
+
+            $start->setEnd($end);
+            $end->setStart($start);
+
             $lexer = clone $state->getLexer();
+
+            yield $start;
             foreach ($lexer->lex($tagInterpolation) as $token) {
                 yield $token;
             }
-            yield $state->createToken(TagInterpolationEndToken::class);
+            yield $end;
 
             return;
         }
 
-        yield $state->createToken(InterpolationStartToken::class);
+        /** @var InterpolationStartToken $start */
+        $start = $state->createToken(InterpolationStartToken::class);
+        /** @var InterpolationEndToken $end */
+        $end = $state->createToken(InterpolationEndToken::class);
+
+        $start->setEnd($end);
+        $end->setStart($start);
+
         /** @var ExpressionToken $token */
         $token = $state->createToken(ExpressionToken::class);
         $token->setValue($interpolation);
         if ($escape === '#') {
             $token->escape();
         }
+
+        yield $start;
         yield $token;
-        yield $state->createToken(InterpolationEndToken::class);
+        yield $end;
     }
 
     public function scan(State $state)
@@ -57,6 +79,17 @@ class InterpolationScanner implements ScannerInterface
             if (mb_strlen($text) > 0) {
                 /** @var TextToken $token */
                 $token = $state->createToken(TextToken::class);
+                if (in_array(mb_substr($text, 0, 1), [' ', "\t"])) {
+                    $previous = $state->getLastToken();
+                    if (
+                        $previous instanceof TagToken ||
+                        $previous instanceof AttributeEndToken ||
+                        $previous instanceof ClassToken ||
+                        $previous instanceof IdToken
+                    ) {
+                        $text = mb_substr($text, 1);
+                    }
+                }
                 $token->setValue($text);
                 yield $token;
             }

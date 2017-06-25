@@ -4,17 +4,19 @@ namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
+use Phug\Lexer\Token\InterpolationEndToken;
+use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TextToken;
 
 class TextScanner implements ScannerInterface
 {
     public function scan(State $state)
     {
+        $reader = $state->getReader();
+
         foreach ($state->scan(InterpolationScanner::class) as $subToken) {
             yield $subToken;
         }
-
-        $reader = $state->getReader();
 
         /** @var TextToken $token */
         $token = $state->createToken(TextToken::class);
@@ -25,8 +27,11 @@ class TextScanner implements ScannerInterface
         }
 
         //Always omit the very first space in basically every text (if there is one)
-        if ($text[0] === ' ') {
-            $text = mb_substr($text, 1);
+        if (in_array(mb_substr($text, 0, 1), [' ', "\t"])) {
+            $previous = $state->getLastToken();
+            if (!($previous instanceof TagInterpolationEndToken || $previous instanceof InterpolationEndToken)) {
+                $text = mb_substr($text, 1);
+            }
         }
 
         $token->setValue($text);

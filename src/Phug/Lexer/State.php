@@ -94,6 +94,16 @@ class State implements OptionInterface
     }
 
     /**
+     * @return TokenInterface
+     */
+    public function getLastToken()
+    {
+        return $this->lexer
+            ? $this->lexer->getLastToken()
+            : null;
+    }
+
+    /**
      * Returns the current lexer instance linked.
      *
      * @return Lexer|null

@@ -1,0 +1,48 @@
+<?php
+
+namespace Phug\Test\Lexer\Scanner;
+
+use Phug\Lexer\Token\TagInterpolationEndToken;
+use Phug\Lexer\Token\TagInterpolationStartToken;
+use Phug\Lexer\Token\TagToken;
+use Phug\Lexer\Token\TextToken;
+use Phug\Test\AbstractLexerTest;
+
+class InterpolationScannerTest extends AbstractLexerTest
+{
+    /**
+     * @covers \Phug\Lexer\Scanner\InterpolationScanner
+     * @covers \Phug\Lexer\Scanner\InterpolationScanner::scanInterpolation
+     * @covers \Phug\Lexer\Scanner\InterpolationScanner::scan
+     */
+    public function testScan()
+    {
+        $tokens = $this->assertTokens('p a #[strong b] c', [
+            TagToken::class,
+            TextToken::class,
+            TagInterpolationStartToken::class,
+            TagToken::class,
+            TextToken::class,
+            TagInterpolationEndToken::class,
+            TextToken::class,
+        ]);
+
+        self::assertSame('a ', $tokens[1]->getValue());
+        self::assertSame('b', $tokens[4]->getValue());
+        self::assertSame(' c', $tokens[6]->getValue());
+
+        $tokens = $this->assertTokens('p  a#[strong  b ]c ', [
+            TagToken::class,
+            TextToken::class,
+            TagInterpolationStartToken::class,
+            TagToken::class,
+            TextToken::class,
+            TagInterpolationEndToken::class,
+            TextToken::class,
+        ]);
+
+        self::assertSame(' a', $tokens[1]->getValue());
+        self::assertSame(' b ', $tokens[4]->getValue());
+        self::assertSame('c ', $tokens[6]->getValue());
+    }
+}

@@ -88,6 +88,11 @@ class Lexer implements ModulesContainerInterface, OptionInterface
     private $state;
 
     /**
+     * @var TokenInterface
+     */
+    private $lastToken;
+
+    /**
      * Creates a new lexer instance.
      *
      * The options should be an associative array
@@ -265,11 +270,21 @@ class Lexer implements ModulesContainerInterface, OptionInterface
 
         //Scan for tokens
         foreach ($this->state->loopScan($scanners) as $token) {
+            $this->lastToken = $token;
+
             yield $token;
         }
 
         //Free state
         $this->state = null;
+    }
+
+    /**
+     * @return TokenInterface
+     */
+    public function getLastToken()
+    {
+        return $this->lastToken;
     }
 
     public function dump($input)

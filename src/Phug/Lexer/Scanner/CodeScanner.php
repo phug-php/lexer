@@ -2,10 +2,10 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CodeToken;
+use Phug\Lexer\Token\TextToken;
 
 class CodeScanner implements ScannerInterface
 {
@@ -26,7 +26,7 @@ class CodeScanner implements ScannerInterface
             //Trim the text as expressions usually would
             yield $token;
 
-            if ($textToken instanceof Lexer\Token\TextToken) {
+            if ($textToken instanceof TextToken) {
                 $textToken->setValue(trim($textToken->getValue()));
                 yield $textToken;
             }
