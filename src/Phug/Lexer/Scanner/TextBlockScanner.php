@@ -18,7 +18,8 @@ class TextBlockScanner implements ScannerInterface
              * @var TextToken $token
              */
             $token = $state->createToken(TextToken::class);
-            $token->setValue(implode("\n", $textLines));
+            $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', implode("\n", $textLines));
+            $token->setValue($text);
 
             yield $token;
 

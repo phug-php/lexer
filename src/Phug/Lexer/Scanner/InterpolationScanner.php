@@ -65,6 +65,7 @@ class InterpolationScanner implements ScannerInterface
 
         while ($reader->match(
             '(?<text>.*?)'.
+            '(?<!\\\\)'.
             '(?<escape>#|!(?=\{))(?<wrap>'.
                 '\\[(?<tagInterpolation>'.
                     '(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\[\\]\'"]++|(?-3))*+'.
@@ -90,6 +91,7 @@ class InterpolationScanner implements ScannerInterface
                         $text = mb_substr($text, 1);
                     }
                 }
+                $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', $text);
                 $token->setValue($text);
                 yield $token;
             }
