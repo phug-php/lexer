@@ -39,11 +39,14 @@ class MarkupScanner extends TextBlockScanner
             }
 
             $this->interpolateLines($state, $lines);
-            $lines[] = $reader->readUntilNewLine();
+            $line = $reader->readUntilNewLine();
 
             if ($reader->peekNewLine()) {
+                $line .= "\n";
                 $reader->consume(1);
             }
+
+            $lines[] = $line;
         }
 
         foreach ($this->createBlockTokens($state, $lines) as $token) {
