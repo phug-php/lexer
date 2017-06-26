@@ -16,7 +16,7 @@ class TextBlockScanner implements ScannerInterface
         if (count($textLines)) {
             /** @var TextToken $token */
             $token = $state->createToken(TextToken::class);
-            $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', implode("\n", $textLines));
+            $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', implode('', $textLines));
             $token->setValue($text);
 
             yield $token;
@@ -45,7 +45,6 @@ class TextBlockScanner implements ScannerInterface
             }
 
             yield $line;
-
         }
 
         if (count($textLines)) {
@@ -74,7 +73,7 @@ class TextBlockScanner implements ScannerInterface
             if ($newLevel < $level) {
                 if ($reader->match('[ \t]*\n')) {
                     $reader->consume(mb_strlen($reader->getMatch(0)));
-                    $lines[] = '';
+                    $lines[] = "\n";
 
                     continue;
                 }
@@ -88,7 +87,7 @@ class TextBlockScanner implements ScannerInterface
             $lines[] = $reader->readUntilNewLine();
 
             if ($reader->peekNewLine()) {
-                $lines[] = '';
+                $lines[] = "\n";
                 $reader->consume(1);
             }
         }
@@ -114,7 +113,7 @@ class TextBlockScanner implements ScannerInterface
             yield $token;
 
             if ($token instanceof NewLineToken && count($lines)) {
-                $lines[] = '';
+                $lines[] = "\n";
             }
             if ($token instanceof OutdentToken) {
                 break;
@@ -124,6 +123,7 @@ class TextBlockScanner implements ScannerInterface
 
                 $lines[] = $reader->readUntilNewLine();
                 if ($reader->peekNewLine()) {
+                    $lines[] = "\n";
                     $reader->consume(1);
                 }
 
