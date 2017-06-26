@@ -109,6 +109,13 @@ class InterpolationScanner implements ScannerInterface
             }
 
             $reader->consume();
+
+            if ($reader->peekNewLine()) {
+                /** @var TextToken $token */
+                $token = $state->createToken(TextToken::class);
+                $token->setValue("\n");
+                yield $token;
+            }
         }
     }
 }
