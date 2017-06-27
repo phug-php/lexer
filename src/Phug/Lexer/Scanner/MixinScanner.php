@@ -16,6 +16,11 @@ class MixinScanner implements ScannerInterface
         ) as $token) {
             yield $token;
 
+            $reader = $state->getReader();
+            if ($reader->match('[\t ]+(?=\()')) {
+                $reader->consume();
+            }
+
             foreach ($state->scan(SubScanner::class) as $subToken) {
                 yield $subToken;
             }

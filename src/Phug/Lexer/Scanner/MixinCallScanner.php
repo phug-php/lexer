@@ -12,7 +12,7 @@ class MixinCallScanner implements ScannerInterface
     {
         foreach ($state->scanToken(
             MixinCallToken::class,
-            '\+(?<name>('.
+            '\+[ \t]*(?<name>('.
                 '[a-zA-Z_][a-zA-Z0-9\-_]*|'.
                 '#\\{(?:(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^{}\'"]++|(?-1))*+)\\}'.
             '))'
