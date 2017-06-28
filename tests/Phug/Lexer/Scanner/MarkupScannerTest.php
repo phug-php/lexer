@@ -15,13 +15,23 @@ class MarkupScannerTest extends AbstractLexerTest
      */
     public function testRawMarkup()
     {
-        /** @var TagToken $tok */
-        list($tok) = $this->assertTokens('<a></a>', [
+        $template = '<a></a>';
+        /** @var TextToken $tok */
+        list($tok) = $this->assertTokens($template, [
             TextToken::class,
         ]);
 
         self::assertFalse($tok->isEscaped());
-        self::assertSame('<a></a>', $tok->getValue());
+        self::assertSame($template, $tok->getValue());
+
+        $template = "<ul id='aa'>\n  <li class='foo'>item</li>\n</ul>";
+        /** @var TextToken $tok */
+        list($tok) = $this->assertTokens($template, [
+            TextToken::class,
+        ]);
+
+        self::assertFalse($tok->isEscaped());
+        self::assertSame($template, $tok->getValue());
     }
 
     /**

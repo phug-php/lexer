@@ -29,7 +29,7 @@ class CommentScannerTest extends AbstractLexerTest
         ]);
 
         self::assertTrue($c->isVisible());
-        self::assertSame('This is some comment text', $t->getValue());
+        self::assertSame(' This is some comment text', $t->getValue());
     }
 
     /**
@@ -49,7 +49,7 @@ class CommentScannerTest extends AbstractLexerTest
         ]);
 
         self::assertFalse($c->isVisible());
-        self::assertSame('This is some comment text', $t->getValue());
+        self::assertSame(' This is some comment text', $t->getValue());
     }
 
     /**
@@ -63,16 +63,14 @@ class CommentScannerTest extends AbstractLexerTest
          * @var CommentToken $c
          * @var TextToken    $t
          */
-        list($c, , , $t) = $this->assertTokens("//\n\tFirst line\n\tSecond line\n\tThird line", [
+        list($c, $t) = $this->assertTokens("//\n\tFirst line\n\tSecond line\n\tThird line", [
             CommentToken::class,
-            NewLineToken::class,
-            IndentToken::class,
             TextToken::class,
         ]);
 
         self::assertTrue($c->isVisible());
         self::assertSame(
-            "First line\nSecond line\nThird line",
+            "\n\tFirst line\n\tSecond line\n\tThird line",
             $t->getValue()
         );
     }
@@ -88,16 +86,14 @@ class CommentScannerTest extends AbstractLexerTest
          * @var CommentToken $c
          * @var TextToken    $t
          */
-        list($c, , , $t) = $this->assertTokens("//-\n\tFirst line\n\tSecond line\n\tThird line", [
+        list($c, $t) = $this->assertTokens("//-\n\tFirst line\n\tSecond line\n\tThird line", [
             CommentToken::class,
-            NewLineToken::class,
-            IndentToken::class,
             TextToken::class,
         ]);
 
         self::assertFalse($c->isVisible());
         self::assertSame(
-            "First line\nSecond line\nThird line",
+            "\n\tFirst line\n\tSecond line\n\tThird line",
             $t->getValue()
         );
     }
