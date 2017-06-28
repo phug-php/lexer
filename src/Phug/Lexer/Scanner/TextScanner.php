@@ -13,8 +13,21 @@ class TextScanner implements ScannerInterface
     public function scan(State $state)
     {
         $reader = $state->getReader();
+        $first = true;
 
         foreach ($state->scan(InterpolationScanner::class) as $subToken) {
+            if ($first) {
+                // Interpolation in tag text must always be preceded by a text token
+                if (!($subToken instanceof TextToken)) {
+                    /** @var TextToken $token */
+                    $token = $state->createToken(TextToken::class);
+                    $token->setValue('');
+
+                    yield $token;
+                }
+                $first = false;
+            }
+
             yield $subToken;
         }
 

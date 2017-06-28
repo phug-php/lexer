@@ -12,6 +12,7 @@ use Phug\Lexer\Scanner\CommentScanner;
 use Phug\Lexer\Scanner\ConditionalScanner;
 use Phug\Lexer\Scanner\DoctypeScanner;
 use Phug\Lexer\Scanner\DoScanner;
+use Phug\Lexer\Scanner\DynamicTagScanner;
 use Phug\Lexer\Scanner\EachScanner;
 use Phug\Lexer\Scanner\ExpansionScanner;
 use Phug\Lexer\Scanner\ExpressionScanner;
@@ -152,6 +153,7 @@ class Lexer implements ModulesContainerInterface, OptionInterface
                 'code'        => CodeScanner::class,
                 'markup'      => MarkupScanner::class,
                 'expansion'   => ExpansionScanner::class,
+                'dynamic_tag' => DynamicTagScanner::class,
                 'text_line'   => TextLineScanner::class,
                 //Notice that TextScanner is always added in lex(), as we'd basically disable extensions otherwise
                 //As this array is replaced recursively, your extensions are either added or overwritten
