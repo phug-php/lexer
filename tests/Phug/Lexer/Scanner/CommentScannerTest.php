@@ -5,8 +5,6 @@ namespace Phug\Test\Lexer\Scanner;
 use Phug\Lexer\Scanner\CommentScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CommentToken;
-use Phug\Lexer\Token\IndentToken;
-use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
