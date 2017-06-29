@@ -37,7 +37,6 @@ class FilterScanner implements ScannerInterface
                 continue;
             }
 
-
             $level = $state->getLevel() + 1;
             $newLevel = $level;
             $lines = [$reader->readUntilNewLine()];
