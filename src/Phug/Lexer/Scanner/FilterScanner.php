@@ -38,6 +38,7 @@ class FilterScanner implements ScannerInterface
             }
 
             $level = $state->getLevel();
+            $newLevel = $level;
             $lines = [$reader->readUntilNewLine()];
             $maxIndent = INF;
 
@@ -96,7 +97,7 @@ class FilterScanner implements ScannerInterface
             if ($reader->hasLength()) {
                 yield $state->createToken(NewLineToken::class);
 
-                $state->indent($level + 1);
+                $state->setLevel($newLevel)->indent($level + 1);
 
                 while ($state->nextOutdent() !== false) {
                     yield $state->createToken(OutdentToken::class);
