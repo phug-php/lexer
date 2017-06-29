@@ -37,13 +37,17 @@ class FilterScanner implements ScannerInterface
                 continue;
             }
 
-            $level = $state->getLevel() + 1;
-            $newLevel = $level;
+            $level = $state->getLevel();
             $lines = [$reader->readUntilNewLine()];
+            $maxIndent = INF;
 
             while ($reader->hasLength()) {
                 $indentationScanner = new IndentationScanner();
                 $newLevel = $indentationScanner->getIndentLevel($state, $level);
+
+                if (!$reader->peekChars([' ', "\t", "\n"])) {
+                    break;
+                }
 
                 if ($newLevel < $level) {
                     if ($reader->match('[ \t]*\n')) {
@@ -58,7 +62,15 @@ class FilterScanner implements ScannerInterface
                     break;
                 }
 
-                $lines[] = $reader->readUntilNewLine();
+                $line = $reader->readUntilNewLine();
+                $lines[] = $line;
+                $unIndentedLine = ltrim($line);
+                if ($unIndentedLine !== '') {
+                    $indent = mb_strlen($line) - mb_strlen($unIndentedLine);
+                    if ($indent < $maxIndent) {
+                        $maxIndent = $indent;
+                    }
+                }
 
                 if (!$reader->peekNewLine()) {
                     break;
@@ -72,6 +84,11 @@ class FilterScanner implements ScannerInterface
 
             /** @var TextToken $token */
             $token = $state->createToken(TextToken::class);
+            if ($maxIndent > 0 && $maxIndent < INF) {
+                foreach ($lines as &$line) {
+                    $line = mb_substr($line, $maxIndent) ?: '';
+                }
+            }
             $token->setValue(implode("\n", $lines));
 
             yield $token;
@@ -79,7 +96,7 @@ class FilterScanner implements ScannerInterface
             if ($reader->hasLength()) {
                 yield $state->createToken(NewLineToken::class);
 
-                $state->indent($level);
+                $state->indent($level + 1);
 
                 while ($state->nextOutdent() !== false) {
                     yield $state->createToken(OutdentToken::class);
