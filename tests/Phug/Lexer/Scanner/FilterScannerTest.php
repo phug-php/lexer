@@ -91,6 +91,5 @@ class FilterScannerTest extends AbstractLexerTest
             TagToken::class,
             NewLineToken::class,
         ]);
-
     }
 }
