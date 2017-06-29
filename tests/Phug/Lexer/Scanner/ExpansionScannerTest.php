@@ -50,19 +50,30 @@ class ExpansionScannerTest extends AbstractLexerTest
     public function testFilterExpansion()
     {
         /** @var FilterToken $tok */
-        list($tok) = $this->assertTokens(':some-filter:', [
+        list($tok) = $this->assertTokens(':some-filter a', [
             FilterToken::class,
-            // @TODO Determine what would be the point to allow ExpansionToken here.
             TextToken::class,
         ]);
         self::assertSame('some-filter', $tok->getName());
 
-        list($tok) = $this->assertTokens(':some:namespaced:filter:', [
+        list($tok) = $this->assertTokens(':some:namespaced:filter a', [
             FilterToken::class,
-            // @TODO Determine what would be the point to allow ExpansionToken here.
             TextToken::class,
         ]);
         self::assertSame('some:namespaced:filter', $tok->getName());
+
+        $this->assertTokens(':some-filter: a', [
+            ExpansionToken::class,
+            TagToken::class,
+            ExpansionToken::class,
+            TagToken::class,
+        ]);
+        $this->assertTokens(':some:namespaced:filter: a', [
+            ExpansionToken::class,
+            TagToken::class,
+            ExpansionToken::class,
+            TagToken::class,
+        ]);
     }
 
     /**
