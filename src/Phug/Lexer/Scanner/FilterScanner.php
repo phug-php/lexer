@@ -39,7 +39,7 @@ class FilterScanner implements ScannerInterface
 
             $level = $state->getLevel();
             $newLevel = $level;
-            $lines = [$reader->readUntilNewLine()];
+            $lines = [];
             $maxIndent = INF;
 
             while ($reader->hasLength()) {
