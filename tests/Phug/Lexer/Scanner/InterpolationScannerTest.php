@@ -14,6 +14,7 @@ use Phug\Test\AbstractLexerTest;
 class InterpolationScannerTest extends AbstractLexerTest
 {
     /**
+     * @group i
      * @covers \Phug\Lexer\Scanner\InterpolationScanner
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scanInterpolation
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scan

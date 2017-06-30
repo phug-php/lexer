@@ -24,6 +24,8 @@ class SubScanner implements ScannerInterface
 
                 yield $token;
             }
+
+            return;
         }
 
         //Escaped text after e.g. tags, classes (p! some text)

@@ -5,136 +5,143 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\InterpolationEndToken;
+use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
+use Phug\Lexer\Token\TagInterpolationEndToken;
+use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TextToken;
 
 class TextBlockScanner implements ScannerInterface
 {
-    protected function getTextLinesAsTokens(State $state, array &$textLines)
+    protected function unEscapedToken(State $state, $buffer)
     {
-        if (count($textLines)) {
-            /** @var TextToken $token */
-            $token = $state->createToken(TextToken::class);
-            $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', implode('', $textLines));
-            $token->setValue($text);
+        /** @var TextToken $token */
+        $token = $state->createToken(TextToken::class);
+        $token->setValue(preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', $buffer));
 
-            yield $token;
-
-            $textLines = [];
-        }
-    }
-
-    protected function createBlockTokens(State $state, array $lines)
-    {
-        $reader = $state->getReader();
-        $textLines = [];
-        foreach ($lines as $line) {
-            if (is_string($line)) {
-                $textLines[] = $line;
-
-                continue;
-            }
-
-            if (count($textLines)) {
-                foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
-                    yield $token;
-                }
-
-                $textLines = [];
-            }
-
-            yield $line;
-        }
-
-        if (count($textLines)) {
-            foreach ($this->getTextLinesAsTokens($state, $textLines) as $token) {
-                yield $token;
-            }
-        }
-
-        if ($reader->getLength()) {
-            yield $state->createToken(NewLineToken::class);
-
-            while ($state->nextOutdent() !== false) {
-                yield $state->createToken(OutdentToken::class);
-            }
-        }
-    }
-
-    protected function appendBlockLines(array &$lines, State $state)
-    {
-        $reader = $state->getReader();
-        $level = $state->getLevel();
-
-        while ($reader->hasLength()) {
-            $indentationScanner = new IndentationScanner();
-            $newLevel = $indentationScanner->getIndentLevel($state, $level);
-            if ($newLevel < $level) {
-                if ($reader->match('[ \t]*\n')) {
-                    $reader->consume(mb_strlen($reader->getMatch(0)));
-                    $lines[] = "\n";
-
-                    continue;
-                }
-
-                $state->setLevel($newLevel);
-
-                break;
-            }
-
-            $this->interpolateLines($state, $lines);
-            $lines[] = $reader->readUntilNewLine();
-
-            if ($reader->peekNewLine()) {
-                $lines[] = "\n";
-                $reader->consume(1);
-            }
-        }
-    }
-
-    protected function interpolateLines(State $state, array &$lines)
-    {
-        foreach ($state->scan(InterpolationScanner::class) as $subToken) {
-            $lines[] = $subToken instanceof TextToken ? $subToken->getValue() : $subToken;
-        }
+        return $token;
     }
 
     public function scan(State $state)
     {
         $reader = $state->getReader();
-        $lines = [];
 
         foreach ($state->scan(TextScanner::class) as $token) {
             yield $token;
         }
 
-        foreach ($state->loopScan([NewLineScanner::class, IndentationScanner::class]) as $token) {
-            yield $token;
+        if ($reader->peekNewLine()) {
+            yield $state->createToken(NewLineToken::class);
 
-            if ($token instanceof NewLineToken && count($lines)) {
-                $lines[] = "\n";
-            }
-            if ($token instanceof OutdentToken) {
-                break;
-            }
-            if ($token instanceof IndentToken) {
-                $this->interpolateLines($state, $lines);
+            $reader->consume(1);
 
-                $lines[] = $reader->readUntilNewLine();
-                if ($reader->peekNewLine()) {
-                    $lines[] = "\n";
-                    $reader->consume(1);
+            $lines = [];
+            $level = $state->getLevel();
+            $newLevel = $level;
+            $maxIndent = INF;
+
+            while ($reader->hasLength()) {
+                $indentationScanner = new IndentationScanner();
+                $newLevel = $indentationScanner->getIndentLevel($state, $level);
+
+                if (!$reader->peekChars([' ', "\t", "\n"])) {
+                    break;
                 }
 
-                break;
-            }
-        }
+                if ($newLevel < $level) {
+                    if ($reader->match('[ \t]*\n')) {
+                        $reader->consume(mb_strlen($reader->getMatch(0)));
+                        $lines[] = [];
 
-        if (count($lines)) {
-            $this->appendBlockLines($lines, $state);
-            foreach ($this->createBlockTokens($state, $lines) as $token) {
-                yield $token;
+                        continue;
+                    }
+
+                    $state->setLevel($newLevel);
+
+                    break;
+                }
+
+                $line = [];
+                $indent = $reader->match('[ \t]+(?=\S)') ? mb_strlen($reader->getMatch(0)) : INF;
+                if ($indent < $maxIndent) {
+                    $maxIndent = $indent;
+                }
+
+                foreach ($state->scan(InterpolationScanner::class) as $subToken) {
+                    $line[] = $subToken instanceof TextToken ? $subToken->getValue() : $subToken;
+                }
+
+                $text = $reader->readUntilNewLine();
+                $line[] = $text;
+                $lines[] = $line;
+
+                if (!$reader->peekNewLine()) {
+                    break;
+                }
+
+                $reader->consume(1);
+            }
+
+            if (count($lines)) {
+                yield $state->createToken(IndentToken::class);
+
+                if ($maxIndent > 0 && $maxIndent < INF) {
+                    foreach ($lines as &$line) {
+                        if (count($line) && is_string($line[0])) {
+                            $line[0] = mb_substr($line[0], $maxIndent) ?: '';
+                        }
+                    }
+                }
+
+                $buffer = '';
+                $interpolationLevel = 0;
+                foreach ($lines as $number => $lineValues) {
+                    if ($number) {
+                        $buffer .= "\n";
+                    }
+                    foreach ($lineValues as $value) {
+                        if (is_string($value)) {
+                            if ($interpolationLevel) {
+                                yield $this->unEscapedToken($state, $value);
+
+                                continue;
+                            }
+                            $buffer .= $value;
+
+                            continue;
+                        }
+
+                        if (!$interpolationLevel) {
+                            yield $this->unEscapedToken($state, $buffer);
+
+                            $buffer = '';
+                        }
+
+                        yield $value;
+
+                        if ($value instanceof TagInterpolationStartToken || $value instanceof InterpolationStartToken) {
+                            $interpolationLevel++;
+                        }
+
+                        if ($value instanceof TagInterpolationEndToken || $value instanceof InterpolationEndToken) {
+                            $interpolationLevel--;
+                        }
+                    }
+                }
+
+                yield $this->unEscapedToken($state, $buffer);
+
+                if ($reader->hasLength()) {
+                    yield $state->createToken(NewLineToken::class);
+
+                    $state->setLevel($newLevel)->indent($level + 1);
+
+                    while ($state->nextOutdent() !== false) {
+                        yield $state->createToken(OutdentToken::class);
+                    }
+                }
             }
         }
     }

@@ -31,7 +31,7 @@ class TextScannerTest extends AbstractLexerTest
     public function testTextIndent()
     {
         /* @var TextToken $tok */
-        list(, , , $tok) = $this->assertTokens('p.'."\n".'  foo', [
+        list(, , , $tok) = $this->assertTokens('p'."\n".'  | foo', [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,

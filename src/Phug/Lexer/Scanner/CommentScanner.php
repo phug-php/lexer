@@ -4,6 +4,8 @@ namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CommentToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\TextToken;
 
 class CommentScanner extends TextBlockScanner
 {
@@ -27,9 +29,12 @@ class CommentScanner extends TextBlockScanner
 
         yield $token;
         $level = $state->getLevel();
-        $lines = [$reader->readUntilNewLine()];
+        $line = $reader->readUntilNewLine();
+        $lines = $line === '' ? [] : [$line];
 
+        $newLine = false;
         while ($reader->hasLength()) {
+            $newLine = true;
             $indentationScanner = new IndentationScanner();
             $newLevel = $indentationScanner->getIndentLevel($state, $level);
 
@@ -50,19 +55,25 @@ class CommentScanner extends TextBlockScanner
                 break;
             }
 
-            $this->interpolateLines($state, $lines);
-            $line = $reader->readUntilNewLine();
+            $lines[] = $reader->readUntilNewLine();
 
-            if ($reader->peekNewLine()) {
-                $line .= "\n";
+            if ($newLine = $reader->peekNewLine()) {
                 $reader->consume(1);
             }
-
-            $lines[] = $line;
         }
 
-        foreach ($this->createBlockTokens($state, $lines) as $token) {
-            yield $token;
+        if (end($lines) === '') {
+            array_pop($lines);
+        }
+
+        /** @var TextToken $token */
+        $token = $state->createToken(TextToken::class);
+        $token->setValue(implode("\n", $lines));
+
+        yield $token;
+
+        if ($newLine) {
+            yield $state->createToken(NewLineToken::class);
         }
     }
 }

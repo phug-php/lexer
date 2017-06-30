@@ -23,7 +23,6 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
-     * @covers \Phug\Lexer\Scanner\TextBlockScanner::getTextLinesAsTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      * @covers \Phug\Lexer\Scanner\InterpolationScanner
@@ -118,8 +117,6 @@ class TextBlockScannerTest extends AbstractLexerTest
         $this->assertTokens("p.\n\n\n  Hello", [
             TagToken::class,
             NewLineToken::class,
-            NewLineToken::class,
-            NewLineToken::class,
             IndentToken::class,
             TextToken::class,
         ]);
@@ -139,6 +136,19 @@ class TextBlockScannerTest extends AbstractLexerTest
             OutdentToken::class,
             TagToken::class,
         ]);
+
+        /** TextToken $tok */
+        list(, , , $tok) = $this->assertTokens("pre.\n  foo\n    bar\n  biz\ndiv", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+        ]);
+
+        self::assertSame("foo\n  bar\nbiz", $tok->getValue());
     }
 
     /**
@@ -167,7 +177,7 @@ class TextBlockScannerTest extends AbstractLexerTest
         });
         $token = reset($tokens);
 
-        self::assertSame("Hello\n  world\nbye\n", $token->getValue());
+        self::assertSame("Hello\n  world\nbye", $token->getValue());
 
         $tokens = $this->assertTokens("p.\n  Hello\n    world\n\n       \n   bye\n    \n\ndiv", [
             TagToken::class,
@@ -184,6 +194,6 @@ class TextBlockScannerTest extends AbstractLexerTest
         });
         $token = reset($tokens);
 
-        self::assertSame("Hello\n  world\n\n     \n bye\n  \n\n", $token->getValue());
+        self::assertSame("Hello\n  world\n\n     \n bye\n  \n", $token->getValue());
     }
 }
