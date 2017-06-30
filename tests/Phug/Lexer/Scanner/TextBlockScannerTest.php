@@ -23,7 +23,6 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
-     * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      * @covers \Phug\Lexer\Scanner\InterpolationScanner
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scanInterpolation
@@ -157,7 +156,6 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentChar
      * @covers \Phug\Lexer\Scanner\IndentationScanner::getIndentLevel
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
-     * @covers \Phug\Lexer\Scanner\TextBlockScanner::createBlockTokens
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      */
     public function testScanWhiteSpaces()
