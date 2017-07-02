@@ -26,6 +26,7 @@ use Phug\Lexer\Scanner\MixinCallScanner;
 use Phug\Lexer\Scanner\MixinScanner;
 use Phug\Lexer\Scanner\NewLineScanner;
 use Phug\Lexer\Scanner\TagScanner;
+use Phug\Lexer\Scanner\TextBlockScanner;
 use Phug\Lexer\Scanner\TextLineScanner;
 use Phug\Lexer\Scanner\TextScanner;
 use Phug\Lexer\Scanner\VariableScanner;
@@ -125,7 +126,7 @@ class Lexer implements ModulesContainerInterface, OptionInterface
             'encoding'           => null,
             'modules'            => [],
             'scanners'           => [
-                //TODO: Several of these are non-standard and need to be capsulated into extensions
+                //TODO: Several of these are non-standard and need to be encapsulated into extensions
                 //Namely: ForScanner, DoScanner, VariableScanner
                 'new_line'    => NewLineScanner::class,
                 'indent'      => IndentationScanner::class,
@@ -153,6 +154,7 @@ class Lexer implements ModulesContainerInterface, OptionInterface
                 'code'        => CodeScanner::class,
                 'markup'      => MarkupScanner::class,
                 'expansion'   => ExpansionScanner::class,
+                'text_block'  => TextBlockScanner::class,
                 'dynamic_tag' => DynamicTagScanner::class,
                 'text_line'   => TextLineScanner::class,
                 //Notice that TextScanner is always added in lex(), as we'd basically disable extensions otherwise

@@ -7,7 +7,7 @@ use Phug\Lexer\Token\CommentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TextToken;
 
-class CommentScanner extends TextBlockScanner
+class CommentScanner extends MultilineScanner
 {
     public function scan(State $state)
     {

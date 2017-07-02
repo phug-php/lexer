@@ -38,7 +38,7 @@ class CodeScanner implements ScannerInterface
         $token->setIsBlock(true);
         yield $token;
 
-        foreach ($state->scan(TextBlockScanner::class) as $token) {
+        foreach ($state->scan(MultilineScanner::class) as $token) {
             yield $token;
         }
     }

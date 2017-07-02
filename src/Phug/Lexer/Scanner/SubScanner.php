@@ -17,7 +17,7 @@ class SubScanner implements ScannerInterface
             $escape = $reader->getMatch(1) === '!';
             $reader->consume();
 
-            foreach ($state->scan(TextBlockScanner::class) as $token) {
+            foreach ($state->scan(MultilineScanner::class) as $token) {
                 if ($token instanceof TextToken && $escape) {
                     $token->escape();
                 }

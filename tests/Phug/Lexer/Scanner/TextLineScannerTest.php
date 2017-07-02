@@ -4,6 +4,7 @@ namespace Phug\Test\Lexer\Scanner;
 
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TagToken;
@@ -18,9 +19,7 @@ class TextLineScannerTest extends AbstractLexerTest
      */
     public function testScan()
     {
-        /**
-         * @var TextToken $tok
-         */
+        /* @var TextToken $tok */
         list(, , , $tok) = $this->assertTokens("p\n  | Hello", [
             TagToken::class,
             NewLineToken::class,
@@ -30,9 +29,7 @@ class TextLineScannerTest extends AbstractLexerTest
 
         self::assertFalse($tok->isEscaped());
 
-        /**
-         * @var TextToken $tok
-         */
+        /* @var TextToken $tok */
         list(, , , $tok) = $this->assertTokens("p\n  !| Hello", [
             TagToken::class,
             NewLineToken::class,
@@ -41,6 +38,24 @@ class TextLineScannerTest extends AbstractLexerTest
         ]);
 
         self::assertTrue($tok->isEscaped());
+
+        $template = "p\n  | foo\n  | bar\n  |\n  |\n  | baz\np";
+
+        $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+        ]);
     }
 
     /**

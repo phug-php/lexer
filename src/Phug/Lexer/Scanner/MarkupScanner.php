@@ -10,7 +10,7 @@ use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TextToken;
 
-class MarkupScanner extends TextBlockScanner
+class MarkupScanner extends MultilineScanner
 {
     public function scan(State $state)
     {
