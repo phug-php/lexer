@@ -162,7 +162,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             ],
 
             //Events
-            'on_lex' => null,
+            'on_lex'   => null,
             'on_token' => null,
         ], $options ?: []);
 
