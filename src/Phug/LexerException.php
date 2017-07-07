@@ -14,7 +14,7 @@ class LexerException extends \Exception implements PugFileLocationInterface
 {
     use PugFileLocationTrait;
 
-    public function __construct($message = "", $code = 0, $previous = null, $line, $offset)
+    public function __construct($message, $code, $previous, $line, $offset)
     {
         $this->setPugLine($line);
         $this->setPugOffset($offset);
