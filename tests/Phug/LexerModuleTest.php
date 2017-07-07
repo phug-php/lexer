@@ -9,29 +9,22 @@ use Phug\LexerEvent;
 //@codingStandardsIgnoreStart
 class TestModule extends AbstractLexerModule
 {
-
     public function getEventListeners()
     {
-
         return [
-            LexerEvent::TOKEN => function (Lexer\TokenEvent $e)
-            {
-
+            LexerEvent::TOKEN => function (Lexer\TokenEvent $e) {
                 if ($e->getToken() instanceof Lexer\Token\TagToken) {
-
                     $e->setToken(new Lexer\Token\ClassToken());
                 }
-            }
+            },
         ];
     }
 }
 
 class GeneratorTestModule extends AbstractLexerModule
 {
-
     private function generateTokens()
     {
-
         yield (new Lexer\Token\TagToken())->setName('div');
         yield new Lexer\Token\ClassToken();
         yield new Lexer\Token\IdToken();
@@ -39,21 +32,16 @@ class GeneratorTestModule extends AbstractLexerModule
 
     public function getEventListeners()
     {
-
         return [
-            LexerEvent::TOKEN => function (Lexer\TokenEvent $e)
-            {
-
+            LexerEvent::TOKEN => function (Lexer\TokenEvent $e) {
                 $token = $e->getToken();
                 if ($token instanceof Lexer\Token\TagToken && $token->getName() === 'p') {
-
                     $e->setTokenGenerator($this->generateTokens());
                 }
-            }
+            },
         ];
     }
 }
-
 
 /**
  * @coversDefaultClass Phug\AbstractLexerModule
@@ -71,19 +59,19 @@ class LexerModuleTest extends AbstractLexerTest
      */
     public function testTokenEvent()
     {
-
         self::assertTokens('p Test', [
             Lexer\Token\TagToken::class,
-            Lexer\Token\TextToken::class
+            Lexer\Token\TextToken::class,
         ]);
 
         $lexer = new Lexer(['modules' => [TestModule::class]]);
 
         self::assertTokens('p Test', [
             Lexer\Token\ClassToken::class,
-            Lexer\Token\TextToken::class
+            Lexer\Token\TextToken::class,
         ], $lexer);
     }
+
     /**
      * @covers ::<public>
      * @covers \Phug\Lexer::lex
@@ -95,10 +83,9 @@ class LexerModuleTest extends AbstractLexerTest
      */
     public function testTokenGeneratorEvent()
     {
-
         self::assertTokens('p Test', [
             Lexer\Token\TagToken::class,
-            Lexer\Token\TextToken::class
+            Lexer\Token\TextToken::class,
         ]);
 
         $lexer = new Lexer(['modules' => [GeneratorTestModule::class]]);
@@ -107,7 +94,7 @@ class LexerModuleTest extends AbstractLexerTest
             Lexer\Token\TagToken::class,
             Lexer\Token\ClassToken::class,
             Lexer\Token\IdToken::class,
-            Lexer\Token\TextToken::class
+            Lexer\Token\TextToken::class,
         ], $lexer);
     }
 }
