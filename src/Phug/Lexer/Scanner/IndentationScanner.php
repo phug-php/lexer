@@ -7,7 +7,6 @@ use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\OutdentToken;
-use Phug\LexerException;
 use Phug\Reader;
 
 class IndentationScanner implements ScannerInterface
@@ -42,7 +41,7 @@ class IndentationScanner implements ScannerInterface
             $state->setIndentStyle($indentStyle);
         }
         if ($state->getIndentStyle() !== $indentStyle && !$state->getOption('allow_mixed_indent')) {
-            throw new LexerException(
+            $state->throwException(
                 'Invalid indentation, you can use tabs or spaces but not both'
             );
         }
