@@ -42,11 +42,10 @@ use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
+use Phug\Lexer\TokenEvent;
 use Phug\Lexer\TokenInterface;
-use Phug\Util\ModulesContainerInterface;
-use Phug\Util\OptionInterface;
-use Phug\Util\Partial\ModuleTrait;
-use Phug\Util\Partial\OptionTrait;
+use Phug\Util\ModuleContainerInterface;
+use Phug\Util\Partial\ModuleContainerTrait;
 
 /**
  * Performs lexical analysis and provides a token generator.
@@ -73,10 +72,9 @@ use Phug\Util\Partial\OptionTrait;
  *
  * </code>
  */
-class Lexer implements ModulesContainerInterface, OptionInterface
+class Lexer implements LexerInterface, ModuleContainerInterface
 {
-    use ModuleTrait;
-    use OptionTrait;
+    use ModuleContainerTrait;
 
     const INDENT_SPACE = ' ';
     const INDENT_TAB = "\t";
@@ -165,7 +163,6 @@ class Lexer implements ModulesContainerInterface, OptionInterface
 
         $this->state = null;
 
-        $this->setExpectedModuleType(LexerModuleInterface::class);
         $this->addModules($this->getOption('modules'));
     }
 
@@ -258,7 +255,7 @@ class Lexer implements ModulesContainerInterface, OptionInterface
         }
 
         //Put together our initial state
-        $this->state = new State($input, [
+        $this->state = new $stateClassName($input, [
             'encoding'           => $this->getOption('encoding'),
             'indent_style'       => $this->getOption('indent_style'),
             'indent_width'       => $this->getOption('indent_width'),
@@ -273,14 +270,38 @@ class Lexer implements ModulesContainerInterface, OptionInterface
         $scanners['final_plain_text'] = TextScanner::class;
 
         //Scan for tokens
-        foreach ($this->state->loopScan($scanners) as $token) {
-            $this->lastToken = $token;
-
+        //N> yield from $this->handleTokens($this->>state->loopScan($scanners));
+        $tokens = $this->state->loopScan($scanners);
+        foreach ($this->handleTokens($tokens) as $token) {
             yield $token;
         }
 
         //Free state
         $this->state = null;
+        $this->lastToken = null;
+    }
+
+    private function handleTokens(\Generator $tokens)
+    {
+
+        foreach ($tokens as $token) {
+            $e = new TokenEvent($token);
+            $this->trigger($e);
+
+            $token = $e->getToken();
+            $tokens = $e->getTokenGenerator();
+
+            if ($tokens) {
+                //N> yield from $this->>handleTokens($tokens)
+                foreach ($this->handleTokens($tokens) as $tok) {
+                    yield $tok;
+                }
+                continue;
+            }
+
+            $this->lastToken = $token;
+            yield $token;
+        }
     }
 
     /**
@@ -373,5 +394,11 @@ class Lexer implements ModulesContainerInterface, OptionInterface
     private function getTokenName($token)
     {
         return preg_replace('/Token$/', '', get_class($token));
+    }
+
+    public function getModuleBaseClassName()
+    {
+
+        return LexerModuleInterface::class;
     }
 }

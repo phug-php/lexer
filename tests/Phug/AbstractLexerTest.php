@@ -48,9 +48,9 @@ abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function assertTokens($expression, array $classNames)
+    protected function assertTokens($expression, array $classNames, Lexer $lexer = null)
     {
-        $tokens = iterator_to_array($this->lexer->lex($expression));
+        $tokens = iterator_to_array(($lexer ?: $this->lexer)->lex($expression));
 
         self::assertSame(
             count($tokens),
