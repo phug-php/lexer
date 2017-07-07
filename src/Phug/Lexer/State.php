@@ -184,7 +184,7 @@ class State implements OptionInterface
         if ($expected < $oldLevel) {
             $newLevel = $this->outdent();
             if ($newLevel < $expected) {
-                throw new LexerException(
+                $this->throwException(
                     'Inconsistent indentation. '.
                     'Expecting either '.
                     $newLevel.
