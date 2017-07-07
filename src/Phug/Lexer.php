@@ -254,7 +254,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'indent_style'       => $this->getOption('indent_style'),
             'indent_width'       => $this->getOption('indent_width'),
             'allow_mixed_indent' => $this->getOption('allow_mixed_indent'),
-            'level'              => $this->getOption('level')
+            'level'              => $this->getOption('level'),
         ]);
 
         $this->trigger($e);
