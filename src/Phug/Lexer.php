@@ -283,7 +283,6 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
     private function handleTokens(\Generator $tokens)
     {
-
         foreach ($tokens as $token) {
             $e = new TokenEvent($token);
             $this->trigger($e);
@@ -398,7 +397,6 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
     public function getModuleBaseClassName()
     {
-
         return LexerModuleInterface::class;
     }
 }

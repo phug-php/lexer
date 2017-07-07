@@ -7,7 +7,6 @@ use Phug\LexerEvent;
 
 class TokenEvent extends Event
 {
-
     private $token;
     private $tokenGenerator = null;
 
@@ -28,19 +27,16 @@ class TokenEvent extends Event
 
     public function setToken(TokenInterface $token)
     {
-
         $this->token = $token;
     }
 
     public function getTokenGenerator()
     {
-
         return $this->tokenGenerator;
     }
 
     public function setTokenGenerator(\Generator $tokens)
     {
-
         $this->tokenGenerator = $tokens;
     }
 }
