@@ -160,11 +160,23 @@ class Lexer implements LexerInterface, ModuleContainerInterface
                 //As this array is replaced recursively, your extensions are either added or overwritten
                 //If Text would be last one, every extension would end up as text, as text matches everything
             ],
+
+            //Events
+            'on_lex' => null,
+            'on_token' => null,
         ], $options ?: []);
 
         $this->state = null;
 
         $this->addModules($this->getOption('modules'));
+
+        if ($onLex = $this->getOption('on_lex')) {
+            $this->attach(LexerEvent::LEX, $onLex);
+        }
+
+        if ($onToken = $this->getOption('on_token')) {
+            $this->attach(LexerEvent::TOKEN, $onToken);
+        }
     }
 
     /**
@@ -248,13 +260,12 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     public function lex($input, $path = null)
     {
         $stateClassName = $this->getOption('state_class_name');
-
         $e = new LexEvent($input, $path, $stateClassName, [
             'encoding'           => $this->getOption('encoding'),
             'indent_style'       => $this->getOption('indent_style'),
             'indent_width'       => $this->getOption('indent_width'),
             'allow_mixed_indent' => $this->getOption('allow_mixed_indent'),
-            'level'              => $this->getOption('level')
+            'level'              => $this->getOption('level'),
         ]);
 
         $this->trigger($e);
