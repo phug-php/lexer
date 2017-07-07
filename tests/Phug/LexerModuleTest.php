@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Phug\AbstractLexerModule;
 use Phug\Lexer;
+use Phug\Lexer\Event\TokenEvent;
 use Phug\LexerEvent;
 
 //@codingStandardsIgnoreStart
@@ -12,7 +13,7 @@ class TestModule extends AbstractLexerModule
     public function getEventListeners()
     {
         return [
-            LexerEvent::TOKEN => function (Lexer\TokenEvent $e) {
+            LexerEvent::TOKEN => function (TokenEvent $e) {
                 if ($e->getToken() instanceof Lexer\Token\TagToken) {
                     $e->setToken(new Lexer\Token\ClassToken());
                 }
@@ -33,7 +34,7 @@ class GeneratorTestModule extends AbstractLexerModule
     public function getEventListeners()
     {
         return [
-            LexerEvent::TOKEN => function (Lexer\TokenEvent $e) {
+            LexerEvent::TOKEN => function (TokenEvent $e) {
                 $token = $e->getToken();
                 if ($token instanceof Lexer\Token\TagToken && $token->getName() === 'p') {
                     $e->setTokenGenerator($this->generateTokens());
@@ -51,9 +52,9 @@ class LexerModuleTest extends AbstractLexerTest
     /**
      * @covers ::<public>
      * @covers \Phug\Lexer::lex
-     * @covers \Phug\Lexer\TokenEvent::__construct
-     * @covers \Phug\Lexer\TokenEvent::getToken
-     * @covers \Phug\Lexer\TokenEvent::setToken
+     * @covers \Phug\Lexer\Event\TokenEvent::__construct
+     * @covers \Phug\Lexer\Event\TokenEvent::getToken
+     * @covers \Phug\Lexer\Event\TokenEvent::setToken
      * @covers \Phug\Lexer::handleTokens
      * @covers \Phug\Lexer::getModuleBaseClassName
      */
@@ -75,9 +76,9 @@ class LexerModuleTest extends AbstractLexerTest
     /**
      * @covers ::<public>
      * @covers \Phug\Lexer::lex
-     * @covers \Phug\Lexer\TokenEvent::__construct
-     * @covers \Phug\Lexer\TokenEvent::getTokenGenerator
-     * @covers \Phug\Lexer\TokenEvent::setTokenGenerator
+     * @covers \Phug\Lexer\Event\TokenEvent::__construct
+     * @covers \Phug\Lexer\Event\TokenEvent::getTokenGenerator
+     * @covers \Phug\Lexer\Event\TokenEvent::setTokenGenerator
      * @covers \Phug\Lexer::handleTokens
      * @covers \Phug\Lexer::getModuleBaseClassName
      */

@@ -2,6 +2,8 @@
 
 namespace Phug;
 
+use Phug\Lexer\Event\LexEvent;
+use Phug\Lexer\Event\TokenEvent;
 use Phug\Lexer\Scanner\AssignmentScanner;
 use Phug\Lexer\Scanner\AttributeScanner;
 use Phug\Lexer\Scanner\BlockScanner;
@@ -42,7 +44,6 @@ use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
-use Phug\Lexer\TokenEvent;
 use Phug\Lexer\TokenInterface;
 use Phug\Util\ModuleContainerInterface;
 use Phug\Util\Partial\ModuleContainerTrait;
@@ -248,6 +249,23 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     {
         $stateClassName = $this->getOption('state_class_name');
 
+        $e = new LexEvent($input, $path, $stateClassName, [
+            'encoding'           => $this->getOption('encoding'),
+            'indent_style'       => $this->getOption('indent_style'),
+            'indent_width'       => $this->getOption('indent_width'),
+            'allow_mixed_indent' => $this->getOption('allow_mixed_indent'),
+            'level'              => $this->getOption('level')
+        ]);
+
+        $this->trigger($e);
+
+        $input = $e->getInput();
+        $path = $e->getPath();
+        $stateClassName = $e->getStateClassName();
+        $stateOptions = $e->getStateOptions();
+
+        $stateOptions['path'] = $path;
+
         if (!is_a($stateClassName, State::class, true)) {
             throw new \InvalidArgumentException(
                 'state_class_name needs to be a valid '.State::class.' sub class'
@@ -255,14 +273,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         }
 
         //Put together our initial state
-        $this->state = new $stateClassName($input, [
-            'encoding'           => $this->getOption('encoding'),
-            'indent_style'       => $this->getOption('indent_style'),
-            'indent_width'       => $this->getOption('indent_width'),
-            'allow_mixed_indent' => $this->getOption('allow_mixed_indent'),
-            'level'              => $this->getOption('level'),
-            'path'               => $path,
-        ], $this);
+        $this->state = new $stateClassName($input, $stateOptions, $this);
 
         $scanners = $this->getOption('scanners');
 

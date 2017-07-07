@@ -1,8 +1,9 @@
 <?php
 
-namespace Phug\Lexer;
+namespace Phug\Lexer\Event;
 
 use Phug\Event;
+use Phug\Lexer\TokenInterface;
 use Phug\LexerEvent;
 
 class TokenEvent extends Event
