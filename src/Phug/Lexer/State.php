@@ -441,11 +441,13 @@ class State implements OptionInterface
      * The current line and offset of the exception
      * get automatically appended to the message
      *
-     * @param string $message A meaningful error message
+     * @param string     $message  A meaningful error message
+     * @param int        $code     Error code
+     * @param \Throwable $previous Source error
      *
      * @throws LexerException
      */
-    public function throwException($message)
+    public function throwException($message, $code = 0, $previous = null)
     {
         $pattern = "Failed to lex: %s \nNear: %s \nLine: %s \nOffset: %s \nPosition: %s";
         $path = $this->getOption('path');
@@ -454,12 +456,18 @@ class State implements OptionInterface
             $pattern .= "\nPath: $path";
         }
 
-        throw new LexerException(vsprintf($pattern, [
-            $message,
-            $this->reader->peek(20),
+        throw new LexerException(
+            vsprintf($pattern, [
+                $message,
+                $this->reader->peek(20),
+                $this->reader->getLine(),
+                $this->reader->getOffset(),
+                $this->reader->getPosition(),
+            ]),
+            $code,
+            $previous,
             $this->reader->getLine(),
-            $this->reader->getOffset(),
-            $this->reader->getPosition(),
-        ]));
+            $this->reader->getOffset()
+        );
     }
 }

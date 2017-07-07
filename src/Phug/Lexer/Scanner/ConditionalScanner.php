@@ -24,7 +24,8 @@ class ConditionalScanner extends ControlStatementScanner
 
                 if ($token->getName() === 'else' && !in_array($token->getSubject(), ['', false, null])) {
                     $state->throwException(
-                        'The `else`-conditional statement can\'t have a subject'
+                        'The `else`-conditional statement can\'t have a subject',
+                        $token
                     );
                 }
             }

@@ -7,7 +7,6 @@ use Phug\LexerEvent;
 
 class LexEvent extends Event
 {
-
     private $input;
     private $path;
     private $stateClassName;
@@ -16,10 +15,10 @@ class LexEvent extends Event
     /**
      * LexEvent constructor.
      *
-     * @param string $input
+     * @param string      $input
      * @param string|null $path
-     * @param string $stateClassName
-     * @param array $stateOptions
+     * @param string      $stateClassName
+     * @param array       $stateOptions
      */
     public function __construct($input, $path, $stateClassName, array $stateOptions)
     {
