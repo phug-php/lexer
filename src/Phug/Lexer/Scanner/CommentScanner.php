@@ -17,20 +17,23 @@ class CommentScanner extends MultilineScanner
             return;
         }
 
-        $reader->consume();
-
         /** @var CommentToken $token */
         $token = $state->createToken(CommentToken::class);
+
+        $reader->consume();
 
         if ($reader->peekChar('-')) {
             $reader->consume();
             $token->hide();
         }
 
-        yield $token;
+        yield $state->endToken($token);
         $level = $state->getLevel();
         $line = $reader->readUntilNewLine();
         $lines = $line === '' ? [] : [$line];
+
+        /** @var TextToken $token */
+        $token = $state->createToken(TextToken::class);
 
         $newLine = false;
         while ($reader->hasLength()) {
@@ -65,11 +68,13 @@ class CommentScanner extends MultilineScanner
         if (end($lines) === '') {
             array_pop($lines);
         }
-
-        /** @var TextToken $token */
-        $token = $state->createToken(TextToken::class);
         $token->setValue(implode("\n", $lines));
 
+
+        //TODO: As it seems, this is the only TextToken that will actually contain newlines, thus Stat->endToken will
+        // end up with a wrong line offset. This is why endToken is not applied at all here and only the start
+        // position will be kept
+        $token->setOffsetLength(1); //Let it have at least 1 length for debugging
         yield $token;
 
         if ($newLine) {

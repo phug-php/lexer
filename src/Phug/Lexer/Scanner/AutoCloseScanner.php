@@ -19,6 +19,6 @@ class AutoCloseScanner implements ScannerInterface
         $token = $state->createToken(AutoCloseToken::class);
 
         $reader->consume();
-        yield $token;
+        yield $state->endToken($token);
     }
 }

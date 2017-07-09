@@ -111,6 +111,7 @@ class IndentationScanner implements ScannerInterface
     {
         $reader = $state->getReader();
 
+        //TODO: $state->endToken
         //There's no indentation if we're not at the start of a line
         if ($reader->getOffset() !== 1) {
             return;

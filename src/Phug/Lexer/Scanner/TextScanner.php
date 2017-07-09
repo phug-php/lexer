@@ -63,6 +63,6 @@ class TextScanner implements ScannerInterface
         $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', $text);
         $token->setValue($text);
 
-        yield $token;
+        yield $state->endToken($token);
     }
 }

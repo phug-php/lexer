@@ -19,12 +19,13 @@ class CodeScanner implements ScannerInterface
 
         /** @var CodeToken $token */
         $token = $state->createToken(CodeToken::class);
+
         $reader->consume();
 
         //Single-line code
         foreach ($state->scan(TextScanner::class) as $textToken) {
             //Trim the text as expressions usually would
-            yield $token;
+            yield $state->endToken($token);
 
             if ($textToken instanceof TextToken) {
                 $textToken->setValue(trim($textToken->getValue()));
@@ -36,7 +37,7 @@ class CodeScanner implements ScannerInterface
 
         //Multi-line code
         $token->setIsBlock(true);
-        yield $token;
+        yield $state->endToken($token);
 
         foreach ($state->scan(MultilineScanner::class) as $token) {
             yield $token;

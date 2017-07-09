@@ -45,7 +45,7 @@ abstract class ControlStatementScanner implements ScannerInterface
             $token->setSubject($subject !== '' ? $subject : null);
         }
 
-        yield $token;
+        yield $state->endToken($token);
 
         foreach ($state->scan(SubScanner::class) as $token) {
             yield $token;

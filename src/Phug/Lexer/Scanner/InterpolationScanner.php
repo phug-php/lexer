@@ -24,7 +24,7 @@ class InterpolationScanner implements ScannerInterface
             $start->setEnd($end);
             $end->setStart($start);
 
-            $lexer = clone $state->getLexer();
+            $lexer = $state->getLexer();
 
             yield $start;
             foreach ($lexer->lex($tagInterpolation) as $token) {
@@ -59,6 +59,7 @@ class InterpolationScanner implements ScannerInterface
     {
         $reader = $state->getReader();
 
+        //TODO: $state->endToken
         while ($reader->match(
             '(?<text>.*?)'.
             '(?<!\\\\)'.

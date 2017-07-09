@@ -47,6 +47,6 @@ class EachScanner implements ScannerInterface
 
         $token->setSubject($subject);
 
-        yield $token;
+        yield $state->endToken($token);
     }
 }

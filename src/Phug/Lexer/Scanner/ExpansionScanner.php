@@ -16,11 +16,12 @@ class ExpansionScanner implements ScannerInterface
             return;
         }
 
+        $token = $state->createToken(ExpansionToken::class);
         $reader->consume();
 
         //Allow any kind of spacing after an expansion
         $reader->readIndentation();
 
-        yield $state->createToken(ExpansionToken::class);
+        yield $state->endToken($token);
     }
 }

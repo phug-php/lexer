@@ -96,6 +96,7 @@ class MarkupScanner extends MultilineScanner
             }
         }
 
+        //TODO: $state->endToken
         yield $this->unEscapedToken($state, $buffer);
 
         if ($newLine) {

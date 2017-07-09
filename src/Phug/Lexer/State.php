@@ -349,7 +349,7 @@ class State implements OptionInterface
      *
      * @param string $className the class name of the token
      *
-     * @return array the token array
+     * @return TokenInterface the token
      */
     public function createToken($className)
     {
@@ -403,7 +403,17 @@ class State implements OptionInterface
             }
         }
 
-        yield $token;
+        yield $this->endToken($token);
+    }
+
+    /**
+     * @param TokenInterface $token
+     * @return TokenInterface
+     */
+    public function endToken(TokenInterface $token)
+    {
+
+        return $token->setOffsetLength($this->getReader()->getOffset() - $token->getOffset());
     }
 
     /**

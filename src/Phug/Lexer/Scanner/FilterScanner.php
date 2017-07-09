@@ -32,7 +32,7 @@ class FilterScanner implements ScannerInterface
                 $token = $state->createToken(TextToken::class);
                 $token->setValue($reader->readUntilNewLine());
 
-                yield $token;
+                yield $state->endToken($token);
 
                 continue;
             }
@@ -92,6 +92,10 @@ class FilterScanner implements ScannerInterface
             }
             $token->setValue(implode("\n", $lines));
 
+            //TODO: As it seems, this is the only TextToken that will actually contain newlines, thus Stat->endToken
+            // will end up with a wrong line offset. This is why endToken is not applied at all here and only the
+            // start position will be kept
+            $token->setOffsetLength(1); //Let it have at least 1 length for debugging
             yield $token;
 
             if ($reader->hasLength()) {

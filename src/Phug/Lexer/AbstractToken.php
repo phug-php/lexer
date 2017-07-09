@@ -10,6 +10,7 @@ abstract class AbstractToken implements TokenInterface
     use DocumentLocationTrait;
     use LevelGetTrait;
 
+    private $offsetLength = 0;
     private $indent;
 
     public function __construct($line = null, $offset = null, $level = null, $indent = null)
@@ -18,6 +19,26 @@ abstract class AbstractToken implements TokenInterface
         $this->offset = $offset ?: 0;
         $this->level = $level ?: 0;
         $this->indent = $indent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOffsetLength()
+    {
+        return $this->offsetLength;
+    }
+
+    /**
+     * @param int $offsetLength
+     * @return $this
+     */
+    public function setOffsetLength($offsetLength)
+    {
+
+        $this->offsetLength = $offsetLength;
+
+        return $this;
     }
 
     public function getIndent()

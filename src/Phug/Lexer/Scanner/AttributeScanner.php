@@ -212,16 +212,18 @@ class AttributeScanner implements ScannerInterface
             return;
         }
 
-        $reader->consume();
+        $start = $state->createToken(AttributeStartToken::class);
 
-        yield $state->createToken(AttributeStartToken::class);
+        $reader->consume();
+        yield $state->endToken($start);
 
         foreach ($this->scanParenthesesContent($state) as $token) {
             yield $token;
         }
 
+        $end = $state->createToken(AttributeEndToken::class);
         $reader->consume();
-        yield $state->createToken(AttributeEndToken::class);
+        yield $state->endToken($end);
 
         foreach ($state->scan(ClassScanner::class) as $subToken) {
             yield $subToken;

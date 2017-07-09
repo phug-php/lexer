@@ -19,6 +19,6 @@ class NewLineScanner implements ScannerInterface
         $token = $state->createToken(NewLineToken::class);
 
         $reader->consume();
-        yield $token;
+        yield $state->endToken($token);
     }
 }

@@ -16,10 +16,10 @@ class ExpressionScanner implements ScannerInterface
             return;
         }
 
-        $prefix = $reader->consume();
-
         /** @var ExpressionToken $token */
         $token = $state->createToken(ExpressionToken::class);
+
+        $prefix = $reader->consume();
 
         if (mb_strpos($prefix, '!') === false) {
             $token->escape();
@@ -31,6 +31,6 @@ class ExpressionScanner implements ScannerInterface
 
         $token->setValue($reader->readExpression(["\n", '//']));
 
-        yield $token;
+        yield $state->endToken($token);
     }
 }
