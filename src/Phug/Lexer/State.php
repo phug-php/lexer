@@ -408,11 +408,11 @@ class State implements OptionInterface
 
     /**
      * @param TokenInterface $token
+     *
      * @return TokenInterface
      */
     public function endToken(TokenInterface $token)
     {
-
         return $token->setOffsetLength($this->getReader()->getOffset() - $token->getOffset());
     }
 

@@ -70,7 +70,6 @@ class CommentScanner extends MultilineScanner
         }
         $token->setValue(implode("\n", $lines));
 
-
         //TODO: As it seems, this is the only TextToken that will actually contain newlines, thus Stat->endToken will
         // end up with a wrong line offset. This is why endToken is not applied at all here and only the start
         // position will be kept
