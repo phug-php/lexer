@@ -100,10 +100,10 @@ class Lexer implements LexerInterface, ModuleContainerInterface
      *
      * Valid options are:
      *
-     * stateClassName:  The class of the lexer state to use
+     * state_class_name:  The class of the lexer state to use
      * level:           The internal indentation level to start on
-     * indentStyle:     The indentation character (auto-detected)
-     * indentWidth:     How often to repeat indentStyle (auto-detected)
+     * indent_style:     The indentation character (auto-detected)
+     * indent_width:     How often to repeat indentStyle (auto-detected)
      * encoding:        The encoding when working with mb_*-functions (auto-detected)
      * scanners:        An array of scans that will be performed
      *
@@ -187,6 +187,17 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     public function getScanners()
     {
         return $this->getOption('scanners');
+    }
+
+    /**
+     * Returns true if a lexing process is active and a state exists, false if not.
+     *
+     * @return bool
+     */
+    public function hasState()
+    {
+
+        return $this->state instanceof State;
     }
 
     /**
