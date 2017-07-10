@@ -2,7 +2,6 @@
 
 namespace Phug\Lexer;
 
-use Phug\Util\Partial\DocumentLocationTrait;
 use Phug\Util\Partial\LevelGetTrait;
 use Phug\Util\SourceLocationInterface;
 
