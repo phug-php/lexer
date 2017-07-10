@@ -2,15 +2,18 @@
 
 namespace Phug\Lexer;
 
-use Phug\Util\DocumentLocationInterface;
+use Phug\Util\SourceLocationInterface;
 
-interface TokenInterface extends DocumentLocationInterface
+interface TokenInterface
 {
-    public function getOffsetLength();
+    public function __construct(SourceLocationInterface $sourceLocation = null, $level = null, $indentation = null);
 
-    public function setOffsetLength($offsetLength);
+    /**
+     * @return SourceLocationInterface|null
+     */
+    public function getSourceLocation();
 
     public function getLevel();
 
-    public function getIndent();
+    public function getIndentation();
 }

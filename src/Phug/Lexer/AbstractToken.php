@@ -4,45 +4,32 @@ namespace Phug\Lexer;
 
 use Phug\Util\Partial\DocumentLocationTrait;
 use Phug\Util\Partial\LevelGetTrait;
+use Phug\Util\SourceLocationInterface;
 
 abstract class AbstractToken implements TokenInterface
 {
-    use DocumentLocationTrait;
     use LevelGetTrait;
 
-    private $offsetLength = 0;
-    private $indent;
+    private $sourceLocation;
+    private $indentation;
 
-    public function __construct($line = null, $offset = null, $level = null, $indent = null)
+    public function __construct(SourceLocationInterface $sourceLocation = null, $level = null, $indentation = null)
     {
-        $this->line = $line ?: 0;
-        $this->offset = $offset ?: 0;
+        $this->sourceLocation = $sourceLocation;
         $this->level = $level ?: 0;
-        $this->indent = $indent;
+        $this->indentation = $indentation;
     }
 
     /**
-     * @return int
+     * @return SourceLocationInterface
      */
-    public function getOffsetLength()
+    public function getSourceLocation()
     {
-        return $this->offsetLength;
+        return $this->sourceLocation;
     }
 
-    /**
-     * @param int $offsetLength
-     *
-     * @return $this
-     */
-    public function setOffsetLength($offsetLength)
+    public function getIndentation()
     {
-        $this->offsetLength = $offsetLength;
-
-        return $this;
-    }
-
-    public function getIndent()
-    {
-        return $this->indent;
+        return $this->indentation;
     }
 }

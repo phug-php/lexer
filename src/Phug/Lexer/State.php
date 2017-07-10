@@ -5,7 +5,6 @@ namespace Phug\Lexer;
 use Phug\Lexer;
 use Phug\LexerException;
 use Phug\Reader;
-use Phug\Util\ExceptionLocation;
 use Phug\Util\OptionInterface;
 use Phug\Util\Partial\LevelTrait;
 use Phug\Util\Partial\OptionTrait;
@@ -106,6 +105,7 @@ class State implements OptionInterface
     }
 
     /**
+     * @param $classNames
      * @return bool
      */
     public function lastTokenIs($classNames)
@@ -205,6 +205,7 @@ class State implements OptionInterface
     /**
      * Indent and return the new level.
      *
+     * @param null $level
      * @return int
      */
     public function indent($level = null)
@@ -344,6 +345,16 @@ class State implements OptionInterface
         }
     }
 
+    public function createCurrentSourceLocation()
+    {
+
+        return new SourceLocation(
+            $this->getOption('path'),
+            $this->reader->getLine(),
+            $this->reader->getOffset()
+        );
+    }
+
     /**
      * Creates a new instance of a token.
      *
@@ -362,8 +373,7 @@ class State implements OptionInterface
         }
 
         return new $className(
-            $this->getReader()->getLine(),
-            $this->getReader()->getOffset(),
+            $this->createCurrentSourceLocation(),
             $this->level,
             str_repeat($this->getIndentStyle(), $this->getIndentWidth())
         );
@@ -415,7 +425,11 @@ class State implements OptionInterface
      */
     public function endToken(TokenInterface $token)
     {
-        return $token->setOffsetLength($this->getReader()->getOffset() - $token->getOffset());
+        $token->getSourceLocation()->setOffsetLength(
+            $this->reader->getOffset() - $token->getSourceLocation()->getOffset()
+        );
+
+        return $token;
     }
 
     /**
@@ -469,7 +483,7 @@ class State implements OptionInterface
         }
 
         throw new LexerException(
-            new SourceLocation($path, $this->reader->getLine(), $this->reader->getOffset()),
+            $this->createCurrentSourceLocation(),
             vsprintf($pattern, [
                 $message,
                 $this->reader->peek(20),

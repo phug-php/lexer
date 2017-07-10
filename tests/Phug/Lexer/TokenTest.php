@@ -7,6 +7,7 @@ use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
 use Phug\Lexer\Token\AttributeToken;
 use Phug\Lexer\TokenInterface;
+use Phug\Util\SourceLocation;
 
 class TokenTest extends \PHPUnit_Framework_TestCase
 {
@@ -91,11 +92,11 @@ class TokenTest extends \PHPUnit_Framework_TestCase
         $level = mt_rand(0, 8);
 
         /** @var TokenInterface $tok */
-        $tok = new $className($line, $offset, $level);
+        $tok = new $className(new SourceLocation(null, $line, $offset), $level);
 
         self::assertInstanceOf($className, $tok, 'instance created');
-        self::assertSame($line, $tok->getLine(), "{$className}->getLine");
-        self::assertSame($offset, $tok->getOffset(), "{$className}->getOffset");
+        self::assertSame($line, $tok->getSourceLocation()->getLine(), "{$className}->getLine");
+        self::assertSame($offset, $tok->getSourceLocation()->getOffset(), "{$className}->getOffset");
         self::assertSame($level, $tok->getLevel(), "{$className}->getLevel");
 
         return $tok;

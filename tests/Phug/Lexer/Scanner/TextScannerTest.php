@@ -26,7 +26,7 @@ class TextScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers \Phug\Lexer\AbstractToken::getIndent
+     * @covers \Phug\Lexer\AbstractToken::getIndentation
      */
     public function testTextIndent()
     {
@@ -38,7 +38,7 @@ class TextScannerTest extends AbstractLexerTest
             TextToken::class,
         ]);
 
-        self::assertSame('  ', $tok->getIndent());
+        self::assertSame('  ', $tok->getIndentation());
     }
 
     /**
