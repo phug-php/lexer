@@ -196,7 +196,6 @@ class Lexer implements LexerInterface, ModuleContainerInterface
      */
     public function hasState()
     {
-
         return $this->state instanceof State;
     }
 
