@@ -5,6 +5,7 @@ namespace Phug\Lexer;
 use Phug\Lexer;
 use Phug\LexerException;
 use Phug\Reader;
+use Phug\Util\ExceptionLocation;
 use Phug\Util\OptionInterface;
 use Phug\Util\Partial\LevelTrait;
 use Phug\Util\Partial\OptionTrait;
@@ -459,7 +460,7 @@ class State implements OptionInterface
      */
     public function throwException($message, $code = 0, $previous = null)
     {
-        $pattern = "Failed to lex: %s \nNear: %s \nLine: %s \nOffset: %s \nPosition: %s";
+        $pattern = "Failed to lex: %s \nNear: %s \nLine: %s \nOffset: %s";
         $path = $this->getOption('path');
 
         if ($path) {
@@ -467,17 +468,15 @@ class State implements OptionInterface
         }
 
         throw new LexerException(
+            new ExceptionLocation($path, $this->reader->getLine(), $this->reader->getOffset()),
             vsprintf($pattern, [
                 $message,
                 $this->reader->peek(20),
                 $this->reader->getLine(),
                 $this->reader->getOffset(),
-                $this->reader->getPosition(),
             ]),
             $code,
-            $previous,
-            $this->reader->getLine(),
-            $this->reader->getOffset()
+            $previous
         );
     }
 }
