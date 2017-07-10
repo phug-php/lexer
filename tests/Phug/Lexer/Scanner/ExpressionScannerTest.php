@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\ExpressionScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
@@ -120,7 +121,7 @@ class ExpressionScannerTest extends AbstractLexerTest
      */
     public function testExpressionQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'expression' => ExpressionScanner::class,
         ];

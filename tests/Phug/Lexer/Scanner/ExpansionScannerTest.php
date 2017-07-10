@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\ExpansionScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\ExpansionToken;
@@ -82,7 +83,7 @@ class ExpansionScannerTest extends AbstractLexerTest
      */
     public function testExpansionQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'tag' => ExpansionScanner::class,
         ];

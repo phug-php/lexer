@@ -56,11 +56,11 @@ class State implements OptionInterface
     /**
      * Creates a new instance of the state.
      *
+     * @param Lexer  $lexer   linked lexer
      * @param string $input   pug string input
      * @param array  $options indent settings, errors info and reader class name
-     * @param Lexer  $lexer   optional linked lexer
      */
-    public function __construct($input, array $options, Lexer $lexer = null)
+    public function __construct(Lexer $lexer, $input, array $options)
     {
         $this->lexer = $lexer;
         $this->setOptionsRecursive([

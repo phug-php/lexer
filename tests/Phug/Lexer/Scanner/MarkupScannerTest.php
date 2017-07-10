@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\MarkupScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\TextToken;
@@ -40,7 +41,7 @@ class MarkupScannerTest extends AbstractLexerTest
      */
     public function testRawMarkupQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'markup' => MarkupScanner::class,
         ];

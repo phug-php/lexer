@@ -26,7 +26,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testBadReaderClass()
     {
-        new State('p Hello', [
+        new State(new Lexer(), 'p Hello', [
             'reader_class_name' => 'NotAValidClassName',
         ]);
     }
@@ -37,7 +37,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetReader()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
 
         self::assertInstanceOf(Reader::class, $state->getReader());
     }
@@ -48,7 +48,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIndentStyle()
     {
-        $state = new State('p Hello', [
+        $state = new State(new Lexer(), 'p Hello', [
             'indent_style' => null,
         ]);
 
@@ -62,7 +62,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetIndentStyle()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $state->setIndentStyle(Lexer::INDENT_TAB);
 
         self::assertSame(Lexer::INDENT_TAB, $state->getIndentStyle());
@@ -75,7 +75,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetIndentStyleException()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $state->setIndentStyle(42);
     }
 
@@ -84,7 +84,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetIndentWidth()
     {
-        $state = new State('p Hello', [
+        $state = new State(new Lexer(), 'p Hello', [
             'indent_width' => null,
         ]);
 
@@ -96,10 +96,8 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetLexer()
     {
-        $state = new State('p Hello', []);
-        $lexer = new Lexer();
+        $state = new State($lexer = new Lexer(), 'p Hello', []);
 
-        self::assertSame(null, $state->getLexer());
         foreach ($lexer->lex('p Hello') as $token) {
             self::assertSame($lexer, $lexer->getState()->getLexer());
             break;
@@ -111,7 +109,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetIndentWidth()
     {
-        $state = new State('p Hello', [
+        $state = new State(new Lexer(), 'p Hello', [
             'indent_width' => null,
         ]);
         $state->setIndentWidth(42);
@@ -126,7 +124,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetIndentWidthException()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $state->setIndentWidth(-1);
     }
 
@@ -135,7 +133,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateToken()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $block = $state->createToken(BlockToken::class);
 
         self::assertInstanceOf(BlockToken::class, $block);
@@ -154,7 +152,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testCreateTokenException()
     {
-        $state = new State('p Hello', [
+        $state = new State(new Lexer(), 'p Hello', [
             'path' => 'foo',
         ]);
         $state->createToken('bar');
@@ -168,7 +166,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testScan()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $scanners = [
             'tag'       => TagScanner::class,
             'text_line' => TextScanner::class,
@@ -195,7 +193,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testFilterScanersException()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $scanners = [
             'tag' => stdClass::class,
         ];
@@ -219,7 +217,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
         $mock = new MockScanner();
         $mock->badTokens();
 
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         $scanners = [
             'tag' => $mock,
         ];
@@ -235,7 +233,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoopScanException()
     {
-        $state = new State('p Hello', []);
+        $state = new State(new Lexer(), 'p Hello', []);
         foreach ($state->loopScan([], true) as $token) {
         }
     }

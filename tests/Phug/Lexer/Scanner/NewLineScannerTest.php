@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\NewLineScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\NewLineToken;
@@ -26,7 +27,7 @@ class NewLineScannerTest extends AbstractLexerTest
      */
     public function testNewLineQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'new_line' => NewLineScanner::class,
         ];

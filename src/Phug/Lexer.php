@@ -294,7 +294,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         }
 
         //Put together our initial state
-        $this->state = new $stateClassName($input, $stateOptions, $this);
+        $this->state = new $stateClassName($this, $input, $stateOptions);
 
         $scanners = $this->getOption('scanners');
 

@@ -13,6 +13,7 @@ use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
+use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 
 /**
@@ -133,6 +134,24 @@ class LexerTest extends AbstractLexerTest
         ]);
         foreach ($lexer->lex('p') as $token) {
         }
+    }
+
+    /**
+     * @covers  ::lex
+     */
+    public function testIfPathIsPassedToTokenSourceLocationsCorrectly()
+    {
+
+        $lexer = new Lexer();
+
+        /* @var TagToken $tag */
+        /* @var TextToken $text */
+        list($tag, $text) = iterator_to_array($lexer->lex('p Test', 'test.pug'));
+
+        self::assertInstanceOf(TagToken::class, $tag);
+        self::assertInstanceOf(TextToken::class, $text);
+        self::assertSame('test.pug', $tag->getSourceLocation()->getPath());
+        self::assertSame('test.pug', $text->getSourceLocation()->getPath());
     }
 
     /**

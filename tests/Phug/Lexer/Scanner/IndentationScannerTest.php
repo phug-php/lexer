@@ -59,7 +59,7 @@ class IndentationScannerTest extends AbstractLexerTest
      */
     public function testIndentationQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'indent' => IndentationScanner::class,
         ];
@@ -70,7 +70,7 @@ class IndentationScannerTest extends AbstractLexerTest
 
         self::assertSame(0, count($tokens));
 
-        $state = new State("p\t\t", []);
+        $state = new State(new Lexer(), "p\t\t", []);
         $scanners = [
             'tag'    => TagScanner::class,
             'indent' => IndentationScanner::class,

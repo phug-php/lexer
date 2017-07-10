@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\CommentScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CommentToken;
@@ -102,7 +103,7 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testCommentQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'comment' => CommentScanner::class,
         ];

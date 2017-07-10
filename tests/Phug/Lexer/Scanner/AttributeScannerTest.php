@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\AttributeScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
@@ -189,7 +190,7 @@ class AttributeScannerTest extends AbstractLexerTest
      */
     public function testAttributeQuit()
     {
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'attribute' => AttributeScanner::class,
         ];

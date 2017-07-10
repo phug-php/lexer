@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
 use Phug\Lexer\Scanner\CodeScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CodeToken;
@@ -53,7 +54,7 @@ class CodeScannerTest extends AbstractLexerTest
 
         self::assertSame("foo();\n\$bar = 1;", $tok->getValue());
 
-        $state = new State('p', []);
+        $state = new State(new Lexer(), 'p', []);
         $scanners = [
             'tag' => CodeScanner::class,
         ];
