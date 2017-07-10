@@ -5,7 +5,6 @@ namespace Phug\Lexer;
 use Phug\Lexer;
 use Phug\LexerException;
 use Phug\Reader;
-use Phug\Util\ExceptionLocation;
 use Phug\Util\OptionInterface;
 use Phug\Util\Partial\LevelTrait;
 use Phug\Util\Partial\OptionTrait;
