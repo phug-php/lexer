@@ -106,6 +106,7 @@ class State implements OptionInterface
 
     /**
      * @param $classNames
+     *
      * @return bool
      */
     public function lastTokenIs($classNames)
@@ -206,6 +207,7 @@ class State implements OptionInterface
      * Indent and return the new level.
      *
      * @param null $level
+     *
      * @return int
      */
     public function indent($level = null)
@@ -347,7 +349,6 @@ class State implements OptionInterface
 
     public function createCurrentSourceLocation()
     {
-
         return new SourceLocation(
             $this->getOption('path'),
             $this->reader->getLine(),
