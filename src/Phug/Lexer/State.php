@@ -9,6 +9,7 @@ use Phug\Util\ExceptionLocation;
 use Phug\Util\OptionInterface;
 use Phug\Util\Partial\LevelTrait;
 use Phug\Util\Partial\OptionTrait;
+use Phug\Util\SourceLocation;
 
 /**
  * Represents the state of a currently running lexing process.
@@ -468,7 +469,7 @@ class State implements OptionInterface
         }
 
         throw new LexerException(
-            new ExceptionLocation($path, $this->reader->getLine(), $this->reader->getOffset()),
+            new SourceLocation($path, $this->reader->getLine(), $this->reader->getOffset()),
             vsprintf($pattern, [
                 $message,
                 $this->reader->peek(20),
