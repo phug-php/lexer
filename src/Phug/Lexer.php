@@ -168,8 +168,6 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
         $this->state = null;
 
-        $this->addModules($this->getOption('modules'));
-
         if ($onLex = $this->getOption('on_lex')) {
             $this->attach(LexerEvent::LEX, $onLex);
         }
@@ -177,6 +175,8 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         if ($onToken = $this->getOption('on_token')) {
             $this->attach(LexerEvent::TOKEN, $onToken);
         }
+
+        $this->addModules($this->getOption('modules'));
     }
 
     /**
