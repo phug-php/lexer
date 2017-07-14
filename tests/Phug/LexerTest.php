@@ -141,7 +141,6 @@ class LexerTest extends AbstractLexerTest
      */
     public function testIfPathIsPassedToTokenSourceLocationsCorrectly()
     {
-
         $lexer = new Lexer();
 
         /* @var TagToken $tag */
