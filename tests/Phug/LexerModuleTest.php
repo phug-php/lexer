@@ -65,7 +65,7 @@ class LexerModuleTest extends AbstractLexerTest
             Lexer\Token\TextToken::class,
         ]);
 
-        $lexer = new Lexer(['modules' => [TestModule::class]]);
+        $lexer = new Lexer(['lexer_modules' => [TestModule::class]]);
 
         self::assertTokens('p Test', [
             Lexer\Token\ClassToken::class,
@@ -89,7 +89,7 @@ class LexerModuleTest extends AbstractLexerTest
             Lexer\Token\TextToken::class,
         ]);
 
-        $lexer = new Lexer(['modules' => [GeneratorTestModule::class]]);
+        $lexer = new Lexer(['lexer_modules' => [GeneratorTestModule::class]]);
 
         self::assertTokens('p Test', [
             Lexer\Token\TagToken::class,

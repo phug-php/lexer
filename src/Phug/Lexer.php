@@ -231,19 +231,14 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     {
         $this->filterScanner($scanner);
 
-        //Quick return if we don't want to prepend
-        if (!$before) {
-            $this->setOption(['scanners', $name], $scanner);
-
-            return $this;
-        }
-
-        $scanners = [];
+        $scanners = $before ? [] : $this->getOption('scanners');
         $scanners[$name] = $scanner;
 
-        foreach ($this->getOption('scanners') as $scannerName => $classNameOrInstance) {
-            if ($scannerName !== $name) {
-                $scanners[$scannerName] = $classNameOrInstance;
+        if ($before) {
+            foreach ($this->getOption('scanners') as $scannerName => $classNameOrInstance) {
+                if ($scannerName !== $name) {
+                    $scanners[$scannerName] = $classNameOrInstance;
+                }
             }
         }
 
