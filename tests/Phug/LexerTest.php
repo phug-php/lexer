@@ -125,12 +125,12 @@ class LexerTest extends AbstractLexerTest
     public function testBadStateClassName()
     {
         $this->expectMessageToBeThrown(
-            'state_class_name needs to be a valid '.
+            'lexer_state_class_name needs to be a valid '.
             'Phug\\Lexer\\State sub class'
         );
 
         $lexer = new Lexer([
-            'state_class_name' => 'NotAValidClassName',
+            'lexer_state_class_name' => 'NotAValidClassName',
         ]);
         foreach ($lexer->lex('p') as $token) {
         }

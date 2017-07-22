@@ -100,7 +100,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
      *
      * Valid options are:
      *
-     * state_class_name:  The class of the lexer state to use
+     * lexer_state_class_name:  The class of the lexer state to use
      * level:           The internal indentation level to start on
      * indent_style:     The indentation character (auto-detected)
      * indent_width:     How often to repeat indentStyle (auto-detected)
@@ -114,17 +114,17 @@ class Lexer implements LexerInterface, ModuleContainerInterface
      *
      * @throws \Exception
      */
-    public function __construct(array $options = null)
+    public function __construct($options = null)
     {
-        $this->setOptionsRecursive([
-            'state_class_name'   => State::class,
-            'level'              => 0,
-            'indent_style'       => null,
-            'indent_width'       => null,
-            'allow_mixed_indent' => true,
-            'encoding'           => null,
-            'modules'            => [],
-            'scanners'           => [
+        $this->setOptionsDefaults($options ?: [], [
+            'lexer_state_class_name' => State::class,
+            'level'                  => 0,
+            'indent_style'           => null,
+            'indent_width'           => null,
+            'allow_mixed_indent'     => true,
+            'encoding'               => null,
+            'lexer_modules'          => [],
+            'scanners'               => [
                 //TODO: Several of these are non-standard and need to be encapsulated into extensions
                 //Namely: ForScanner, DoScanner, VariableScanner
                 'new_line'    => NewLineScanner::class,
@@ -164,7 +164,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             //Events
             'on_lex'   => null,
             'on_token' => null,
-        ], $options ?: []);
+        ]);
 
         $this->state = null;
 
@@ -176,7 +176,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             $this->attach(LexerEvent::TOKEN, $onToken);
         }
 
-        $this->addModules($this->getOption('modules'));
+        $this->addModules($this->getOption('lexer_modules'));
     }
 
     /**
@@ -231,19 +231,14 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     {
         $this->filterScanner($scanner);
 
-        //Quick return if we don't want to prepend
-        if (!$before) {
-            $this->setOption(['scanners', $name], $scanner);
-
-            return $this;
-        }
-
-        $scanners = [];
+        $scanners = $before ? [] : $this->getOption('scanners');
         $scanners[$name] = $scanner;
 
-        foreach ($this->getOption('scanners') as $scannerName => $classNameOrInstance) {
-            if ($scannerName !== $name) {
-                $scanners[$scannerName] = $classNameOrInstance;
+        if ($before) {
+            foreach ($this->getOption('scanners') as $scannerName => $classNameOrInstance) {
+                if ($scannerName !== $name) {
+                    $scanners[$scannerName] = $classNameOrInstance;
+                }
             }
         }
 
@@ -269,7 +264,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
      */
     public function lex($input, $path = null)
     {
-        $stateClassName = $this->getOption('state_class_name');
+        $stateClassName = $this->getOption('lexer_state_class_name');
         $e = new LexEvent($input, $path, $stateClassName, [
             'encoding'           => $this->getOption('encoding'),
             'indent_style'       => $this->getOption('indent_style'),
@@ -289,7 +284,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
         if (!is_a($stateClassName, State::class, true)) {
             throw new \InvalidArgumentException(
-                'state_class_name needs to be a valid '.State::class.' sub class'
+                'lexer_state_class_name needs to be a valid '.State::class.' sub class'
             );
         }
 
