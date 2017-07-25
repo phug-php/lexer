@@ -13,9 +13,9 @@ class TestModule extends AbstractLexerModule
     public function getEventListeners()
     {
         return [
-            LexerEvent::TOKEN => function (TokenEvent $e) {
-                if ($e->getToken() instanceof Lexer\Token\TagToken) {
-                    $e->setToken(new Lexer\Token\ClassToken());
+            LexerEvent::TOKEN => function (TokenEvent $event) {
+                if ($event->getToken() instanceof Lexer\Token\TagToken) {
+                    $event->setToken(new Lexer\Token\ClassToken());
                 }
             },
         ];
@@ -34,10 +34,10 @@ class GeneratorTestModule extends AbstractLexerModule
     public function getEventListeners()
     {
         return [
-            LexerEvent::TOKEN => function (TokenEvent $e) {
-                $token = $e->getToken();
+            LexerEvent::TOKEN => function (TokenEvent $event) {
+                $token = $event->getToken();
                 if ($token instanceof Lexer\Token\TagToken && $token->getName() === 'p') {
-                    $e->setTokenGenerator($this->generateTokens());
+                    $event->setTokenGenerator($this->generateTokens());
                 }
             },
         ];

@@ -275,10 +275,10 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
         $this->trigger($event);
 
-        $input = $e->getInput();
-        $path = $e->getPath();
-        $stateClassName = $e->getStateClassName();
-        $stateOptions = $e->getStateOptions();
+        $input = $event->getInput();
+        $path = $event->getPath();
+        $stateClassName = $event->getStateClassName();
+        $stateOptions = $event->getStateOptions();
 
         $stateOptions['path'] = $path;
 
