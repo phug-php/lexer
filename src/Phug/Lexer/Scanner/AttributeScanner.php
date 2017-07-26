@@ -49,69 +49,6 @@ class AttributeScanner implements ScannerInterface
         return false;
     }
 
-    private function readAssignOperator(State $state, AttributeToken $token)
-    {
-        $reader = $state->getReader();
-
-        if ($reader->peekString('?!=')) {
-            $token->unescape();
-            $token->uncheck();
-            $reader->consume();
-
-            return true;
-        }
-        if ($reader->peekString('?=')) {
-            $token->uncheck();
-            $reader->consume();
-
-            return true;
-        }
-        if ($reader->peekString('!=')) {
-            $token->unescape();
-            $reader->consume();
-
-            return true;
-        }
-        if ($reader->peekChar('=')) {
-            $reader->consume();
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private function readTokenValue(State $state, AttributeToken $token)
-    {
-        $reader = $state->getReader();
-
-        $expr = $reader->readExpression([
-            ' ', "\t", "\n", ',', ')', '//',
-        ]);
-        while ($this->isTruncatedExpression($reader, $expr)) {
-            $reader->readSpaces();
-            $this->skipComments($reader);
-            $reader->readSpaces();
-            $expr .= $reader->readExpression([
-                ' ', "\t", "\n", ',', ')', '//',
-            ]);
-        }
-        $token->setValue($expr);
-
-        //Ignore a comma if found
-        if ($reader->peekChar(',')) {
-            $reader->consume();
-        }
-
-        //And check for comments again
-        // a(
-        //  href='value' //<- Awesome attribute, i say
-        //  )
-        $reader->readSpaces();
-        $this->skipComments($reader);
-        $reader->readSpaces();
-    }
-
     private function scanParenthesesContent(State $state)
     {
         $reader = $state->getReader();
@@ -195,7 +132,24 @@ class AttributeScanner implements ScannerInterface
             //more reliable.
             //If any of the following assignment operators have been found,
             //we REQUIRE a following expression as the attribute value
-            $hasValue = $this->readTokenValue($state, $token);
+            $hasValue = false;
+            if ($reader->peekString('?!=')) {
+                $token->unescape();
+                $token->uncheck();
+                $hasValue = true;
+                $reader->consume();
+            } elseif ($reader->peekString('?=')) {
+                $token->uncheck();
+                $hasValue = true;
+                $reader->consume();
+            } elseif ($reader->peekString('!=')) {
+                $token->unescape();
+                $hasValue = true;
+                $reader->consume();
+            } elseif ($reader->peekChar('=')) {
+                $hasValue = true;
+                $reader->consume();
+            }
 
             //Check for comments again
             // a(
@@ -207,7 +161,31 @@ class AttributeScanner implements ScannerInterface
             $reader->readSpaces();
 
             if ($hasValue) {
-                $this->readAssignOperator($state, $token);
+                $expr = $reader->readExpression([
+                    ' ', "\t", "\n", ',', ')', '//',
+                ]);
+                while ($this->isTruncatedExpression($reader, $expr)) {
+                    $reader->readSpaces();
+                    $this->skipComments($reader);
+                    $reader->readSpaces();
+                    $expr .= $reader->readExpression([
+                        ' ', "\t", "\n", ',', ')', '//',
+                    ]);
+                }
+                $token->setValue($expr);
+
+                //Ignore a comma if found
+                if ($reader->peekChar(',')) {
+                    $reader->consume();
+                }
+
+                //And check for comments again
+                // a(
+                //  href='value' //<- Awesome attribute, i say
+                //  )
+                $reader->readSpaces();
+                $this->skipComments($reader);
+                $reader->readSpaces();
             }
 
             yield $token;

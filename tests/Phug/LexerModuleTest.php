@@ -93,12 +93,17 @@ class LexerModuleTest extends AbstractLexerTest
     public function testLexEvent()
     {
         $lexer = new Lexer([
-            'on_token' => function (LexEvent $event) {
-                $event->setInput('div:'.$event->getInput());
+            'on_lex' => function (LexEvent $event) {
+                $event->setInput('.bar:'.$event->getInput());
+            },
+            'on_token' => function (TokenEvent $event) {
+                if ($event->getToken() instanceof Lexer\Token\ClassToken) {
+                    $event->setToken(new Lexer\Token\TagToken());
+                }
             },
         ]);
 
-        self::assertTokens('p Test', [
+        self::assertTokens('.foo Test', [
             Lexer\Token\TagToken::class,
             Lexer\Token\ExpansionToken::class,
             Lexer\Token\TagToken::class,
