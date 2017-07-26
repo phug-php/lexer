@@ -49,6 +49,36 @@ class AttributeScanner implements ScannerInterface
         return false;
     }
 
+    private function readAssignOperator(Reader $reader, AttributeToken $token)
+    {
+        if ($reader->peekString('?!=')) {
+            $token->unescape();
+            $token->uncheck();
+            $reader->consume();
+
+            return true;
+        }
+        if ($reader->peekString('?=')) {
+            $token->uncheck();
+            $reader->consume();
+
+            return true;
+        }
+        if ($reader->peekString('!=')) {
+            $token->unescape();
+            $reader->consume();
+
+            return true;
+        }
+        if ($reader->peekChar('=')) {
+            $reader->consume();
+
+            return true;
+        }
+
+        return false;
+    }
+
     private function scanParenthesesContent(State $state)
     {
         $reader = $state->getReader();
@@ -132,24 +162,7 @@ class AttributeScanner implements ScannerInterface
             //more reliable.
             //If any of the following assignment operators have been found,
             //we REQUIRE a following expression as the attribute value
-            $hasValue = false;
-            if ($reader->peekString('?!=')) {
-                $token->unescape();
-                $token->uncheck();
-                $hasValue = true;
-                $reader->consume();
-            } elseif ($reader->peekString('?=')) {
-                $token->uncheck();
-                $hasValue = true;
-                $reader->consume();
-            } elseif ($reader->peekString('!=')) {
-                $token->unescape();
-                $hasValue = true;
-                $reader->consume();
-            } elseif ($reader->peekChar('=')) {
-                $hasValue = true;
-                $reader->consume();
-            }
+            $hasValue = $this->readAssignOperator($reader, $token);
 
             //Check for comments again
             // a(
