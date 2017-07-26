@@ -265,7 +265,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     public function lex($input, $path = null)
     {
         $stateClassName = $this->getOption('lexer_state_class_name');
-        $e = new LexEvent($input, $path, $stateClassName, [
+        $event = new LexEvent($input, $path, $stateClassName, [
             'encoding'           => $this->getOption('encoding'),
             'indent_style'       => $this->getOption('indent_style'),
             'indent_width'       => $this->getOption('indent_width'),
@@ -273,12 +273,12 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'level'              => $this->getOption('level'),
         ]);
 
-        $this->trigger($e);
+        $this->trigger($event);
 
-        $input = $e->getInput();
-        $path = $e->getPath();
-        $stateClassName = $e->getStateClassName();
-        $stateOptions = $e->getStateOptions();
+        $input = $event->getInput();
+        $path = $event->getPath();
+        $stateClassName = $event->getStateClassName();
+        $stateOptions = $event->getStateOptions();
 
         $stateOptions['path'] = $path;
 
@@ -311,11 +311,11 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     private function handleTokens(\Generator $tokens)
     {
         foreach ($tokens as $token) {
-            $e = new TokenEvent($token);
-            $this->trigger($e);
+            $event = new TokenEvent($token);
+            $this->trigger($event);
 
-            $token = $e->getToken();
-            $tokens = $e->getTokenGenerator();
+            $token = $event->getToken();
+            $tokens = $event->getTokenGenerator();
 
             if ($tokens) {
                 //N> yield from $this->>handleTokens($tokens)
