@@ -60,44 +60,9 @@ class MarkupScanner extends MultilineScanner
             }
         }
 
-        $buffer = '';
-        $interpolationLevel = 0;
-        foreach ($lines as $number => $lineValues) {
-            if ($number) {
-                $buffer .= "\n";
-            }
-            foreach ($lineValues as $value) {
-                if (is_string($value)) {
-                    if ($interpolationLevel) {
-                        yield $this->unEscapedToken($state, $value);
-
-                        continue;
-                    }
-                    $buffer .= $value;
-
-                    continue;
-                }
-
-                if (!$interpolationLevel) {
-                    yield $this->unEscapedToken($state, $buffer);
-
-                    $buffer = '';
-                }
-
-                yield $value;
-
-                if ($value instanceof TagInterpolationStartToken || $value instanceof InterpolationStartToken) {
-                    $interpolationLevel++;
-                }
-
-                if ($value instanceof TagInterpolationEndToken || $value instanceof InterpolationEndToken) {
-                    $interpolationLevel--;
-                }
-            }
+        foreach ($this->getUnescapedLines($state, $lines) as $token) {
+            yield $token;
         }
-
-        //TODO: $state->endToken
-        yield $this->unEscapedToken($state, $buffer);
 
         if ($newLine) {
             yield $state->createToken(NewLineToken::class);

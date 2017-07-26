@@ -25,6 +25,8 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      * @covers \Phug\Lexer\Scanner\MultilineScanner
+     * @covers \Phug\Lexer\Scanner\MultilineScanner::unEscapedToken
+     * @covers \Phug\Lexer\Scanner\MultilineScanner::getUnescapedLines
      * @covers \Phug\Lexer\Scanner\MultilineScanner::scan
      * @covers \Phug\Lexer\Scanner\InterpolationScanner
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scanInterpolation
@@ -160,6 +162,8 @@ class TextBlockScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\TextBlockScanner
      * @covers \Phug\Lexer\Scanner\TextBlockScanner::scan
      * @covers \Phug\Lexer\Scanner\MultilineScanner
+     * @covers \Phug\Lexer\Scanner\MultilineScanner::unEscapedToken
+     * @covers \Phug\Lexer\Scanner\MultilineScanner::getUnescapedLines
      * @covers \Phug\Lexer\Scanner\MultilineScanner::scan
      */
     public function testScanWhiteSpaces()

@@ -358,7 +358,6 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
     private function dumpToken(TokenInterface $token)
     {
-        $dumped = '';
         $suffix = '';
         switch (get_class($token)) {
             case IndentToken::class:
