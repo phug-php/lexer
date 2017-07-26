@@ -5,7 +5,6 @@ namespace Phug\Test\Lexer\Scanner;
 use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
-use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class DynamicTagScannerTest extends AbstractLexerTest

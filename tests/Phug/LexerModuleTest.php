@@ -126,7 +126,7 @@ class LexerModuleTest extends AbstractLexerTest
         self::assertCount(1, $tokens);
         $token = $tokens[0];
         self::assertInstanceOf(Lexer\Token\TextToken::class, $token);
-        /** @var Lexer\Token\TextToken $token */
+        /* @var Lexer\Token\TextToken $token */
         self::assertSame('foo', $token->getValue());
         self::assertSame('path.pug', $token->getSourceLocation()->getPath());
 
