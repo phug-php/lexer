@@ -2,9 +2,9 @@
 
 namespace Phug\Lexer\Scanner;
 
+use Phug\Lexer\EscapeTokenInterface;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
-use Phug\Lexer\Token\TextToken;
 
 class SubScanner implements ScannerInterface
 {
@@ -18,7 +18,7 @@ class SubScanner implements ScannerInterface
             $reader->consume();
 
             foreach ($state->scan(MultilineScanner::class) as $token) {
-                if ($token instanceof TextToken && $escape) {
+                if ($token instanceof EscapeTokenInterface && $escape) {
                     $token->escape();
                 }
 
@@ -33,7 +33,10 @@ class SubScanner implements ScannerInterface
             $reader->consume();
 
             foreach ($state->scan(TextScanner::class) as $token) {
-                $token->escape();
+                if ($token instanceof EscapeTokenInterface) {
+                    $token->escape();
+                }
+
                 yield $token;
             }
         }

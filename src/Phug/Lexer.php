@@ -153,8 +153,8 @@ class Lexer implements LexerInterface, ModuleContainerInterface
                 'code'        => CodeScanner::class,
                 'markup'      => MarkupScanner::class,
                 'expansion'   => ExpansionScanner::class,
-                'text_block'  => TextBlockScanner::class,
                 'dynamic_tag' => DynamicTagScanner::class,
+                'text_block'  => TextBlockScanner::class,
                 'text_line'   => TextLineScanner::class,
                 //Notice that TextScanner is always added in lex(), as we'd basically disable extensions otherwise
                 //As this array is replaced recursively, your extensions are either added or overwritten

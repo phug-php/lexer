@@ -2,9 +2,9 @@
 
 namespace Phug\Lexer\Scanner;
 
+use Phug\Lexer\EscapeTokenInterface;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
-use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 
 class DynamicTagScanner implements ScannerInterface
@@ -20,8 +20,8 @@ class DynamicTagScanner implements ScannerInterface
             }
 
             foreach ($state->scan(InterpolationScanner::class) as $token) {
-                if (!$raw && $token instanceof ExpressionToken) {
-                    $token->escape();
+                if ($raw && $token instanceof EscapeTokenInterface) {
+                    $token->unescape();
                 }
 
                 yield $token;

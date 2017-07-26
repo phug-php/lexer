@@ -79,6 +79,35 @@ class AttributeScanner implements ScannerInterface
         return false;
     }
 
+    private function readAttributeValue(Reader $reader, AttributeToken $token)
+    {
+        $expr = $reader->readExpression([
+            ' ', "\t", "\n", ',', ')', '//',
+        ]);
+        while ($this->isTruncatedExpression($reader, $expr)) {
+            $reader->readSpaces();
+            $this->skipComments($reader);
+            $reader->readSpaces();
+            $expr .= $reader->readExpression([
+                ' ', "\t", "\n", ',', ')', '//',
+            ]);
+        }
+        $token->setValue($expr);
+
+        //Ignore a comma if found
+        if ($reader->peekChar(',')) {
+            $reader->consume();
+        }
+
+        //And check for comments again
+        // a(
+        //  href='value' //<- Awesome attribute, i say
+        //  )
+        $reader->readSpaces();
+        $this->skipComments($reader);
+        $reader->readSpaces();
+    }
+
     private function scanParenthesesContent(State $state)
     {
         $reader = $state->getReader();
@@ -174,31 +203,7 @@ class AttributeScanner implements ScannerInterface
             $reader->readSpaces();
 
             if ($hasValue) {
-                $expr = $reader->readExpression([
-                    ' ', "\t", "\n", ',', ')', '//',
-                ]);
-                while ($this->isTruncatedExpression($reader, $expr)) {
-                    $reader->readSpaces();
-                    $this->skipComments($reader);
-                    $reader->readSpaces();
-                    $expr .= $reader->readExpression([
-                        ' ', "\t", "\n", ',', ')', '//',
-                    ]);
-                }
-                $token->setValue($expr);
-
-                //Ignore a comma if found
-                if ($reader->peekChar(',')) {
-                    $reader->consume();
-                }
-
-                //And check for comments again
-                // a(
-                //  href='value' //<- Awesome attribute, i say
-                //  )
-                $reader->readSpaces();
-                $this->skipComments($reader);
-                $reader->readSpaces();
+                $this->readAttributeValue($reader, $token);
             }
 
             yield $token;
