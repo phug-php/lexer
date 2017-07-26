@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Phug\AbstractLexerModule;
 use Phug\Lexer;
+use Phug\Lexer\Event\LexEvent;
 use Phug\Lexer\Event\TokenEvent;
 use Phug\LexerEvent;
 
@@ -69,6 +70,38 @@ class LexerModuleTest extends AbstractLexerTest
 
         self::assertTokens('p Test', [
             Lexer\Token\ClassToken::class,
+            Lexer\Token\TextToken::class,
+        ], $lexer);
+    }
+
+    /**
+     * @covers ::<public>
+     * @covers \Phug\Lexer::lex
+     * @covers \Phug\Lexer::__construct
+     * @covers \Phug\Lexer\Event\LexEvent::__construct
+     * @covers \Phug\Lexer\Event\LexEvent::getInput
+     * @covers \Phug\Lexer\Event\LexEvent::setInput
+     * @covers \Phug\Lexer\Event\LexEvent::getPath
+     * @covers \Phug\Lexer\Event\LexEvent::setPath
+     * @covers \Phug\Lexer\Event\LexEvent::getStateClassName
+     * @covers \Phug\Lexer\Event\LexEvent::setStateClassName
+     * @covers \Phug\Lexer\Event\LexEvent::getStateOptions
+     * @covers \Phug\Lexer\Event\LexEvent::setStateOptions
+     * @covers \Phug\Lexer::handleTokens
+     * @covers \Phug\Lexer::getModuleBaseClassName
+     */
+    public function testLexEvent()
+    {
+        $lexer = new Lexer([
+            'on_token' => function (LexEvent $event) {
+                $event->setInput('div:'.$event->getInput());
+            },
+        ]);
+
+        self::assertTokens('p Test', [
+            Lexer\Token\TagToken::class,
+            Lexer\Token\ExpansionToken::class,
+            Lexer\Token\TagToken::class,
             Lexer\Token\TextToken::class,
         ], $lexer);
     }
