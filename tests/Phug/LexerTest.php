@@ -75,6 +75,27 @@ class LexerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers ::lex
+     * @covers ::hasState
+     * @covers \Phug\Lexer\State::lastTokenIs
+     */
+    public function testHasState()
+    {
+        $lexer = new Lexer();
+
+        self::assertFalse($lexer->hasState());
+
+        $areTags = [];
+        foreach ($lexer->lex('p Text') as $token) {
+            $areTags[] = $lexer->getState()->lastTokenIs([TagToken::class]);
+            self::assertTrue($lexer->hasState());
+        }
+
+        self::assertSame([true, false], $areTags);
+        self::assertFalse($lexer->hasState());
+    }
+
+    /**
      * @covers ::filterScanner
      * @covers ::addScanner
      */

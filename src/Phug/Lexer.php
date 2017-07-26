@@ -284,7 +284,8 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
         if (!is_a($stateClassName, State::class, true)) {
             throw new \InvalidArgumentException(
-                'lexer_state_class_name needs to be a valid '.State::class.' sub class'
+                'lexer_state_class_name needs to be a valid '.State::class.' sub class, '.
+                $stateClassName.' given'
             );
         }
 

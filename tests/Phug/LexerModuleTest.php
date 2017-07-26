@@ -109,6 +109,60 @@ class LexerModuleTest extends AbstractLexerTest
             Lexer\Token\TagToken::class,
             Lexer\Token\TextToken::class,
         ], $lexer);
+
+        $lexer = new Lexer([
+            'on_lex' => function (LexEvent $event) {
+                $path = $event->getPath();
+                $event->setPath($event->getInput());
+                $event->setInput($path);
+            },
+        ]);
+
+        $tokens = [];
+        foreach ($lexer->lex('path.pug', '| foo') as $token) {
+            $tokens[] = $token;
+        }
+
+        self::assertCount(1, $tokens);
+        $token = $tokens[0];
+        self::assertInstanceOf(Lexer\Token\TextToken::class, $token);
+        /** @var Lexer\Token\TextToken $token */
+        self::assertSame('foo', $token->getValue());
+        self::assertSame('path.pug', $token->getSourceLocation()->getPath());
+
+        $lexer = new Lexer([
+            'on_lex' => function (LexEvent $event) {
+                $event->setStateClassName($event->getStateClassName().'\\Custom');
+            },
+        ]);
+
+        $message = null;
+        try {
+            foreach ($lexer->lex('path.pug', '| foo') as $token) {
+            }
+        } catch (\InvalidArgumentException $exception) {
+            $message = $exception->getMessage();
+        }
+
+        self::assertSame('lexer_state_class_name needs '.
+            'to be a valid Phug\Lexer\State sub class, '.
+            'Phug\\Lexer\\State\\Custom given', $message);
+
+        $lexer = new Lexer([
+            'allow_mixed_indent' => false,
+            'on_lex'             => function (LexEvent $event) {
+                $options = $event->getStateOptions();
+                $options['allow_mixed_indent'] = true;
+                $event->setStateOptions($options);
+            },
+        ]);
+
+        self::assertTokens("p\n\t  div", [
+            Lexer\Token\TagToken::class,
+            Lexer\Token\NewLineToken::class,
+            Lexer\Token\IndentToken::class,
+            Lexer\Token\TagToken::class,
+        ], $lexer);
     }
 
     /**

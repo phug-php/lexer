@@ -2,15 +2,47 @@
 
 namespace Phug\Test\Lexer;
 
+use Phug\Lexer;
 use Phug\Lexer\Token\AssignmentToken;
 use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
 use Phug\Lexer\Token\AttributeToken;
+use Phug\Lexer\Token\TagToken;
+use Phug\Lexer\Token\TextToken;
 use Phug\Lexer\TokenInterface;
 use Phug\Util\SourceLocation;
 
 class TokenTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers \Phug\Lexer\AbstractToken::getSourceLocation
+     * @covers \Phug\Lexer\State::endToken
+     * @covers \Phug\Lexer\State::createCurrentSourceLocation
+     */
+    public function testSourceLocation()
+    {
+        $lexer = new Lexer();
+        $tokens = [];
+
+        foreach ($lexer->lex('p Test') as $token) {
+            $tokens[] = $token;
+        }
+
+        self::assertCount(2, $tokens);
+        /** @var TagToken $token */
+        $token = $tokens[0];
+        self::assertInstanceOf(TagToken::class, $token);
+        self::assertSame(1, $token->getSourceLocation()->getLine());
+        self::assertSame(1, $token->getSourceLocation()->getOffset());
+        self::assertSame(1, $token->getSourceLocation()->getOffsetLength());
+        /** @var TextToken $token */
+        $token = $tokens[1];
+        self::assertInstanceOf(TextToken::class, $token);
+        self::assertSame(1, $token->getSourceLocation()->getLine());
+        self::assertSame(2, $token->getSourceLocation()->getOffset());
+        self::assertSame(5, $token->getSourceLocation()->getOffsetLength());
+    }
+
     /**
      * @covers \Phug\Lexer\Token\AssignmentToken
      * @covers \Phug\Lexer\Token\AssignmentToken::setName
