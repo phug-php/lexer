@@ -10,7 +10,6 @@ use Phug\Test\AbstractLexerTest;
 class DynamicTagScannerTest extends AbstractLexerTest
 {
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\DynamicTagScanner
      * @covers \Phug\Lexer\Scanner\DynamicTagScanner::scan
      */
