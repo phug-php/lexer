@@ -2,6 +2,7 @@
 
 namespace Phug;
 
+use Phug\Lexer\Event\EndLexEvent;
 use Phug\Lexer\Event\LexEvent;
 use Phug\Lexer\Event\TokenEvent;
 use Phug\Lexer\Scanner\AssignmentScanner;
@@ -265,7 +266,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     public function lex($input, $path = null)
     {
         $stateClassName = $this->getOption('lexer_state_class_name');
-        $event = new LexEvent($input, $path, $stateClassName, [
+        $lexEvent = new LexEvent($input, $path, $stateClassName, [
             'encoding'           => $this->getOption('encoding'),
             'indent_style'       => $this->getOption('indent_style'),
             'indent_width'       => $this->getOption('indent_width'),
@@ -273,12 +274,12 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'level'              => $this->getOption('level'),
         ]);
 
-        $this->trigger($event);
+        $this->trigger($lexEvent);
 
-        $input = $event->getInput();
-        $path = $event->getPath();
-        $stateClassName = $event->getStateClassName();
-        $stateOptions = $event->getStateOptions();
+        $input = $lexEvent->getInput();
+        $path = $lexEvent->getPath();
+        $stateClassName = $lexEvent->getStateClassName();
+        $stateOptions = $lexEvent->getStateOptions();
 
         $stateOptions['path'] = $path;
 
@@ -303,6 +304,8 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         foreach ($this->handleTokens($tokens) as $token) {
             yield $token;
         }
+
+        $this->trigger(new EndLexEvent($lexEvent));
 
         //Free state
         $this->state = null;
