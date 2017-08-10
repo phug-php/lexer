@@ -170,6 +170,14 @@ class AttributeScanner implements ScannerInterface
                 //,, or had a space before a comma (since space is also a valid
                 //separator
                 //We just skip that one.
+                if ($reader->peekChar('=') ||
+                    $reader->peekString('?!=') ||
+                    $reader->peekString('?=') ||
+                    $reader->peekString('!=')
+                ) {
+                    $reader->consume();
+                }
+
                 continue;
             }
 
