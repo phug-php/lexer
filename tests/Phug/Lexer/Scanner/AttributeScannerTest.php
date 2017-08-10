@@ -207,13 +207,11 @@ class AttributeScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testSpecialAttributes()
     {
-        set_time_limit(15);
         $this->assertTokens('!!! strict', [
             DoctypeToken::class,
         ]);
