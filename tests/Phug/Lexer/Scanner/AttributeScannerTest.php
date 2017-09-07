@@ -37,6 +37,38 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
 
+        $this->assertTokens('(a b c)', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
+        $this->assertTokens('(a, b, c)', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
+        $tokens = $this->assertTokens('(a, b, ...c)', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
+        /** @var AttributeToken $b */
+        $b = $tokens[2];
+        /** @var AttributeToken $c */
+        $c = $tokens[3];
+
+        self::assertFalse($b->isVariadic());
+        self::assertTrue($c->isVariadic());
+
         $this->assertTokens('(a=b,c=d, e=f)', [
             AttributeStartToken::class,
             AttributeToken::class,

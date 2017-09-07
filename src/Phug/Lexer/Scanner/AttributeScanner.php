@@ -131,6 +131,12 @@ class AttributeScanner implements ScannerInterface
             $token->escape();
             $token->check();
 
+            $variadic = $reader->peekString('...');
+            if ($variadic) {
+                $token->setIsVariadic(true);
+                $reader->consume();
+            }
+
             //Read the first part of the expression
             //e.g.:
             // (`a`), (`a`=b), (`$expr`, `$expr2`) (`$expr` `$expr`=a)
