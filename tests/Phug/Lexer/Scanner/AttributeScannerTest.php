@@ -9,7 +9,11 @@ use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
 use Phug\Lexer\Token\AttributeToken;
 use Phug\Lexer\Token\ClassToken;
+use Phug\Lexer\Token\DoctypeToken;
 use Phug\Lexer\Token\IdToken;
+use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
@@ -232,5 +236,175 @@ class AttributeScannerTest extends AbstractLexerTest
         }
 
         self::assertSame(0, count($tokens));
+    }
+
+    /**
+     * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
+     */
+    public function testSpecialAttributes()
+    {
+        $this->assertTokens('!!! strict', [
+            DoctypeToken::class,
+        ]);
+        $this->assertTokens('a(href=\'/contact\') contact', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            TextToken::class,
+        ]);
+        $this->assertTokens('a(href=\'/save\').button save', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            ClassToken::class,
+            TextToken::class,
+        ]);
+        $this->assertTokens('a(foo, bar, baz)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('a(foo=\'foo, bar, baz\', bar=1)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('a(foo=\'((foo))\', bar= 11 ? 1 : 0 )', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens(implode("\n", [
+            'select',
+            '  option(value=\'foo\', selected) Foo',
+            '  option(selected, value=\'bar\') Bar',
+        ]), [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            TextToken::class,
+        ]);
+        $this->assertTokens('a(5)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('a("a")', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        /* @var AttributeToken $attribute */
+        list(, , $attribute) = $this->assertTokens('a(=5)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        self::assertSame('5', $attribute->getName());
+        self::assertSame(null, $attribute->getValue());
+        /* @var AttributeToken $attribute */
+        list(, , $attribute) = $this->assertTokens('a(="a")', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        self::assertSame('"a"', $attribute->getName());
+        self::assertSame(null, $attribute->getValue());
+        $this->assertTokens('a(yop bar baz)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('a(yop=\'yop bar, baz\' bar=1)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('a(yop=\'((yop))\' bar= 11 ? 1 : 0 )', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('a(yop=\'((yop))\' bar= 11 ? 1 : 0 )', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('input(type=\'radio\' checked=0)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('input(type=\'radio\' checked=\'\')', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('input(type=\'radio\' checked=false)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('input(type=\'radio\' checked=null)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('input(type=\'radio\' checked=undefined)', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        $this->assertTokens('input(class=(true==true) ? \'on\' : \'off\')', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
     }
 }
