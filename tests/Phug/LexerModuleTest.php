@@ -137,6 +137,7 @@ class LexerModuleTest extends AbstractLexerTest
         ]);
 
         $message = null;
+
         try {
             foreach ($lexer->lex('path.pug', '| foo') as $token) {
             }
