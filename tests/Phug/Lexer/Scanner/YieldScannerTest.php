@@ -14,7 +14,6 @@ class YieldScannerTest extends AbstractLexerTest
      */
     public function testScan()
     {
-        /** @var BlockToken $tok */
         $this->assertTokens('yield', [
             YieldToken::class,
         ]);
