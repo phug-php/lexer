@@ -2,7 +2,6 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
-use Phug\Lexer\Token\BlockToken;
 use Phug\Lexer\Token\YieldToken;
 use Phug\Test\AbstractLexerTest;
 
