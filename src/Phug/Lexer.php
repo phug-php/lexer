@@ -35,6 +35,7 @@ use Phug\Lexer\Scanner\TextScanner;
 use Phug\Lexer\Scanner\VariableScanner;
 use Phug\Lexer\Scanner\WhenScanner;
 use Phug\Lexer\Scanner\WhileScanner;
+use Phug\Lexer\Scanner\YieldScanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
@@ -132,6 +133,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
                 'indent'      => IndentationScanner::class,
                 'import'      => ImportScanner::class,
                 'block'       => BlockScanner::class,
+                'yield'       => YieldScanner::class,
                 'conditional' => ConditionalScanner::class,
                 'each'        => EachScanner::class,
                 'case'        => CaseScanner::class,
