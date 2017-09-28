@@ -13,8 +13,8 @@ use Phug\Test\AbstractLexerTest;
 class KeywordScannerTest extends AbstractLexerTest
 {
     /**
-     * @covers \Phug\Lexer\Scanner\Keyword
-     * @covers \Phug\Lexer\Scanner\Keyword::scan
+     * @covers \Phug\Lexer\Scanner\KeywordScanner
+     * @covers \Phug\Lexer\Scanner\KeywordScanner::scan
      */
     public function testKeywords()
     {
