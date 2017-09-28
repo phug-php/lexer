@@ -15,7 +15,9 @@ class KeywordScanner implements ScannerInterface
         if (count($keywords)) {
             $reader = $state->getReader();
 
-            if ($reader->match('(?<name>[a-zA-Z_][a-zA-Z0-9_]*(?:[:-][a-zA-Z_][a-zA-Z0-9_]*)*)(?![a-zA-Z0-9_:-])(?<value>\N*)')) {
+            if ($reader->match(
+                '(?<name>[a-zA-Z_][a-zA-Z0-9_]*(?:[:-][a-zA-Z_][a-zA-Z0-9_]*)*)(?![a-zA-Z0-9_:-])(?<value>\N*)'
+            )) {
                 $name = $reader->getMatch('name');
 
                 if (in_array($name, $keywords)) {
