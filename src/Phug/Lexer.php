@@ -24,6 +24,7 @@ use Phug\Lexer\Scanner\ForScanner;
 use Phug\Lexer\Scanner\IdScanner;
 use Phug\Lexer\Scanner\ImportScanner;
 use Phug\Lexer\Scanner\IndentationScanner;
+use Phug\Lexer\Scanner\KeywordScanner;
 use Phug\Lexer\Scanner\MarkupScanner;
 use Phug\Lexer\Scanner\MixinCallScanner;
 use Phug\Lexer\Scanner\MixinScanner;
@@ -126,6 +127,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'allow_mixed_indent'     => true,
             'encoding'               => null,
             'lexer_modules'          => [],
+            'keywords'               => [],
             'scanners'               => [
                 //TODO: Several of these are non-standard and need to be encapsulated into extensions
                 //Namely: ForScanner, DoScanner, VariableScanner
@@ -144,6 +146,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
                 'mixin'       => MixinScanner::class,
                 'mixin_call'  => MixinCallScanner::class,
                 'doctype'     => DoctypeScanner::class,
+                'keyword'     => KeywordScanner::class,
                 'tag'         => TagScanner::class,
                 'class'       => ClassScanner::class,
                 'id'          => IdScanner::class,
@@ -284,6 +287,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         $stateOptions = $lexEvent->getStateOptions();
 
         $stateOptions['path'] = $path;
+        $stateOptions['keyword_names'] = array_keys($this->getOption('keywords') ?: []);
 
         if (!is_a($stateClassName, State::class, true)) {
             throw new \InvalidArgumentException(
