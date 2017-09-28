@@ -13,7 +13,6 @@ use Phug\Test\AbstractLexerTest;
 class KeywordScannerTest extends AbstractLexerTest
 {
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\Keyword
      * @covers \Phug\Lexer\Scanner\Keyword::scan
      */
@@ -23,7 +22,7 @@ class KeywordScannerTest extends AbstractLexerTest
             'keywords' => [
                 'foo'     => 'FOO',
                 'bar:baz' => 'BAR',
-            ]
+            ],
         ]);
         $tokens = [];
         foreach ($lexer->lex(implode("\n", [
