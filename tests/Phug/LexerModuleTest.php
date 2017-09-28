@@ -4,6 +4,7 @@ namespace Phug\Test;
 
 use Phug\AbstractLexerModule;
 use Phug\Lexer;
+use Phug\Lexer\Event\EndLexEvent;
 use Phug\Lexer\Event\LexEvent;
 use Phug\Lexer\Event\TokenEvent;
 use Phug\LexerEvent;
@@ -87,6 +88,8 @@ class LexerModuleTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Event\LexEvent::setStateClassName
      * @covers \Phug\Lexer\Event\LexEvent::getStateOptions
      * @covers \Phug\Lexer\Event\LexEvent::setStateOptions
+     * @covers \Phug\Lexer\Event\EndLexEvent::__construct
+     * @covers \Phug\Lexer\Event\EndLexEvent::getLexEvent
      * @covers \Phug\Lexer::handleTokens
      * @covers \Phug\Lexer::getModuleBaseClassName
      */
@@ -149,9 +152,15 @@ class LexerModuleTest extends AbstractLexerTest
             'to be a valid Phug\Lexer\State sub class, '.
             'Phug\\Lexer\\State\\Custom given', $message);
 
+        $copy = null;
+        $copyEnd = null;
         $lexer = new Lexer([
             'allow_mixed_indent' => false,
-            'on_lex'             => function (LexEvent $event) {
+            'on_end_lex'         => function (EndLexEvent $event) use (&$copyEnd) {
+                $copyEnd = $event->getLexEvent();
+            },
+            'on_lex'             => function (LexEvent $event) use (&$copy) {
+                $copy = $event;
                 $options = $event->getStateOptions();
                 $options['allow_mixed_indent'] = true;
                 $event->setStateOptions($options);
@@ -164,6 +173,8 @@ class LexerModuleTest extends AbstractLexerTest
             Lexer\Token\IndentToken::class,
             Lexer\Token\TagToken::class,
         ], $lexer);
+
+        self::assertSame($copy, $copyEnd);
     }
 
     /**
