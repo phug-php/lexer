@@ -143,6 +143,16 @@ class AttributeScanner implements ScannerInterface
             $expr = $reader->readExpression([
                 ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
             ]);
+            while ($reader->match('\s+([(.%*^&|!~:?[{+-]|\/(?!\/))') || (
+                $reader->match('\s') &&
+                preg_match('/[).%*^&|!~\/:?\]}+-]\s*$/', $expr)
+            )) {
+                $expr .= $reader->getMatch(0);
+                $reader->consume(mb_strlen($reader->getMatch(0)));
+                $expr .= $reader->readExpression([
+                    ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
+                ]);
+            }
 
             //Notice we have the following problem with spaces:
             //1. You can separate arguments with spaces

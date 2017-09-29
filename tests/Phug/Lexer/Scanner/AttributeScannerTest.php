@@ -21,6 +21,7 @@ use Phug\Test\AbstractLexerTest;
 class AttributeScannerTest extends AbstractLexerTest
 {
     /**
+     * @group i
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
@@ -28,6 +29,18 @@ class AttributeScannerTest extends AbstractLexerTest
      */
     public function testScan()
     {
+        $tokens = $this->assertTokens('(a + b)', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
+        /** @var AttributeToken $token */
+        $token = $tokens[1];
+
+        self::assertSame('a + b', $token->getName());
+        self::assertSame(null, $token->getValue());
+
         $this->assertTokens('()', [
             AttributeStartToken::class,
             AttributeEndToken::class,
