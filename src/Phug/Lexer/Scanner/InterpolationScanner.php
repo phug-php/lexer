@@ -73,6 +73,7 @@ class InterpolationScanner implements ScannerInterface
             ')'
         )) {
             $text = $reader->getMatch('text');
+            $text = preg_replace('/\\\\([#!]\\[|#\\{)/', '$1', $text);
 
             if (mb_strlen($text) > 0) {
                 /** @var TextToken $token */
