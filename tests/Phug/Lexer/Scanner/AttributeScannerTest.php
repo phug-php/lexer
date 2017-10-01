@@ -21,7 +21,6 @@ use Phug\Test\AbstractLexerTest;
 class AttributeScannerTest extends AbstractLexerTest
 {
     /**
-     * @group i
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
