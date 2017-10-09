@@ -79,18 +79,39 @@ class AttributeScanner implements ScannerInterface
         return false;
     }
 
+    private function getAttributeValue(Reader $reader, array $chars = null)
+    {
+        $chars = $chars ?: [
+            ' ', "\t", "\n", ',', ')', '//',
+        ];
+        $joinChars = array_merge($chars, ['"', "'"]);
+        $expr = $reader->readExpression($chars);
+        while ((
+            $reader->match('\s*("(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\')') &&
+            !preg_match('/[\'"]$/', $expr)
+        ) ||
+            $reader->match('\s+(\?([^:?]+|(?R))*:)\s+') ||
+            $reader->match('\s+([.%*^&|!~[{+-]|\/(?!\/))') || (
+                $reader->match('\s') &&
+                preg_match('/[.%*^&|!~\/\]}+-]\s*$/', $expr)
+            )
+        ) {
+            $expr .= $reader->getMatch(0);
+            $reader->consume(mb_strlen($reader->getMatch(0)));
+            $expr .= $reader->readExpression($joinChars);
+        }
+
+        return $expr;
+    }
+
     private function readAttributeValue(Reader $reader, AttributeToken $token)
     {
-        $expr = $reader->readExpression([
-            ' ', "\t", "\n", ',', ')', '//',
-        ]);
+        $expr = $this->getAttributeValue($reader);
         while ($this->isTruncatedExpression($reader, $expr)) {
             $reader->readSpaces();
             $this->skipComments($reader);
             $reader->readSpaces();
-            $expr .= $reader->readExpression([
-                ' ', "\t", "\n", ',', ')', '//',
-            ]);
+            $expr .= $this->getAttributeValue($reader);
         }
         $token->setValue($expr);
 
@@ -140,21 +161,9 @@ class AttributeScanner implements ScannerInterface
             //Read the first part of the expression
             //e.g.:
             // (`a`), (`a`=b), (`$expr`, `$expr2`) (`$expr` `$expr`=a)
-            $expr = $reader->readExpression([
+            $expr = $this->getAttributeValue($reader, [
                 ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
             ]);
-            while ($reader->match('\s*("(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\')') ||
-                $reader->match('\s+([.%*^&|!~:?[{+-]|\/(?!\/))') || (
-                    $reader->match('\s') &&
-                    preg_match('/[.%*^&|!~\/:?\]}+-]\s*$/', $expr)
-                )
-            ) {
-                $expr .= $reader->getMatch(0);
-                $reader->consume(mb_strlen($reader->getMatch(0)));
-                $expr .= $reader->readExpression([
-                    ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//', '"', "'",
-                ]);
-            }
 
             //Notice we have the following problem with spaces:
             //1. You can separate arguments with spaces

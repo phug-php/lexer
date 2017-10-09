@@ -53,6 +53,12 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
 
+        $this->assertTokens('(a=b . c)', [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
         $this->assertTokens('(a b c)', [
             AttributeStartToken::class,
             AttributeToken::class,
