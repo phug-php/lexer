@@ -103,10 +103,6 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testCommentInIndent()
     {
-        /**
-         * @var CommentToken $c
-         * @var TextToken    $t
-         */
         $this->assertTokens("div\n  div\n    //- lorem\n  ul\n    li item", [
             TagToken::class,
             NewLineToken::class,
