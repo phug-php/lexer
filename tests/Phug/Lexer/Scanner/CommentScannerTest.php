@@ -6,6 +6,10 @@ use Phug\Lexer;
 use Phug\Lexer\Scanner\CommentScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CommentToken;
+use Phug\Lexer\Token\IndentToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\OutdentToken;
+use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
@@ -17,7 +21,6 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testVisibleSingleLineComment()
     {
-
         /**
          * @var CommentToken $c
          * @var TextToken    $t
@@ -37,7 +40,6 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testInvisibleSingleLineComment()
     {
-
         /**
          * @var CommentToken $c
          * @var TextToken    $t
@@ -57,7 +59,6 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testVisibleMultiLineComment()
     {
-
         /**
          * @var CommentToken $c
          * @var TextToken    $t
@@ -80,7 +81,6 @@ class CommentScannerTest extends AbstractLexerTest
      */
     public function testInvisibleMultiLineComment()
     {
-
         /**
          * @var CommentToken $c
          * @var TextToken    $t
@@ -95,6 +95,35 @@ class CommentScannerTest extends AbstractLexerTest
             "\n\tFirst line\n\tSecond line\n\tThird line",
             $t->getValue()
         );
+    }
+
+    /**
+     * @covers \Phug\Lexer\Scanner\CommentScanner
+     * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     */
+    public function testCommentInIndent()
+    {
+        /**
+         * @var CommentToken $c
+         * @var TextToken    $t
+         */
+        $this->assertTokens("div\n  div\n    //- lorem\n  ul\n    li item", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            CommentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            TextToken::class,
+        ]);
     }
 
     /**

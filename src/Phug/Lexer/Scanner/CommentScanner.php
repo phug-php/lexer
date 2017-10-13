@@ -5,6 +5,7 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CommentToken;
 use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
 
 class CommentScanner extends MultilineScanner
@@ -78,6 +79,14 @@ class CommentScanner extends MultilineScanner
 
         if ($newLine) {
             yield $state->createToken(NewLineToken::class);
+
+            if (isset($newLevel)) {
+                $state->setLevel($newLevel);
+
+                while ($state->nextOutdent() !== false) {
+                    yield $state->createToken(OutdentToken::class);
+                }
+            }
         }
     }
 }
