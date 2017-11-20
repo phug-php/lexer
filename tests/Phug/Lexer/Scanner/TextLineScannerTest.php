@@ -41,7 +41,8 @@ class TextLineScannerTest extends AbstractLexerTest
 
         $template = "p\n  | foo\n  | bar\n  |\n  |\n  | baz\np";
 
-        $this->assertTokens($template, [
+        /* @var TextToken $tok */
+        list(, , , , , , , $tok) = $this->assertTokens($template, [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
@@ -49,13 +50,17 @@ class TextLineScannerTest extends AbstractLexerTest
             NewLineToken::class,
             TextToken::class,
             NewLineToken::class,
+            TextToken::class,
             NewLineToken::class,
+            TextToken::class,
             NewLineToken::class,
             TextToken::class,
             NewLineToken::class,
             OutdentToken::class,
             TagToken::class,
         ]);
+
+        self::assertSame(' ', $tok->getValue());
     }
 
     /**

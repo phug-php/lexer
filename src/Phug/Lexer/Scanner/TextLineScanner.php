@@ -23,6 +23,11 @@ class TextLineScanner implements ScannerInterface
 
         if ($reader->peekNewLine()) {
             $reader->consume();
+            /** @var TextToken $text */
+            $text = $state->createToken(TextToken::class);
+            $text->setValue(' ');
+
+            yield $text;
             yield $state->createToken(NewLineToken::class);
 
             return;
