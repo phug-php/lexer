@@ -64,7 +64,7 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         list($tok) = $this->assertTokens("else\n", [$this->getTokenClassName(), NewLineToken::class]);
 
         self::assertSame('else', $tok->getName());
-        self::assertSame(null, $tok->getSubject());
+        self::assertNull($tok->getSubject());
     }
 
     public function testExpandedElseStatement()
@@ -78,7 +78,7 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         ]);
 
         self::assertSame('else', $tok->getName());
-        self::assertSame(null, $tok->getSubject());
+        self::assertNull($tok->getSubject());
     }
 
     public function testThatElseStatementFailsWithSubject()

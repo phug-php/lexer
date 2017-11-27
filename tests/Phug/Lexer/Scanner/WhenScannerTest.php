@@ -45,6 +45,6 @@ class WhenScannerTest extends AbstractControlStatementScannerTest
         ]);
 
         self::assertSame('default', $tok->getName());
-        self::assertSame(null, $tok->getSubject());
+        self::assertNull($tok->getSubject());
     }
 }

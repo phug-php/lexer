@@ -2,13 +2,14 @@
 
 namespace Phug\Test\Lexer\Token;
 
+use PHPUnit\Framework\TestCase;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
 
 /**
  * @coversDefaultClass \Phug\Lexer\Token\InterpolationStartToken
  */
-class InterpolationStartTokenTest extends \PHPUnit_Framework_TestCase
+class InterpolationStartTokenTest extends TestCase
 {
     /**
      * @covers ::<public>
@@ -18,7 +19,7 @@ class InterpolationStartTokenTest extends \PHPUnit_Framework_TestCase
         $start = new InterpolationStartToken();
         $end = new InterpolationEndToken();
 
-        self::assertSame(null, $start->getEnd());
+        self::assertNull($start->getEnd());
         $start->setEnd($end);
         self::assertSame($end, $start->getEnd());
     }

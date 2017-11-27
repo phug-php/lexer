@@ -38,7 +38,7 @@ class AttributeScannerTest extends AbstractLexerTest
         $token = $tokens[1];
 
         self::assertSame('a + b', $token->getName());
-        self::assertSame(null, $token->getValue());
+        self::assertNull($token->getValue());
 
         $this->assertTokens('()', [
             AttributeStartToken::class,
@@ -344,7 +344,7 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
         self::assertSame('5', $attribute->getName());
-        self::assertSame(null, $attribute->getValue());
+        self::assertNull($attribute->getValue());
         /* @var AttributeToken $attribute */
         list(, , $attribute) = $this->assertTokens('a(="a")', [
             TagToken::class,
@@ -353,7 +353,7 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
         self::assertSame('"a"', $attribute->getName());
-        self::assertSame(null, $attribute->getValue());
+        self::assertNull($attribute->getValue());
         $this->assertTokens('a(yop bar baz)', [
             TagToken::class,
             AttributeStartToken::class,

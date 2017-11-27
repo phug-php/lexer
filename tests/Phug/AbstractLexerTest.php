@@ -3,9 +3,10 @@
 namespace Phug\Test;
 
 use Exception;
+use PHPUnit\Framework\TestCase;
 use Phug\Lexer;
 
-abstract class AbstractLexerTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractLexerTest extends TestCase
 {
     /** @var Lexer */
     protected $lexer;

@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer;
 
+use PHPUnit\Framework\TestCase;
 use Phug\Lexer;
 use Phug\Lexer\Scanner\TagScanner;
 use Phug\Lexer\Scanner\TextScanner;
@@ -15,7 +16,7 @@ use Phug\Test\MockScanner;
 /**
  * @coversDefaultClass \Phug\Lexer\State
  */
-class StateTest extends \PHPUnit_Framework_TestCase
+class StateTest extends TestCase
 {
     /**
      * @covers                   ::__construct
@@ -52,7 +53,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
             'indent_style' => null,
         ]);
 
-        self::assertSame(null, $state->getIndentStyle());
+        self::assertNull($state->getIndentStyle());
     }
 
     /**
@@ -88,7 +89,7 @@ class StateTest extends \PHPUnit_Framework_TestCase
             'indent_width' => null,
         ]);
 
-        self::assertSame(null, $state->getIndentWidth());
+        self::assertNull($state->getIndentWidth());
     }
 
     /**
