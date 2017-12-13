@@ -302,6 +302,13 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeEndToken::class,
         ]);
+        $this->assertTokens('a(bar=$var ? "color: red" : "color: blue" baz="baz")', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
         $this->assertTokens(implode("\n", [
             'select',
             '  option(value=\'foo\', selected) Foo',
