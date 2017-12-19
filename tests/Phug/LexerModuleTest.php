@@ -156,7 +156,7 @@ class LexerModuleTest extends AbstractLexerTest
         $copyEnd = null;
         $lexer = new Lexer([
             'allow_mixed_indent' => false,
-            'on_end_lex'         => function (EndLexEvent $event) use (&$copyEnd) {
+            'on_lex_end'         => function (EndLexEvent $event) use (&$copyEnd) {
                 $copyEnd = $event->getLexEvent();
             },
             'on_lex'             => function (LexEvent $event) use (&$copy) {

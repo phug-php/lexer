@@ -169,7 +169,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
             //Events
             'on_lex'     => null,
-            'on_end_lex' => null,
+            'on_lex_end' => null,
             'on_token'   => null,
         ]);
 
@@ -179,7 +179,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             $this->attach(LexerEvent::LEX, $onLex);
         }
 
-        if ($onLex = $this->getOption('on_end_lex')) {
+        if ($onLex = $this->getOption('on_lex_end')) {
             $this->attach(LexerEvent::END_LEX, $onLex);
         }
 
