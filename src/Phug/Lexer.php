@@ -323,7 +323,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         $this->lastToken = null;
     }
 
-    private function handleTokens(\Generator $tokens)
+    private function handleTokens(\Iterator $tokens)
     {
         foreach ($tokens as $token) {
             $event = new TokenEvent($token);
@@ -359,7 +359,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             return $this->dumpToken($input);
         }
 
-        if (!($input instanceof \Generator) && !is_array($input)) {
+        if (!($input instanceof \Iterator) && !is_array($input)) {
             $input = $this->lex((string) $input);
         }
 
