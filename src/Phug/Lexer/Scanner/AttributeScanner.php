@@ -86,6 +86,8 @@ class AttributeScanner implements ScannerInterface
         ];
         $joinChars = array_merge($chars, ['"', "'"]);
         $expr = $reader->readExpression($chars);
+        var_dump($expr);
+        static $loop = 0;
         while ((
             $reader->match('\\s*(
                 "(?:\\\\[\\S\\s]|[^"\\\\])*" |
@@ -110,8 +112,14 @@ class AttributeScanner implements ScannerInterface
             )
         ) {
             $expr .= $reader->getMatch(0);
+            echo "\n\n----------------------------------\n\n";
+            var_dump($expr, $reader->getNextConsumeLength());
             $reader->consume();
             $expr .= $reader->readExpression($joinChars);
+            var_dump($expr, $reader->getNextConsumeLength());
+            if (++$loop > 3) {
+                exit;
+            }
         }
 
         return $expr;

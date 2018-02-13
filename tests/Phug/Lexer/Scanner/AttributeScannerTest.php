@@ -172,6 +172,20 @@ class AttributeScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @group i
+     * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::getAttributeValue
+     */
+    public function testScanSpacing()
+    {
+        $this->assertTokens("(\n  id=\$test['id']\n)", [
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+    }
+
+    /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
