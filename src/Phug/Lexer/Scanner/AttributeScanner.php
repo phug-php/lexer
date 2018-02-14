@@ -109,8 +109,9 @@ class AttributeScanner implements ScannerInterface
                 preg_match('/[.%*^&|!~\/\]}+-]\s*$/', $expr)
             )
         ) {
-            $expr .= $reader->getMatch(0);
-            $reader->consume();
+            $match = $reader->getMatch(0);
+            $expr .= $match;
+            $reader->consume(mb_strlen($match));
             $expr .= $reader->readExpression($joinChars);
         }
 
