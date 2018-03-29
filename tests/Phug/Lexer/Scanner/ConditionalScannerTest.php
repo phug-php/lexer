@@ -81,11 +81,11 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         self::assertNull($tok->getSubject());
     }
 
+    /**
+     * @expectedException \Phug\LexerException
+     */
     public function testThatElseStatementFailsWithSubject()
     {
-        self::setExpectedException(LexerException::class);
-
-        /* @var ConditionalToken $tok */
         iterator_to_array($this->lexer->lex('else $someVar'));
     }
 
