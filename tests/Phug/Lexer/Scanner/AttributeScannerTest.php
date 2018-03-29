@@ -15,7 +15,6 @@ use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
-use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
 
 class AttributeScannerTest extends AbstractLexerTest

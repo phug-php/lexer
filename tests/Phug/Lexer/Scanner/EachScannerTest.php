@@ -6,7 +6,6 @@ use Phug\Lexer\Token\EachToken;
 use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
-use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
 
 /**
