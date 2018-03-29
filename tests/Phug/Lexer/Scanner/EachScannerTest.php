@@ -113,12 +113,12 @@ class EachScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers ::scan
-     * @dataProvider provideInvalidSyntaxStyles
+     * @dataProvider      provideInvalidSyntaxStyles
+     * @covers            ::scan
+     * @expectedException \Phug\LexerException
      */
     public function testThatItFailsWithInvalidSyntax($syntax)
     {
-        self::setExpectedException(LexerException::class);
         foreach ($this->lexer->lex($syntax) as $token) {
         }
     }

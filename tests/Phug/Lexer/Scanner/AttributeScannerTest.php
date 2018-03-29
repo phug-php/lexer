@@ -185,14 +185,14 @@ class AttributeScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers \Phug\Lexer\Scanner\AttributeScanner
-     * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
-     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
-     * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @expectedException \Phug\LexerException
      */
     public function testFailsOnUnclosedBracket()
     {
-        $this->setExpectedException(LexerException::class);
         iterator_to_array($this->lexer->lex('(a=b'));
     }
 

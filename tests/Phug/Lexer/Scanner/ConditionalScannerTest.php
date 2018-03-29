@@ -7,7 +7,6 @@ use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
-use Phug\LexerException;
 
 class ConditionalScannerTest extends AbstractControlStatementScannerTest
 {
