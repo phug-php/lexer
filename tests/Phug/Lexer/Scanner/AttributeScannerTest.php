@@ -15,7 +15,6 @@ use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
-use Phug\LexerException;
 use Phug\Test\AbstractLexerTest;
 
 class AttributeScannerTest extends AbstractLexerTest
@@ -185,14 +184,14 @@ class AttributeScannerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers \Phug\Lexer\Scanner\AttributeScanner
-     * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
-     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
-     * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @expectedException \Phug\LexerException
      */
     public function testFailsOnUnclosedBracket()
     {
-        $this->setExpectedException(LexerException::class);
         iterator_to_array($this->lexer->lex('(a=b'));
     }
 

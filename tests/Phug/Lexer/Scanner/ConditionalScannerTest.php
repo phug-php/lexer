@@ -7,7 +7,6 @@ use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
-use Phug\LexerException;
 
 class ConditionalScannerTest extends AbstractControlStatementScannerTest
 {
@@ -81,11 +80,11 @@ class ConditionalScannerTest extends AbstractControlStatementScannerTest
         self::assertNull($tok->getSubject());
     }
 
+    /**
+     * @expectedException \Phug\LexerException
+     */
     public function testThatElseStatementFailsWithSubject()
     {
-        self::setExpectedException(LexerException::class);
-
-        /* @var ConditionalToken $tok */
         iterator_to_array($this->lexer->lex('else $someVar'));
     }
 
