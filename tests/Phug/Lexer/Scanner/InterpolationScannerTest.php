@@ -19,6 +19,7 @@ class InterpolationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\InterpolationScanner
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scanInterpolation
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextScanner::scan
      */
     public function testScan()
     {
