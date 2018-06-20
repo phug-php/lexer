@@ -41,10 +41,8 @@ class DynamicTagScanner implements ScannerInterface
                         yield $subToken;
                     }
 
-                    if ($reader->match('[\t ]')) {
-                        foreach ($state->scan(SubScanner::class) as $subToken) {
-                            yield $subToken;
-                        }
+                    foreach ($state->scan(SubScanner::class) as $subToken) {
+                        yield $subToken;
                     }
 
                     break;

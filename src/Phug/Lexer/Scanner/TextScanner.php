@@ -23,7 +23,10 @@ class TextScanner implements ScannerInterface
             foreach ($state->scan(InterpolationScanner::class) as $subToken) {
                 if ($firstToken) {
                     $firstToken = false;
-                    if ($subToken instanceof InterpolationStartToken || $subToken instanceof TagInterpolationStartToken) {
+                    if (
+                        $subToken instanceof InterpolationStartToken ||
+                        $subToken instanceof TagInterpolationStartToken
+                    ) {
                         /** @var TextToken $token */
                         $token = $state->createToken(TextToken::class);
                         $token->setValue('');
@@ -59,7 +62,10 @@ class TextScanner implements ScannerInterface
         //Always omit the very first space in basically every text (if there is one)
         if ($firstToken && in_array(mb_substr($text, 0, 1), [' ', "\t"])) {
             $previous = $state->getLastToken();
-            if (!($previous instanceof TagInterpolationEndToken || $previous instanceof InterpolationEndToken)) {
+            if (!(
+                $previous instanceof TagInterpolationEndToken ||
+                $previous instanceof InterpolationEndToken
+            )) {
                 $text = mb_substr($text, 1);
             }
         }

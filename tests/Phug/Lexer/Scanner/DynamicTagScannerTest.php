@@ -2,9 +2,19 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Token\AttributeEndToken;
+use Phug\Lexer\Token\AttributeStartToken;
+use Phug\Lexer\Token\AttributeToken;
+use Phug\Lexer\Token\AutoCloseToken;
+use Phug\Lexer\Token\ClassToken;
+use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\ExpressionToken;
+use Phug\Lexer\Token\IdToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\TagToken;
+use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class DynamicTagScannerTest extends AbstractLexerTest
@@ -36,5 +46,80 @@ class DynamicTagScannerTest extends AbstractLexerTest
         self::assertSame('"<b>"', $tok->getValue());
         self::assertFalse($tok->isEscaped());
         self::assertTrue($tok->isChecked());
+
+        $this->assertTokens("#{'foo'}/\n".
+            "#{'foo'}(bar='baz')/\n".
+            "#{'foo'} /\n".
+            "#{'foo'}(bar='baz') /\n", [
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            AutoCloseToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            AutoCloseToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+            TextToken::class,
+            NewLineToken::class,
+        ]);
+
+        $this->assertTokens("#{'foo'}\ta\n".
+            "#{'foo'}: a\n".
+            "#{'foo'} :a\n", [
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            ExpansionToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+            NewLineToken::class,
+        ]);
+
+        $this->assertTokens("#{'foo'}#a\n".
+            "#{'foo'}.a\n".
+            "#{\n".
+            "  'foo'\n".
+            "}/\n", [
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            IdToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            ClassToken::class,
+            NewLineToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            AutoCloseToken::class,
+            NewLineToken::class,
+        ]);
     }
 }
