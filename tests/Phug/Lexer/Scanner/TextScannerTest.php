@@ -16,13 +16,13 @@ class TextScannerTest extends AbstractLexerTest
      */
     public function testText()
     {
-        /* @var TextToken $tok */
-        list($tok) = $this->assertTokens('| foo', [
+        /* @var TextToken $text */
+        list($text) = $this->assertTokens('| foo', [
             TextToken::class,
         ]);
 
-        self::assertSame('foo', $tok->getValue());
-        self::assertFalse($tok->isEscaped());
+        self::assertSame('foo', $text->getValue());
+        self::assertFalse($text->isEscaped());
     }
 
     /**
@@ -39,6 +39,20 @@ class TextScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame('  ', $tok->getIndentation());
+        self::assertSame('foo', $tok->getValue());
+        self::assertFalse($tok->isEscaped());
+
+        /* @var TextToken $tok */
+        list(, , , $tok) = $this->assertTokens('p'."\n".'  ! foo', [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+        ]);
+
+        self::assertSame('  ', $tok->getIndentation());
+        self::assertSame('foo', $tok->getValue());
+        self::assertTrue($tok->isEscaped());
     }
 
     /**

@@ -30,7 +30,7 @@ class TextLineScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
 
         /* @var TextToken $tok */
-        list(, , , $tok) = $this->assertTokens("p\n  !| Hello", [
+        list(, , , $tok) = $this->assertTokens("p\n  ! Hello", [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
