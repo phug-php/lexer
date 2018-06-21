@@ -47,10 +47,11 @@ class DynamicTagScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
         self::assertTrue($tok->isChecked());
 
-        $this->assertTokens("#{'foo'}/\n".
+        $template = "#{'foo'}/\n".
             "#{'foo'}(bar='baz')/\n".
             "#{'foo'} /\n".
-            "#{'foo'}(bar='baz') /\n", [
+            "#{'foo'}(bar='baz') /\n";
+        $this->assertTokens($template, [
             InterpolationStartToken::class,
             ExpressionToken::class,
             InterpolationEndToken::class,
@@ -79,9 +80,10 @@ class DynamicTagScannerTest extends AbstractLexerTest
             NewLineToken::class,
         ]);
 
-        $this->assertTokens("#{'foo'}\ta\n".
+        $template = "#{'foo'}\ta\n".
             "#{'foo'}: a\n".
-            "#{'foo'} :a\n", [
+            "#{'foo'} :a\n";
+        $this->assertTokens($template, [
             InterpolationStartToken::class,
             ExpressionToken::class,
             InterpolationEndToken::class,
@@ -100,11 +102,12 @@ class DynamicTagScannerTest extends AbstractLexerTest
             NewLineToken::class,
         ]);
 
-        $this->assertTokens("#{'foo'}#a\n".
+        $template = "#{'foo'}#a\n".
             "#{'foo'}.a\n".
             "#{\n".
             "  'foo'\n".
-            "}/\n", [
+            "}/\n";
+        $this->assertTokens($template, [
             InterpolationStartToken::class,
             ExpressionToken::class,
             InterpolationEndToken::class,

@@ -23,8 +23,7 @@ class TextScanner implements ScannerInterface
             foreach ($state->scan(InterpolationScanner::class) as $subToken) {
                 if ($firstToken) {
                     $firstToken = false;
-                    if (
-                        $subToken instanceof InterpolationStartToken ||
+                    if ($subToken instanceof InterpolationStartToken ||
                         $subToken instanceof TagInterpolationStartToken
                     ) {
                         /** @var TextToken $token */
