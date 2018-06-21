@@ -5,6 +5,7 @@
  *
  * @example do ... while
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Token\DoToken;

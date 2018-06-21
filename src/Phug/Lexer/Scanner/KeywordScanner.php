@@ -3,6 +3,7 @@
 /**
  * @example custom keyword called when the matching tag name is used.
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

@@ -3,6 +3,7 @@
 /**
  * @example case ... when
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Token\CaseToken;

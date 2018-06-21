@@ -3,6 +3,7 @@
 /**
  * @example while something_is_true()
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Token\WhileToken;

@@ -3,6 +3,7 @@
 /**
  * @example #my-id
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

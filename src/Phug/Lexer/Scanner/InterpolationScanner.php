@@ -3,6 +3,7 @@
 /**
  * @example p Text #{'interpolation'} text
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

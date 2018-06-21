@@ -5,6 +5,7 @@
  *
  * @see TextScanner
  */
+
 namespace Phug\Lexer\Scanner;
 
 class RawTextScanner extends TextScanner
