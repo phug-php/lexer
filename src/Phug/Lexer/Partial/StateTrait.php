@@ -13,7 +13,6 @@ trait StateTrait
      */
     private $state;
 
-
     /**
      * Returns true if a lexing process is active and a state exists, false if not.
      *

@@ -3,6 +3,7 @@
 /**
  * Scanner for after-tag contents (text or expansion).
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\EscapeTokenInterface;

@@ -3,6 +3,7 @@
 /**
  * @example block section
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

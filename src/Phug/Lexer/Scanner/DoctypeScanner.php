@@ -3,6 +3,7 @@
 /**
  * @example doctype html
  */
+
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;
