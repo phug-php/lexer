@@ -8,6 +8,7 @@ use Phug\Lexer\State;
 use Phug\Lexer\Token\CodeToken;
 use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\ExpressionToken;
+use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\NewLineToken;
@@ -73,6 +74,19 @@ EOT;
             NewLineToken::class,
             TagToken::class,
             ExpansionToken::class,
+            TextToken::class,
+        ]);
+
+        /**
+         * /!\ Caution, this may not be the definitive behavior as pugjs handle it differently.
+         * @see https://github.com/phug-php/phug/issues/34
+         */
+        $this->assertTokens("div\n  <div> Foo\n  Bar\n  </div>", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
             TextToken::class,
         ]);
     }
