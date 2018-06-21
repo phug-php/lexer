@@ -5,6 +5,13 @@ namespace Phug\Test\Lexer\Scanner;
 use Phug\Lexer;
 use Phug\Lexer\Scanner\MarkupScanner;
 use Phug\Lexer\State;
+use Phug\Lexer\Token\CodeToken;
+use Phug\Lexer\Token\ExpansionToken;
+use Phug\Lexer\Token\ExpressionToken;
+use Phug\Lexer\Token\InterpolationEndToken;
+use Phug\Lexer\Token\InterpolationStartToken;
+use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
@@ -13,6 +20,7 @@ class MarkupScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\MarkupScanner
      * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testRawMarkup()
     {
@@ -33,11 +41,46 @@ class MarkupScannerTest extends AbstractLexerTest
 
         self::assertFalse($tok->isEscaped());
         self::assertSame($template, $tok->getValue());
+
+        $template = <<<OET
+- var version = 1449104952939
+
+<ul>
+  <li>foo</li>
+  <li>bar</li>
+  <li>baz</li>
+</ul>
+
+<!--build:js /js/app.min.js?v=#{version}-->
+<!--endbuild-->
+
+p You can <em>embed</em> html as well.
+p: <strong>Even</strong> as the body of a block expansion.
+OET;
+        $this->assertTokens($template, [
+            CodeToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            ExpansionToken::class,
+            TextToken::class,
+        ]);
     }
 
     /**
      * @covers \Phug\Lexer\Scanner\MarkupScanner
      * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testRawMarkupQuit()
     {

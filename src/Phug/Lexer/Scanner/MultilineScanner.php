@@ -2,6 +2,7 @@
 
 namespace Phug\Lexer\Scanner;
 
+use Phug\Lexer\Analyzer\LineAnalyzer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
@@ -79,56 +80,13 @@ class MultilineScanner implements ScannerInterface
 
             $reader->consume(1);
 
-            $lines = [];
-            $level = $state->getLevel();
-            $newLevel = $level;
-            $maxIndent = INF;
+            $analyzer = new LineAnalyzer($state, $reader);
+            $analyzer->analyze(true);
 
-            while ($reader->hasLength()) {
-                $indentationScanner = new IndentationScanner();
-                $newLevel = $indentationScanner->getIndentLevel($state, $level);
-
-                if (!$reader->peekChars([' ', "\t", "\n"])) {
-                    break;
-                }
-
-                if ($newLevel < $level) {
-                    if ($reader->match('[ \t]*\n')) {
-                        $reader->consume(mb_strlen($reader->getMatch(0)));
-                        $lines[] = [];
-
-                        continue;
-                    }
-
-                    $state->setLevel($newLevel);
-
-                    break;
-                }
-
-                $line = [];
-                $indent = $reader->match('[ \t]+(?=\S)') ? mb_strlen($reader->getMatch(0)) : INF;
-                if ($indent < $maxIndent) {
-                    $maxIndent = $indent;
-                }
-
-                foreach ($state->scan(InterpolationScanner::class) as $subToken) {
-                    $line[] = $subToken instanceof TextToken ? $subToken->getValue() : $subToken;
-                }
-
-                $text = $reader->readUntilNewLine();
-                $line[] = $text;
-                $lines[] = $line;
-
-                if (!$reader->peekNewLine()) {
-                    break;
-                }
-
-                $reader->consume(1);
-            }
-
-            if (count($lines)) {
+            if (count($lines = $analyzer->getLines())) {
                 yield $state->createToken(IndentToken::class);
 
+                $maxIndent = $analyzer->getMaxIndent();
                 if ($maxIndent > 0 && $maxIndent < INF) {
                     foreach ($lines as &$line) {
                         if (count($line) && is_string($line[0])) {
@@ -144,7 +102,7 @@ class MultilineScanner implements ScannerInterface
                 if ($reader->hasLength()) {
                     yield $state->createToken(NewLineToken::class);
 
-                    $state->setLevel($newLevel)->indent($level + 1);
+                    $state->setLevel($analyzer->getNewLevel())->indent($analyzer->getLevel() + 1);
 
                     while ($state->nextOutdent() !== false) {
                         yield $state->createToken(OutdentToken::class);

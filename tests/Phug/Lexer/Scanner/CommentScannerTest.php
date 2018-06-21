@@ -18,6 +18,7 @@ class CommentScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\CommentScanner
      * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testVisibleSingleLineComment()
     {
@@ -37,6 +38,7 @@ class CommentScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\CommentScanner
      * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testInvisibleSingleLineComment()
     {
@@ -56,6 +58,7 @@ class CommentScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\CommentScanner
      * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testVisibleMultiLineComment()
     {
@@ -78,6 +81,7 @@ class CommentScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\CommentScanner
      * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testInvisibleMultiLineComment()
     {
@@ -100,6 +104,7 @@ class CommentScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\CommentScanner
      * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testCommentInIndent()
     {
@@ -125,6 +130,7 @@ class CommentScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\CommentScanner
      * @covers \Phug\Lexer\Scanner\CommentScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testCommentQuit()
     {

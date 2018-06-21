@@ -116,5 +116,16 @@ class InterpolationScannerTest extends AbstractLexerTest
             NewLineToken::class,
             TextToken::class,
         ]);
+
+        $this->assertTokens("p.\n  foo\n  #{'hi'}\n", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            InterpolationStartToken::class,
+            ExpressionToken::class,
+            InterpolationEndToken::class,
+            TextToken::class,
+        ]);
     }
 }

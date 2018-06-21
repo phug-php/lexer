@@ -18,6 +18,7 @@ class FilterScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\FilterScanner
      * @covers \Phug\Lexer\Scanner\FilterScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      */
     public function testFilter()
     {
