@@ -98,6 +98,8 @@ class LexerModuleTest extends AbstractLexerTest
      * @covers ::<public>
      * @covers \Phug\Lexer::lex
      * @covers \Phug\Lexer::__construct
+     * @covers \Phug\Lexer::updateOptions
+     * @covers \Phug\Scanners::getList
      * @covers \Phug\Lexer\Event\LexEvent::__construct
      * @covers \Phug\Lexer\Event\LexEvent::getInput
      * @covers \Phug\Lexer\Event\LexEvent::setInput

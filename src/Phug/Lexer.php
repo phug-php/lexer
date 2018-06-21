@@ -6,38 +6,7 @@ use Phug\Lexer\Event\EndLexEvent;
 use Phug\Lexer\Event\LexEvent;
 use Phug\Lexer\Event\TokenEvent;
 use Phug\Lexer\Partial\StateTrait;
-use Phug\Lexer\Scanner\AssignmentScanner;
-use Phug\Lexer\Scanner\AttributeScanner;
-use Phug\Lexer\Scanner\BlockScanner;
-use Phug\Lexer\Scanner\CaseScanner;
-use Phug\Lexer\Scanner\ClassScanner;
-use Phug\Lexer\Scanner\CodeScanner;
-use Phug\Lexer\Scanner\CommentScanner;
-use Phug\Lexer\Scanner\ConditionalScanner;
-use Phug\Lexer\Scanner\DoctypeScanner;
-use Phug\Lexer\Scanner\DoScanner;
-use Phug\Lexer\Scanner\DynamicTagScanner;
-use Phug\Lexer\Scanner\EachScanner;
-use Phug\Lexer\Scanner\ExpansionScanner;
-use Phug\Lexer\Scanner\ExpressionScanner;
-use Phug\Lexer\Scanner\FilterScanner;
-use Phug\Lexer\Scanner\ForScanner;
-use Phug\Lexer\Scanner\IdScanner;
-use Phug\Lexer\Scanner\ImportScanner;
-use Phug\Lexer\Scanner\IndentationScanner;
-use Phug\Lexer\Scanner\KeywordScanner;
-use Phug\Lexer\Scanner\MarkupScanner;
-use Phug\Lexer\Scanner\MixinCallScanner;
-use Phug\Lexer\Scanner\MixinScanner;
-use Phug\Lexer\Scanner\NewLineScanner;
-use Phug\Lexer\Scanner\TagScanner;
-use Phug\Lexer\Scanner\TextBlockScanner;
-use Phug\Lexer\Scanner\TextLineScanner;
 use Phug\Lexer\Scanner\TextScanner;
-use Phug\Lexer\Scanner\VariableScanner;
-use Phug\Lexer\Scanner\WhenScanner;
-use Phug\Lexer\Scanner\WhileScanner;
-use Phug\Lexer\Scanner\YieldScanner;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\AttributeEndToken;
@@ -123,44 +92,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'encoding'               => null,
             'lexer_modules'          => [],
             'keywords'               => [],
-            'scanners'               => [
-                //TODO: Several of these are non-standard and need to be encapsulated into extensions
-                //Namely: ForScanner, DoScanner, VariableScanner
-                'new_line'    => NewLineScanner::class,
-                'indent'      => IndentationScanner::class,
-                'import'      => ImportScanner::class,
-                'block'       => BlockScanner::class,
-                'yield'       => YieldScanner::class,
-                'conditional' => ConditionalScanner::class,
-                'each'        => EachScanner::class,
-                'case'        => CaseScanner::class,
-                'when'        => WhenScanner::class,
-                'do'          => DoScanner::class,
-                'while'       => WhileScanner::class,
-                'for'         => ForScanner::class,
-                'mixin'       => MixinScanner::class,
-                'mixin_call'  => MixinCallScanner::class,
-                'doctype'     => DoctypeScanner::class,
-                'keyword'     => KeywordScanner::class,
-                'tag'         => TagScanner::class,
-                'class'       => ClassScanner::class,
-                'id'          => IdScanner::class,
-                'attribute'   => AttributeScanner::class,
-                'assignment'  => AssignmentScanner::class,
-                'variable'    => VariableScanner::class,
-                'comment'     => CommentScanner::class,
-                'filter'      => FilterScanner::class,
-                'expression'  => ExpressionScanner::class,
-                'code'        => CodeScanner::class,
-                'markup'      => MarkupScanner::class,
-                'expansion'   => ExpansionScanner::class,
-                'dynamic_tag' => DynamicTagScanner::class,
-                'text_block'  => TextBlockScanner::class,
-                'text_line'   => TextLineScanner::class,
-                //Notice that TextScanner is always added in lex(), as we'd basically disable extensions otherwise
-                //As this array is replaced recursively, your extensions are either added or overwritten
-                //If Text would be last one, every extension would end up as text, as text matches everything
-            ],
+            'scanners'               => Scanners::getList(),
 
             //Events
             'on_lex'     => null,

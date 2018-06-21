@@ -23,6 +23,8 @@ class LexerTest extends AbstractLexerTest
 {
     /**
      * @covers ::__construct
+     * @covers ::updateOptions
+     * @covers \Phug\Scanners::getList
      * @covers ::getScanners
      */
     public function testGetScanners()

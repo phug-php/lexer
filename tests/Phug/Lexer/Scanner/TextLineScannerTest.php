@@ -2,6 +2,8 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer;
+use Phug\Lexer\Scanner\TextLineScanner;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\OutdentToken;
@@ -61,6 +63,26 @@ class TextLineScannerTest extends AbstractLexerTest
         ]);
 
         self::assertSame(' ', $tok->getValue());
+
+        $lexer = new Lexer();
+        $lexer->addScanner('text_line', TextLineScanner::class, 'new_line');
+        $tokens = iterator_to_array($lexer->lex('!| <foo>'));
+
+        self::assertCount(1, $tokens);
+        self::assertInstanceOf(TextToken::class, $tokens[0]);
+        /** @var TextToken */
+        $tok = $tokens[0];
+        self::assertTrue($tok->isEscaped());
+        self::assertSame('<foo>', $tok->getValue());
+
+        $tokens = iterator_to_array($lexer->lex('| <foo>'));
+
+        self::assertCount(1, $tokens);
+        self::assertInstanceOf(TextToken::class, $tokens[0]);
+        /** @var TextToken */
+        $tok = $tokens[0];
+        self::assertFalse($tok->isEscaped());
+        self::assertSame('<foo>', $tok->getValue());
     }
 
     /**
