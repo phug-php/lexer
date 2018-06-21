@@ -77,7 +77,7 @@ EOT;
             TextToken::class,
         ]);
 
-        /**
+        /*
          * /!\ Caution, this may not be the definitive behavior as pugjs handle it differently.
          * @see https://github.com/phug-php/phug/issues/34
          */

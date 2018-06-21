@@ -15,7 +15,6 @@ class IdScannerTest extends AbstractLexerTest
      */
     public function testId()
     {
-
         /** @var IdToken $tok */
         list(, $tok) = $this->assertTokens('p#some-id', [
             TagToken::class,
