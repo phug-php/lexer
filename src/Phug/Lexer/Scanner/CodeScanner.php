@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example - call_something()
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

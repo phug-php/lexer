@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Abstract class for while, for, do, when, case, if
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait;

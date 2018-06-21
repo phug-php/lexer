@@ -45,7 +45,7 @@ class StateTest extends TestCase
 
     /**
      * @covers ::__construct
-     * @covers ::getIndentStyle
+     * @covers \Phug\Lexer\Partial\IndentStyleTrait::getIndentStyle
      */
     public function testGetIndentStyle()
     {
@@ -58,8 +58,8 @@ class StateTest extends TestCase
 
     /**
      * @covers ::__construct
-     * @covers ::setIndentStyle
-     * @covers ::getIndentStyle
+     * @covers \Phug\Lexer\Partial\IndentStyleTrait::setIndentStyle
+     * @covers \Phug\Lexer\Partial\IndentStyleTrait::getIndentStyle
      */
     public function testSetIndentStyle()
     {
@@ -70,7 +70,7 @@ class StateTest extends TestCase
     }
 
     /**
-     * @covers                   ::setIndentStyle
+     * @covers                   \Phug\Lexer\Partial\IndentStyleTrait::setIndentStyle
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage indentStyle needs to be null or one of the INDENT_* constants of the lexer
      */
@@ -81,7 +81,7 @@ class StateTest extends TestCase
     }
 
     /**
-     * @covers ::getIndentWidth
+     * @covers \Phug\Lexer\Partial\IndentStyleTrait::getIndentWidth
      */
     public function testGetIndentWidth()
     {
@@ -106,7 +106,7 @@ class StateTest extends TestCase
     }
 
     /**
-     * @covers ::setIndentWidth
+     * @covers \Phug\Lexer\Partial\IndentStyleTrait::setIndentWidth
      */
     public function testSetIndentWidth()
     {
@@ -119,7 +119,7 @@ class StateTest extends TestCase
     }
 
     /**
-     * @covers                   ::setIndentWidth
+     * @covers                   \Phug\Lexer\Partial\IndentStyleTrait::setIndentWidth
      * @expectedException        \InvalidArgumentException
      * @expectedExceptionMessage indentWidth needs to be null or an integer above 0
      */

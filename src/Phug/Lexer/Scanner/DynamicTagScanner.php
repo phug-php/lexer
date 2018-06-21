@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example #{'h'.$headerLevel} (produce h1 tag if $headerLevel = 1
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\EscapeTokenInterface;

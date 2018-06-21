@@ -38,7 +38,7 @@ class LexerTest extends AbstractLexerTest
     }
 
     /**
-     * @covers            ::getState
+     * @covers            \Phug\Lexer\Partial\StateTrait::getState
      * @expectedException \RuntimeException
      */
     public function testGetStateException()
@@ -54,7 +54,7 @@ class LexerTest extends AbstractLexerTest
 
     /**
      * @covers ::lex
-     * @covers ::getState
+     * @covers \Phug\Lexer\Partial\StateTrait::getState
      */
     public function testGetState()
     {
@@ -76,7 +76,7 @@ class LexerTest extends AbstractLexerTest
 
     /**
      * @covers ::lex
-     * @covers ::hasState
+     * @covers \Phug\Lexer\Partial\StateTrait::hasState
      * @covers \Phug\Lexer\State::lastTokenIs
      */
     public function testHasState()

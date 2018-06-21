@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example header
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Scanner for multiline texts (or some similar contents).
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Analyzer\LineAnalyzer;

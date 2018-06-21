@@ -42,7 +42,7 @@ class MarkupScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
         self::assertSame($template, $tok->getValue());
 
-        $template = <<<OET
+        $template = <<<'EOT'
 - var version = 1449104952939
 
 <ul>
@@ -56,7 +56,7 @@ class MarkupScannerTest extends AbstractLexerTest
 
 p You can <em>embed</em> html as well.
 p: <strong>Even</strong> as the body of a block expansion.
-OET;
+EOT;
         $this->assertTokens($template, [
             CodeToken::class,
             TextToken::class,

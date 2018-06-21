@@ -5,6 +5,7 @@ namespace Phug;
 use Phug\Lexer\Event\EndLexEvent;
 use Phug\Lexer\Event\LexEvent;
 use Phug\Lexer\Event\TokenEvent;
+use Phug\Lexer\Partial\StateTrait;
 use Phug\Lexer\Scanner\AssignmentScanner;
 use Phug\Lexer\Scanner\AttributeScanner;
 use Phug\Lexer\Scanner\BlockScanner;
@@ -79,17 +80,11 @@ use Phug\Util\Partial\ModuleContainerTrait;
 class Lexer implements LexerInterface, ModuleContainerInterface
 {
     use ModuleContainerTrait;
+    use StateTrait;
 
     const INDENT_SPACE = ' ';
     const INDENT_TAB = "\t";
     const DEFAULT_TAB_WIDTH = 4;
-
-    /**
-     * The state of the current lexing process.
-     *
-     * @var State
-     */
-    private $state;
 
     /**
      * @var TokenInterface
@@ -175,6 +170,14 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
         $this->state = null;
 
+        $this->updateOptions();
+    }
+
+    /**
+     * Synchronize the lexer to the new options values.
+     */
+    public function updateOptions()
+    {
         if ($onLex = $this->getOption('on_lex')) {
             $this->attach(LexerEvent::LEX, $onLex);
         }
@@ -198,32 +201,6 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     public function getScanners()
     {
         return $this->getOption('scanners');
-    }
-
-    /**
-     * Returns true if a lexing process is active and a state exists, false if not.
-     *
-     * @return bool
-     */
-    public function hasState()
-    {
-        return $this->state instanceof State;
-    }
-
-    /**
-     * Returns the state object of the current lexing process.
-     *
-     * @return State
-     */
-    public function getState()
-    {
-        if (!$this->state) {
-            throw new \RuntimeException(
-                'Failed to get state: No lexing process active. Use the `lex()`-method'
-            );
-        }
-
-        return $this->state;
     }
 
     /**

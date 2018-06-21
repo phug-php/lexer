@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Call SubScanner and filter indent/outdent tokens.
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

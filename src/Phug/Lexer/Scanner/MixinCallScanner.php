@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example +my-mixin()
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\ScannerInterface;

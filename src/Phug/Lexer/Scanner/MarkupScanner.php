@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example <span>Raw html</span>
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Analyzer\LineAnalyzer;

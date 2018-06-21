@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example :stylus
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Analyzer\LineAnalyzer;

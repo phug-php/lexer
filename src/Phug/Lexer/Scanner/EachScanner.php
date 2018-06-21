@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example each $value, $key in $items
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Scanner\Partial\NamespaceAndTernaryTrait;

@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @example if $var == 2
+ */
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\State;
