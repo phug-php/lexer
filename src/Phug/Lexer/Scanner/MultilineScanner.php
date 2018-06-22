@@ -29,6 +29,36 @@ class MultilineScanner implements ScannerInterface
         return $token;
     }
 
+    protected function getUnescapedLineValue(State $state, $value, &$interpolationLevel, &$buffer)
+    {
+        if (is_string($value)) {
+            if ($interpolationLevel) {
+                yield $this->unEscapedToken($state, $value);
+
+                return;
+            }
+            $buffer .= $value;
+
+            return;
+        }
+
+        if (!$interpolationLevel) {
+            yield $this->unEscapedToken($state, $buffer);
+
+            $buffer = '';
+        }
+
+        yield $value;
+
+        if ($value instanceof TagInterpolationStartToken || $value instanceof InterpolationStartToken) {
+            $interpolationLevel++;
+        }
+
+        if ($value instanceof TagInterpolationEndToken || $value instanceof InterpolationEndToken) {
+            $interpolationLevel--;
+        }
+    }
+
     protected function getUnescapedLines(State $state, $lines)
     {
         $buffer = '';
@@ -38,37 +68,44 @@ class MultilineScanner implements ScannerInterface
                 $buffer .= "\n";
             }
             foreach ($lineValues as $value) {
-                if (is_string($value)) {
-                    if ($interpolationLevel) {
-                        yield $this->unEscapedToken($state, $value);
-
-                        continue;
-                    }
-                    $buffer .= $value;
-
-                    continue;
-                }
-
-                if (!$interpolationLevel) {
-                    yield $this->unEscapedToken($state, $buffer);
-
-                    $buffer = '';
-                }
-
-                yield $value;
-
-                if ($value instanceof TagInterpolationStartToken || $value instanceof InterpolationStartToken) {
-                    $interpolationLevel++;
-                }
-
-                if ($value instanceof TagInterpolationEndToken || $value instanceof InterpolationEndToken) {
-                    $interpolationLevel--;
+                foreach ($this->getUnescapedLineValue($state, $value, $interpolationLevel, $buffer) as $token) {
+                    yield $token;
                 }
             }
         }
 
         //TODO: $state->endToken
         yield $this->unEscapedToken($state, $buffer);
+    }
+
+    private function yieldLines(State $state, array $lines, LineAnalyzer $analyzer)
+    {
+        $reader = $state->getReader();
+
+        yield $state->createToken(IndentToken::class);
+
+        $maxIndent = $analyzer->getMaxIndent();
+        if ($maxIndent > 0 && $maxIndent < INF) {
+            foreach ($lines as &$line) {
+                if (count($line) && is_string($line[0])) {
+                    $line[0] = mb_substr($line[0], $maxIndent) ?: '';
+                }
+            }
+        }
+
+        foreach ($this->getUnescapedLines($state, $lines) as $token) {
+            yield $token;
+        }
+
+        if ($reader->hasLength()) {
+            yield $state->createToken(NewLineToken::class);
+
+            $state->setLevel($analyzer->getNewLevel())->indent($analyzer->getLevel() + 1);
+
+            while ($state->nextOutdent() !== false) {
+                yield $state->createToken(OutdentToken::class);
+            }
+        }
     }
 
     public function scan(State $state)
@@ -88,29 +125,8 @@ class MultilineScanner implements ScannerInterface
             $analyzer->analyze(true);
 
             if (count($lines = $analyzer->getLines())) {
-                yield $state->createToken(IndentToken::class);
-
-                $maxIndent = $analyzer->getMaxIndent();
-                if ($maxIndent > 0 && $maxIndent < INF) {
-                    foreach ($lines as &$line) {
-                        if (count($line) && is_string($line[0])) {
-                            $line[0] = mb_substr($line[0], $maxIndent) ?: '';
-                        }
-                    }
-                }
-
-                foreach ($this->getUnescapedLines($state, $lines) as $token) {
+                foreach ($this->yieldLines($state, $lines, $analyzer) as $token) {
                     yield $token;
-                }
-
-                if ($reader->hasLength()) {
-                    yield $state->createToken(NewLineToken::class);
-
-                    $state->setLevel($analyzer->getNewLevel())->indent($analyzer->getLevel() + 1);
-
-                    while ($state->nextOutdent() !== false) {
-                        yield $state->createToken(OutdentToken::class);
-                    }
                 }
             }
         }
