@@ -70,8 +70,7 @@ class LexerTest extends AbstractLexerTest
         ]);
         $mock->setLexer($lexer);
 
-        foreach ($lexer->lex('p') as $token) {
-        }
+        iterator_to_array($lexer->lex('p'));
 
         self::assertInstanceOf(State::class, $mock->getState());
     }
@@ -99,6 +98,7 @@ class LexerTest extends AbstractLexerTest
 
     /**
      * @covers ::filterScanner
+     * @covers ::prependScanner
      * @covers ::addScanner
      */
     public function testAddScanner()
@@ -113,7 +113,7 @@ class LexerTest extends AbstractLexerTest
         self::assertSame($lexer, $self);
 
         $lexer = new Lexer();
-        $self = $lexer->addScanner('foo', MockScanner::class, true);
+        $self = $lexer->prependScanner('foo', MockScanner::class);
         $scanners = $lexer->getScanners();
         foreach ($scanners as $scanner) {
             break;
@@ -137,8 +137,7 @@ class LexerTest extends AbstractLexerTest
 
         $lexer = new Lexer();
         $lexer->addScanner('foo', 'NotAValidClassName');
-        foreach ($lexer->lex('p') as $token) {
-        }
+        iterator_to_array($lexer->lex('p'));
     }
 
     /**
@@ -155,8 +154,7 @@ class LexerTest extends AbstractLexerTest
         $lexer = new Lexer([
             'lexer_state_class_name' => 'NotAValidClassName',
         ]);
-        foreach ($lexer->lex('p') as $token) {
-        }
+        iterator_to_array($lexer->lex('p'));
     }
 
     /**

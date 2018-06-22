@@ -76,6 +76,7 @@ class LexerModuleTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Event\TokenEvent::__construct
      * @covers \Phug\Lexer\Event\TokenEvent::getToken
      * @covers \Phug\Lexer\Event\TokenEvent::setToken
+     * @covers \Phug\Lexer::handleToken
      * @covers \Phug\Lexer::handleTokens
      * @covers \Phug\Lexer::getModuleBaseClassName
      */
@@ -111,6 +112,7 @@ class LexerModuleTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Event\LexEvent::setStateOptions
      * @covers \Phug\Lexer\Event\EndLexEvent::__construct
      * @covers \Phug\Lexer\Event\EndLexEvent::getLexEvent
+     * @covers \Phug\Lexer::handleToken
      * @covers \Phug\Lexer::handleTokens
      * @covers \Phug\Lexer::getModuleBaseClassName
      */
@@ -204,6 +206,7 @@ class LexerModuleTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Event\TokenEvent::__construct
      * @covers \Phug\Lexer\Event\TokenEvent::getTokenGenerator
      * @covers \Phug\Lexer\Event\TokenEvent::setTokenGenerator
+     * @covers \Phug\Lexer::handleToken
      * @covers \Phug\Lexer::handleTokens
      * @covers \Phug\Lexer::getModuleBaseClassName
      */

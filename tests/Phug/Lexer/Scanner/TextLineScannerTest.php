@@ -65,7 +65,7 @@ class TextLineScannerTest extends AbstractLexerTest
         self::assertSame(' ', $tok->getValue());
 
         $lexer = new Lexer();
-        $lexer->addScanner('text_line', TextLineScanner::class, 'new_line');
+        $lexer->prependScanner('text_line', TextLineScanner::class);
         $tokens = iterator_to_array($lexer->lex('!| <foo>'));
 
         self::assertCount(1, $tokens);
