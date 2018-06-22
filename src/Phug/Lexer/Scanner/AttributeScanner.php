@@ -49,26 +49,11 @@ class AttributeScanner implements ScannerInterface
 
     private function readAssignOperator(Reader $reader, AttributeToken $token)
     {
-        if ($reader->peekString('?!=')) {
-            $token->unescape();
-            $token->uncheck();
-            $reader->consume();
-
-            return true;
-        }
-        if ($reader->peekString('?=')) {
-            $token->uncheck();
-            $reader->consume();
-
-            return true;
-        }
-        if ($reader->peekString('!=')) {
-            $token->unescape();
-            $reader->consume();
-
-            return true;
-        }
-        if ($reader->peekChar('=')) {
+        if ($reader->peekString('?!=') && $token->unescape() && $token->uncheck() ||
+            $reader->peekString('?=') && $token->unescape() ||
+            $reader->peekString('!=') && $token->unescape() ||
+            $reader->peekChar('=')
+        ) {
             $reader->consume();
 
             return true;
