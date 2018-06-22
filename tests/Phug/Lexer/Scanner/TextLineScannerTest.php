@@ -90,6 +90,7 @@ class TextLineScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\TextLineScanner::scan
      * @covers \Phug\Lexer\Scanner\TextScanner
      * @covers \Phug\Lexer\Scanner\TextScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextScanner::scanInterpolationToken
      * @covers \Phug\Lexer::getLastToken
      * @covers \Phug\Lexer\State::getLastToken
      * @covers \Phug\Lexer\Scanner\InterpolationScanner

@@ -13,10 +13,36 @@ use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TextToken;
+use Phug\Lexer\TokenInterface;
 
 class TextScanner implements ScannerInterface
 {
     const INTERPOLATION_ENABLED = true;
+
+    private function scanInterpolationToken(State $state, TokenInterface $subToken)
+    {
+        if ($subToken instanceof InterpolationStartToken ||
+            $subToken instanceof TagInterpolationStartToken
+        ) {
+            /** @var TextToken $token */
+            $token = $state->createToken(TextToken::class);
+            $token->setValue('');
+
+            yield $token;
+        }
+        if ($subToken instanceof TextToken) {
+            $text = $subToken->getValue();
+            if (in_array(mb_substr($text, 0, 1), [' ', "\t"])) {
+                $previous = $state->getLastToken();
+                if (!(
+                    $previous instanceof TagInterpolationEndToken ||
+                    $previous instanceof InterpolationEndToken
+                )) {
+                    $subToken->setValue(mb_substr($text, 1) ?: '');
+                }
+            }
+        }
+    }
 
     public function scan(State $state)
     {
@@ -27,26 +53,8 @@ class TextScanner implements ScannerInterface
             foreach ($state->scan(InterpolationScanner::class) as $subToken) {
                 if ($firstToken) {
                     $firstToken = false;
-                    if ($subToken instanceof InterpolationStartToken ||
-                        $subToken instanceof TagInterpolationStartToken
-                    ) {
-                        /** @var TextToken $token */
-                        $token = $state->createToken(TextToken::class);
-                        $token->setValue('');
-
+                    foreach ($this->scanInterpolationToken($state, $subToken) as $token) {
                         yield $token;
-                    }
-                    if ($subToken instanceof TextToken) {
-                        $text = $subToken->getValue();
-                        if (in_array(mb_substr($text, 0, 1), [' ', "\t"])) {
-                            $previous = $state->getLastToken();
-                            if (!(
-                                $previous instanceof TagInterpolationEndToken ||
-                                $previous instanceof InterpolationEndToken
-                            )) {
-                                $subToken->setValue(mb_substr($text, 1) ?: '');
-                            }
-                        }
                     }
                 }
 

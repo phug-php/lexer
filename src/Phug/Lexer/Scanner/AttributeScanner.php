@@ -17,10 +17,12 @@ class AttributeScanner implements ScannerInterface
 {
     private function skipComments(Reader $reader)
     {
+        $reader->readSpaces();
         if ($reader->peekString('//')) {
             $reader->consume();
             $reader->readUntilNewLine();
         }
+        $reader->readSpaces();
     }
 
     private function isTruncatedExpression(Reader $reader, &$expr)
@@ -32,15 +34,7 @@ class AttributeScanner implements ScannerInterface
             return true;
         }
 
-        if ($reader->match('[\\t ]*[+\\/*%-]')) {
-            $expr .= $reader->getMatch(0);
-            $reader->consume();
-            $expr .= $reader->readSpaces();
-
-            return !$reader->peekChar(')');
-        }
-
-        if ($reader->match('[\\t ]*(\\?'.
+        if ($reader->match('[\\t ]*[+\\/*%-]') || $reader->match('[\\t ]*(\\?'.
             '(?:(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\?\\:\'"]++|(?-1))*+)'.
         '\\:)')) {
             $expr .= $reader->getMatch(0);
@@ -126,9 +120,7 @@ class AttributeScanner implements ScannerInterface
     {
         $expr = $this->getAttributeValue($reader);
         while ($this->isTruncatedExpression($reader, $expr)) {
-            $reader->readSpaces();
             $this->skipComments($reader);
-            $reader->readSpaces();
             $expr .= $this->getAttributeValue($reader);
         }
         $token->setValue($expr);
@@ -142,9 +134,62 @@ class AttributeScanner implements ScannerInterface
         // a(
         //  href='value' //<- Awesome attribute, i say
         //  )
-        $reader->readSpaces();
         $this->skipComments($reader);
-        $reader->readSpaces();
+    }
+
+    private function readExpression(Reader $reader)
+    {
+        //Read the first part of the expression
+        //e.g.:
+        // (`a`), (`a`=b), (`$expr`, `$expr2`) (`$expr` `$expr`=a)
+        $expr = $this->getAttributeValue($reader, [
+            ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
+        ]);
+
+        //Notice we have the following problem with spaces:
+        //1. You can separate arguments with spaces
+        // -> a(a=a b=b c=c)
+        //2. You can have spaces around anything
+        // -> a(a =
+        //       a c=c d
+        // =  d)
+        //3. You can also separate with tabs and line-breaks
+        // -> a(
+        //      a=a
+        //      b=b
+        //      c=c
+        //    )
+        //
+        //This leads to commas actually being just ignored as the most
+        //simple solution. Attribute finding passes on as long as there's
+        //no ) or EOF in sight.
+        //TODO: Afaik this could also lead to a(a=(b ? b : c)d=f), where a space or
+        // anything else _should_ be required.
+        // Check this.
+
+        //Ignore the comma. It's mainly just a "visual" separator,
+        //it's actually completely optional.
+        if ($reader->peekChar(',')) {
+            $reader->consume();
+        }
+
+        if ($expr === null || $expr === '') {
+            //An empty attribute would mean we did something like
+            //,, or had a space before a comma (since space is also a valid
+            //separator
+            //We just skip that one.
+            if ($reader->peekChar('=') ||
+                $reader->peekString('?!=') ||
+                $reader->peekString('?=') ||
+                $reader->peekString('!=')
+            ) {
+                $reader->consume();
+            }
+
+            $expr = null;
+        }
+
+        return $expr;
     }
 
     private function scanParenthesesContent(State $state)
@@ -159,9 +204,7 @@ class AttributeScanner implements ScannerInterface
             //Check for comments
             // a( //Now attributes follow!
             //   a=a...
-            $reader->readSpaces();
             $this->skipComments($reader);
-            $reader->readSpaces();
 
             //We create the attribute token first (we don't need to yield it
             //but we fill it sequentially)
@@ -176,53 +219,7 @@ class AttributeScanner implements ScannerInterface
                 $reader->consume();
             }
 
-            //Read the first part of the expression
-            //e.g.:
-            // (`a`), (`a`=b), (`$expr`, `$expr2`) (`$expr` `$expr`=a)
-            $expr = $this->getAttributeValue($reader, [
-                ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
-            ]);
-
-            //Notice we have the following problem with spaces:
-            //1. You can separate arguments with spaces
-            // -> a(a=a b=b c=c)
-            //2. You can have spaces around anything
-            // -> a(a =
-            //       a c=c d
-            // =  d)
-            //3. You can also separate with tabs and line-breaks
-            // -> a(
-            //      a=a
-            //      b=b
-            //      c=c
-            //    )
-            //
-            //This leads to commas actually being just ignored as the most
-            //simple solution. Attribute finding passes on as long as there's
-            //no ) or EOF in sight.
-            //TODO: Afaik this could also lead to a(a=(b ? b : c)d=f), where a space or
-            // anything else _should_ be required.
-            // Check this.
-
-            //Ignore the comma. It's mainly just a "visual" separator,
-            //it's actually completely optional.
-            if ($reader->peekChar(',')) {
-                $reader->consume();
-            }
-
-            if ($expr === null || $expr === '') {
-                //An empty attribute would mean we did something like
-                //,, or had a space before a comma (since space is also a valid
-                //separator
-                //We just skip that one.
-                if ($reader->peekChar('=') ||
-                    $reader->peekString('?!=') ||
-                    $reader->peekString('?=') ||
-                    $reader->peekString('!=')
-                ) {
-                    $reader->consume();
-                }
-
+            if (!($expr = $this->readExpression($reader))) {
                 continue;
             }
 
@@ -232,9 +229,7 @@ class AttributeScanner implements ScannerInterface
             // a(
             //      href //<- The name of the thing
             //      = 'value' //<- The value of the thing
-            $reader->readSpaces();
             $this->skipComments($reader);
-            $reader->readSpaces();
 
             //Check for our assignment-operators.
             //Notice that they have to be exactly written in the correct order
@@ -251,9 +246,7 @@ class AttributeScanner implements ScannerInterface
             //  href= //Here be value
             //      'value'
             //  )
-            $reader->readSpaces();
             $this->skipComments($reader);
-            $reader->readSpaces();
 
             if ($hasValue) {
                 $this->readAttributeValue($reader, $token);

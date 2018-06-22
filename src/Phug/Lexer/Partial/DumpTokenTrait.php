@@ -19,6 +19,32 @@ trait DumpTokenTrait
         return preg_replace('/Token$/', '', get_class($token));
     }
 
+    private function dumpAttributeToken(AttributeToken $token)
+    {
+        return sprintf(
+            'Attr %s=%s (%s, %s)',
+            $token->getName() ?: '""',
+            $token->getValue() ?: '""',
+            $token->isEscaped() ? 'escaped' : 'unescaped',
+            $token->isChecked() ? 'checked' : 'unchecked'
+        );
+    }
+
+    private function dumpTextToken(TextToken $token)
+    {
+        return 'Text '.$token->getValue();
+    }
+
+    private function dumpExpressionToken(ExpressionToken $token)
+    {
+        return sprintf(
+            'Expr %s (%s, %s)',
+            $token->getValue() ?: '""',
+            $token->isEscaped() ? 'escaped' : 'unescaped',
+            $token->isChecked() ? 'checked' : 'unchecked'
+        );
+    }
+
     private function getTokenSymbol(TokenInterface $token)
     {
         static $symbols = [
@@ -26,39 +52,21 @@ trait DumpTokenTrait
             OutdentToken::class        => '<-',
             NewLineToken::class        => '\n',
             AttributeStartToken::class => '(',
+            AttributeToken::class      => 'dumpAttributeToken',
             AttributeEndToken::class   => ')',
+            TextToken::class           => 'dumpTextToken',
+            ExpressionToken::class     => 'dumpExpressionToken',
         ];
 
         $className = get_class($token);
 
         if (isset($symbols[$className])) {
-            return $symbols[$className];
+            return substr($symbols[$className], 0, 4) === 'dump' ?
+                call_user_func([$this, $symbols[$className]], $token) :
+                $symbols[$className];
         }
 
-        switch ($className) {
-            case AttributeToken::class:
-                /** @var AttributeToken $token */
-                return sprintf(
-                    'Attr %s=%s (%s, %s)',
-                    $token->getName() ?: '""',
-                    $token->getValue() ?: '""',
-                    $token->isEscaped() ? 'escaped' : 'unescaped',
-                    $token->isChecked() ? 'checked' : 'unchecked'
-                );
-            case TextToken::class:
-                /** @var TextToken $token */
-                return 'Text '.$token->getValue();
-            case ExpressionToken::class:
-                /** @var ExpressionToken $token */
-                return sprintf(
-                    'Expr %s (%s, %s)',
-                    $token->getValue() ?: '""',
-                    $token->isEscaped() ? 'escaped' : 'unescaped',
-                    $token->isChecked() ? 'checked' : 'unchecked'
-                );
-            default:
-                return $this->getTokenName($token);
-        }
+        return $this->getTokenName($token);
     }
 
     private function dumpToken(TokenInterface $token)

@@ -177,6 +177,9 @@ class LexerTest extends AbstractLexerTest
     /**
      * @covers ::dump
      * @covers \Phug\Lexer\Partial\DumpTokenTrait::dumpToken
+     * @covers \Phug\Lexer\Partial\DumpTokenTrait::dumpAttributeToken
+     * @covers \Phug\Lexer\Partial\DumpTokenTrait::dumpTextToken
+     * @covers \Phug\Lexer\Partial\DumpTokenTrait::dumpExpressionToken
      * @covers \Phug\Lexer\Partial\DumpTokenTrait::getTokenSymbol
      * @covers \Phug\Lexer\Partial\DumpTokenTrait::getTokenName
      */
