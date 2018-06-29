@@ -444,4 +444,29 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeEndToken::class,
         ]);
     }
+
+    /**
+     * @covers \Phug\Lexer\Scanner\AttributeScanner
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner
+     * @covers \Phug\Lexer\Scanner\ExpressionScanner::scan
+     */
+    public function testJsAttributeStyle()
+    {
+        list($tag, , $href, $class) = $this->assertTokens('a(href=href[i] class="a")', [
+            TagToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+        /* @var TagToken $tag */
+        self::assertSame('a', $tag->getName());
+        /* @var AttributeToken $href */
+        self::assertSame('href', $href->getName());
+        self::assertSame('href[i]', $href->getValue());
+        /* @var AttributeToken $class */
+        self::assertSame('class', $class->getName());
+        self::assertSame('"a"', $class->getValue());
+    }
 }
