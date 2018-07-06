@@ -22,6 +22,9 @@ class MarkupScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\MarkupScanner
      * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
      * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::recordLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
      */
     public function testRawMarkup()
     {
@@ -95,6 +98,9 @@ EOT;
      * @covers \Phug\Lexer\Scanner\MarkupScanner
      * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
      * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::recordLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
      */
     public function testRawMarkupQuit()
     {

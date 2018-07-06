@@ -22,6 +22,9 @@ class FilterScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\FilterScanner
      * @covers \Phug\Lexer\Scanner\FilterScanner::scan
      * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::recordLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
      */
     public function testFilter()
     {
@@ -97,6 +100,14 @@ class FilterScannerTest extends AbstractLexerTest
         ]);
     }
 
+    /**
+     * @covers \Phug\Lexer\Scanner\FilterScanner
+     * @covers \Phug\Lexer\Scanner\FilterScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::recordLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     */
     public function testStylusFilter()
     {
         $template = "//- set from php controller\n".

@@ -45,6 +45,11 @@ class LineAnalyzer
      */
     protected $newLevel;
 
+    /**
+     * @var bool
+     */
+    protected $allowedInterpolation = true;
+
     public function __construct(State $state, Reader $reader, $lines = [])
     {
         $this->state = $state;
@@ -52,55 +57,71 @@ class LineAnalyzer
         $this->lines = $lines;
     }
 
+    public function disallowInterpolation()
+    {
+        $this->allowedInterpolation = false;
+    }
+
+    protected function getLine()
+    {
+        $line = [];
+        $indent = $this->reader->match('[ \t]+(?=\S)') ? mb_strlen($this->reader->getMatch(0)) : INF;
+        if ($indent < $this->maxIndent) {
+            $this->maxIndent = $indent;
+        }
+
+        if ($this->allowedInterpolation) {
+            foreach ($this->state->scan(InterpolationScanner::class) as $subToken) {
+                $line[] = $subToken instanceof TextToken ? $subToken->getValue() : $subToken;
+            }
+        }
+
+        if (($text = $this->reader->readUntilNewLine()) !== null) {
+            $line[] = $text;
+        }
+
+        return $line;
+    }
+
+    protected function recordLine()
+    {
+        $this->lines[] = $this->getLine();
+
+        if ($this->newLine = $this->reader->peekNewLine()) {
+            $this->reader->consume(1);
+        }
+    }
+
     public function analyze($quitOnOutdent, array $breakChars = [])
     {
-        $state = $this->state;
-        $reader = $this->reader;
-        $this->level = $state->getLevel();
+        $this->level = $this->state->getLevel();
         $this->newLevel = $this->level;
         $breakChars = array_merge($breakChars, [' ', "\t", "\n"]);
         $this->newLine = false;
 
-        while ($reader->hasLength()) {
+        while ($this->reader->hasLength()) {
             $this->newLine = true;
             $indentationScanner = new IndentationScanner();
-            $this->newLevel = $indentationScanner->getIndentLevel($state, $this->level);
+            $this->newLevel = $indentationScanner->getIndentLevel($this->state, $this->level);
 
-            if (!$reader->peekChars($breakChars)) {
+            if (!$this->reader->peekChars($breakChars)) {
                 break;
             }
 
             if ($this->newLevel < $this->level) {
-                if ($reader->match('[ \t]*\n')) {
-                    $reader->consume(mb_strlen($reader->getMatch(0)));
+                if ($this->reader->match('[ \t]*\n')) {
+                    $this->reader->consume(mb_strlen($this->reader->getMatch(0)));
                     $this->lines[] = [];
 
                     continue;
                 }
 
-                $state->setLevel($this->newLevel);
+                $this->state->setLevel($this->newLevel);
 
                 break;
             }
 
-            $line = [];
-            $indent = $reader->match('[ \t]+(?=\S)') ? mb_strlen($reader->getMatch(0)) : INF;
-            if ($indent < $this->maxIndent) {
-                $this->maxIndent = $indent;
-            }
-
-            foreach ($state->scan(InterpolationScanner::class) as $subToken) {
-                $line[] = $subToken instanceof TextToken ? $subToken->getValue() : $subToken;
-            }
-
-            if (($text = $reader->readUntilNewLine()) !== null) {
-                $line[] = $text;
-            }
-            $this->lines[] = $line;
-
-            if ($this->newLine = $reader->peekNewLine()) {
-                $reader->consume(1);
-            }
+            $this->recordLine();
 
             if ($quitOnOutdent && !$this->newLine) {
                 break;
