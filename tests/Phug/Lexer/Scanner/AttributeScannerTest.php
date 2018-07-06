@@ -22,7 +22,10 @@ class AttributeScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::getAttributeToken
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::seedAttributeToken
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParentheses
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testScan()
@@ -186,7 +189,10 @@ class AttributeScannerTest extends AbstractLexerTest
     /**
      * @covers            \Phug\Lexer\Scanner\AttributeScanner
      * @covers            \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::getAttributeToken
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::seedAttributeToken
      * @covers            \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
+     * @covers            \Phug\Lexer\Scanner\AttributeScanner::scanParentheses
      * @covers            \Phug\Lexer\Scanner\AttributeScanner::scan
      * @expectedException \Phug\LexerException
      */
@@ -198,7 +204,10 @@ class AttributeScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::getAttributeToken
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::seedAttributeToken
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParentheses
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testDetailedScan()
@@ -251,7 +260,10 @@ class AttributeScannerTest extends AbstractLexerTest
     /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::skipComments
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::getAttributeToken
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::seedAttributeToken
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
+     * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParentheses
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      */
     public function testAttributeQuit()

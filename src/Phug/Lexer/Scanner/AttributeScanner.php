@@ -56,6 +56,32 @@ class AttributeScanner implements ScannerInterface
         ) && $reader->consume();
     }
 
+    private function isExpressionPartial(Reader $reader, $expression)
+    {
+        return (
+            $reader->match('\\s*(
+                "(?:\\\\[\\S\\s]|[^"\\\\])*" |
+                \'(?:\\\\[\\S\\s]|[^\'\\\\])*\' |
+                (\\[([^\\[\\]\'"]+|(?1))*\\]) |
+                (\\(([^\\(\\)\'"]+|(?1))*\\)) |
+                (\\{([^\\{\\}\'"]+|(?1))*\\})
+            )', 'x') &&
+            !preg_match('/[\'"]$/', $expression)
+        ) ||
+        $reader->match('\\s*\?((
+            \s+ |
+            "(?:\\\\[\\S\\s]|[^"\\\\])*" |
+            \'(?:\\\\[\\S\\s]|[^\'\\\\])*\' |
+            (\\[([^\\[\\]\'"]+|(?1))*\\]) |
+            (\\(([^\\(\\)\'"]+|(?1))*\\)) |
+            (\\{([^\\{\\}\'"]+|(?1))*\\})
+        )+)\\:', 'x') ||
+        $reader->match('\s+([.%*^&|!~[{+-]|\/(?!\/))') || (
+            $reader->match('\s') &&
+            preg_match('/[.%*^&|!~\/}+-]\s*$/', $expression)
+        );
+    }
+
     private function getAttributeValue(Reader $reader, array $chars = null)
     {
         $chars = $chars ?: [
@@ -63,29 +89,7 @@ class AttributeScanner implements ScannerInterface
         ];
         $joinChars = array_merge($chars, ['"', "'"]);
         $expression = $reader->readExpression($chars);
-        while ((
-                $reader->match('\\s*(
-                    "(?:\\\\[\\S\\s]|[^"\\\\])*" |
-                    \'(?:\\\\[\\S\\s]|[^\'\\\\])*\' |
-                    (\\[([^\\[\\]\'"]+|(?1))*\\]) |
-                    (\\(([^\\(\\)\'"]+|(?1))*\\)) |
-                    (\\{([^\\{\\}\'"]+|(?1))*\\})
-                )', 'x') &&
-                !preg_match('/[\'"]$/', $expression)
-            ) ||
-            $reader->match('\\s*\?((
-                \s+ |
-                "(?:\\\\[\\S\\s]|[^"\\\\])*" |
-                \'(?:\\\\[\\S\\s]|[^\'\\\\])*\' |
-                (\\[([^\\[\\]\'"]+|(?1))*\\]) |
-                (\\(([^\\(\\)\'"]+|(?1))*\\)) |
-                (\\{([^\\{\\}\'"]+|(?1))*\\})
-            )+)\\:', 'x') ||
-            $reader->match('\s+([.%*^&|!~[{+-]|\/(?!\/))') || (
-                $reader->match('\s') &&
-                preg_match('/[.%*^&|!~\/}+-]\s*$/', $expression)
-            )
-        ) {
+        while ($this->isExpressionPartial($reader, $expression)) {
             $match = $reader->getMatch(0);
             $expression .= $match;
             $reader->consume(mb_strlen($match));
@@ -171,64 +175,76 @@ class AttributeScanner implements ScannerInterface
         return $expression;
     }
 
+    private function getAttributeToken(State $state)
+    {
+        $reader = $state->getReader();
+
+        //Check for comments
+        // a( //Now attributes follow!
+        //   a=a...
+        $this->skipComments($reader);
+
+        //We create the attribute token first (we don't need to yield it
+        //but we fill it sequentially)
+        /** @var AttributeToken $token */
+        $token = $state->createToken(AttributeToken::class);
+        $token->escape();
+        $token->check();
+
+        if ($variadic = $reader->peekString('...')) {
+            $token->setIsVariadic(true);
+            $reader->consume();
+        }
+
+        return $token;
+    }
+
+    private function seedAttributeToken(State $state, AttributeToken $token, $expression)
+    {
+        $reader = $state->getReader();
+
+        $token->setName($expression);
+
+        //Check for comments at this point
+        // a(
+        //      href //<- The name of the thing
+        //      = 'value' //<- The value of the thing
+        $this->skipComments($reader);
+
+        //Check for our assignment-operators.
+        //Notice that they have to be exactly written in the correct order
+        //? first, ! second, = last (and required!)
+        //It's made like this on purpose so that the Jade code is consistent
+        //later on. It also makes this part of the lexing process easier and
+        //more reliable.
+        //If any of the following assignment operators have been found,
+        //we REQUIRE a following expression as the attribute value
+        $hasValue = $this->readAssignOperator($reader, $token);
+
+        //Check for comments again
+        // a(
+        //  href= //Here be value
+        //      'value'
+        //  )
+        $this->skipComments($reader);
+
+        if ($hasValue) {
+            $this->readAttributeValue($reader, $token);
+        }
+    }
+
     private function scanParenthesesContent(State $state)
     {
         $reader = $state->getReader();
 
-        if ($reader->peekChar(')')) {
-            return;
-        }
-
         while ($reader->hasLength()) {
-            //Check for comments
-            // a( //Now attributes follow!
-            //   a=a...
-            $this->skipComments($reader);
-
-            //We create the attribute token first (we don't need to yield it
-            //but we fill it sequentially)
-            /** @var AttributeToken $token */
-            $token = $state->createToken(AttributeToken::class);
-            $token->escape();
-            $token->check();
-
-            if ($variadic = $reader->peekString('...')) {
-                $token->setIsVariadic(true);
-                $reader->consume();
-            }
+            $token = $this->getAttributeToken($state);
 
             if (($expression = $this->readExpression($reader)) === null) {
                 continue;
             }
 
-            $token->setName($expression);
-
-            //Check for comments at this point
-            // a(
-            //      href //<- The name of the thing
-            //      = 'value' //<- The value of the thing
-            $this->skipComments($reader);
-
-            //Check for our assignment-operators.
-            //Notice that they have to be exactly written in the correct order
-            //? first, ! second, = last (and required!)
-            //It's made like this on purpose so that the Jade code is consistent
-            //later on. It also makes this part of the lexing process easier and
-            //more reliable.
-            //If any of the following assignment operators have been found,
-            //we REQUIRE a following expression as the attribute value
-            $hasValue = $this->readAssignOperator($reader, $token);
-
-            //Check for comments again
-            // a(
-            //  href= //Here be value
-            //      'value'
-            //  )
-            $this->skipComments($reader);
-
-            if ($hasValue) {
-                $this->readAttributeValue($reader, $token);
-            }
+            $this->seedAttributeToken($state, $token, $expression);
 
             yield $token;
 
@@ -237,6 +253,19 @@ class AttributeScanner implements ScannerInterface
             }
 
             break;
+        }
+    }
+
+    private function scanParentheses(State $state)
+    {
+        $reader = $state->getReader();
+
+        if ($reader->peekChar(')')) {
+            return;
+        }
+
+        foreach ($this->scanParenthesesContent($state) as $token) {
+            yield $token;
         }
 
         if (!$reader->peekChar(')')) {
@@ -259,7 +288,7 @@ class AttributeScanner implements ScannerInterface
         $reader->consume();
         yield $state->endToken($start);
 
-        foreach ($this->scanParenthesesContent($state) as $token) {
+        foreach ($this->scanParentheses($state) as $token) {
             yield $token;
         }
 
@@ -267,19 +296,7 @@ class AttributeScanner implements ScannerInterface
         $reader->consume();
         yield $state->endToken($end);
 
-        foreach ($state->scan(ClassScanner::class) as $subToken) {
-            yield $subToken;
-        }
-
-        foreach ($state->scan(IdScanner::class) as $subToken) {
-            yield $subToken;
-        }
-
-        foreach ($state->scan(AutoCloseScanner::class) as $subToken) {
-            yield $subToken;
-        }
-
-        foreach ($state->scan(SubScanner::class) as $subToken) {
+        foreach ($state->scan(ElementScanner::class) as $subToken) {
             yield $subToken;
         }
     }
