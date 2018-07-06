@@ -19,6 +19,10 @@ use Phug\Test\AbstractLexerTest;
 class MarkupScannerTest extends AbstractLexerTest
 {
     /**
+     * /!\ Caution, breaking change on lexer version 0.6 to align phug on pugjs behavior.
+     * You can set multiline_markup_enabled option to false to restore previous behavior.
+     * @see https://github.com/phug-php/phug/issues/34
+     *
      * @covers \Phug\Lexer\Scanner\MarkupScanner
      * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
      * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
@@ -80,15 +84,26 @@ EOT;
             TextToken::class,
         ]);
 
-        /*
-         * /!\ Caution, this may not be the definitive behavior as pugjs handle it differently.
-         * @see https://github.com/phug-php/phug/issues/34
-         */
+        $this->lexer->setOption('multiline_markup_enabled', true);
+
         $this->assertTokens("div\n  <div> Foo\n  Bar\n  </div>", [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
             TextToken::class,
+            NewLineToken::class,
+            TextToken::class,
+        ]);
+
+        $this->lexer->setOption('multiline_markup_enabled', false);
+
+        $this->assertTokens("div\n  <div> Foo\n  Bar\n  </div>", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TagToken::class,
             NewLineToken::class,
             TextToken::class,
         ]);
