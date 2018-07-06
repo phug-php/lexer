@@ -6,7 +6,6 @@
 
 namespace Phug\Lexer\Scanner;
 
-use Phug\Lexer\Analyzer\LineAnalyzer;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\FilterToken;

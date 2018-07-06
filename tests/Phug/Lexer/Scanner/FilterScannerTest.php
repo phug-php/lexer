@@ -99,34 +99,34 @@ class FilterScannerTest extends AbstractLexerTest
 
     public function testStylusFilter()
     {
-        $template = "//- set from php controller\n" .
-            "- prev = color\n" .
-            "\n" .
-            "//- set in the jade template\n" .
-            "- color = 'red'\n" .
-            "\n" .
-            "head\n" .
-            "  :stylus\n" .
-            "    prev = yellow\n" .
-            "    p\n" .
-            "      width 200px\n" .
-            "      color #{color}\n" .
-            "      a\n" .
-            "        color #{prev}\n" .
-            "      em\n" .
-            "        color prev\n" .
-            "body\n" .
-            "  p\n" .
-            "    | I'm\n" .
-            "    =\" \"\n" .
-            "    =color\n" .
-            "    =\" \"\n" .
-            "    | but my links are\n" .
-            "    =\" \"\n" .
-            "    a=prev\n" .
-            "    =\" \"\n" .
-            "    | and my quotes are\n" .
-            "    =\" \"\n" .
+        $template = "//- set from php controller\n".
+            "- prev = color\n".
+            "\n".
+            "//- set in the jade template\n".
+            "- color = 'red'\n".
+            "\n".
+            "head\n".
+            "  :stylus\n".
+            "    prev = yellow\n".
+            "    p\n".
+            "      width 200px\n".
+            "      color #{color}\n".
+            "      a\n".
+            "        color #{prev}\n".
+            "      em\n".
+            "        color prev\n".
+            "body\n".
+            "  p\n".
+            "    | I'm\n".
+            "    =\" \"\n".
+            "    =color\n".
+            "    =\" \"\n".
+            "    | but my links are\n".
+            "    =\" \"\n".
+            "    a=prev\n".
+            "    =\" \"\n".
+            "    | and my quotes are\n".
+            "    =\" \"\n".
             "    em=prev\n";
 
         $this->assertTokens($template, [
