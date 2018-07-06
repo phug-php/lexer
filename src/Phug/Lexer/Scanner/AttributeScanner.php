@@ -25,10 +25,10 @@ class AttributeScanner implements ScannerInterface
         $reader->readSpaces();
     }
 
-    private function isTruncatedExpression(Reader $reader, &$expr)
+    private function isTruncatedExpression(Reader $reader, &$expression)
     {
-        if (mb_substr($expr, -3) === 'new' || mb_substr($expr, -5) === 'clone') {
-            $expr .= $reader->getLastPeekResult();
+        if (mb_substr($expression, -3) === 'new' || mb_substr($expression, -5) === 'clone') {
+            $expression .= $reader->getLastPeekResult();
             $reader->consume();
 
             return true;
@@ -37,9 +37,9 @@ class AttributeScanner implements ScannerInterface
         if ($reader->match('[\\t ]*[+\\/*%-]') || $reader->match('[\\t ]*(\\?'.
             '(?:(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\?\\:\'"]++|(?-1))*+)'.
         '\\:)')) {
-            $expr .= $reader->getMatch(0);
+            $expression .= $reader->getMatch(0);
             $reader->consume();
-            $expr .= $reader->readSpaces();
+            $expression .= $reader->readSpaces();
 
             return !$reader->peekChar(')');
         }
@@ -62,7 +62,7 @@ class AttributeScanner implements ScannerInterface
             ' ', "\t", "\n", ',', ')', '//',
         ];
         $joinChars = array_merge($chars, ['"', "'"]);
-        $expr = $reader->readExpression($chars);
+        $expression = $reader->readExpression($chars);
         while ((
                 $reader->match('\\s*(
                     "(?:\\\\[\\S\\s]|[^"\\\\])*" |
@@ -71,7 +71,7 @@ class AttributeScanner implements ScannerInterface
                     (\\(([^\\(\\)\'"]+|(?1))*\\)) |
                     (\\{([^\\{\\}\'"]+|(?1))*\\})
                 )', 'x') &&
-                !preg_match('/[\'"]$/', $expr)
+                !preg_match('/[\'"]$/', $expression)
             ) ||
             $reader->match('\\s*\?((
                 \s+ |
@@ -83,26 +83,26 @@ class AttributeScanner implements ScannerInterface
             )+)\\:', 'x') ||
             $reader->match('\s+([.%*^&|!~[{+-]|\/(?!\/))') || (
                 $reader->match('\s') &&
-                preg_match('/[.%*^&|!~\/}+-]\s*$/', $expr)
+                preg_match('/[.%*^&|!~\/}+-]\s*$/', $expression)
             )
         ) {
             $match = $reader->getMatch(0);
-            $expr .= $match;
+            $expression .= $match;
             $reader->consume(mb_strlen($match));
-            $expr .= $reader->readExpression($joinChars);
+            $expression .= $reader->readExpression($joinChars);
         }
 
-        return $expr;
+        return $expression;
     }
 
     private function readAttributeValue(Reader $reader, AttributeToken $token)
     {
-        $expr = $this->getAttributeValue($reader);
-        while ($this->isTruncatedExpression($reader, $expr)) {
+        $expression = $this->getAttributeValue($reader);
+        while ($this->isTruncatedExpression($reader, $expression)) {
             $this->skipComments($reader);
-            $expr .= $this->getAttributeValue($reader);
+            $expression .= $this->getAttributeValue($reader);
         }
-        $token->setValue($expr);
+        $token->setValue($expression);
 
         //Ignore a comma if found
         if ($reader->peekChar(',')) {
@@ -120,8 +120,8 @@ class AttributeScanner implements ScannerInterface
     {
         //Read the first part of the expression
         //e.g.:
-        // (`a`), (`a`=b), (`$expr`, `$expr2`) (`$expr` `$expr`=a)
-        $expr = $this->getAttributeValue($reader, [
+        // (`a`), (`a`=b), (`$expression1`, `$expression2`) (`$expression` `$expression`=a)
+        $expression = $this->getAttributeValue($reader, [
             ' ', "\t", "\n", ',', '?!=', '?=', '!=', '=', ')', '//',
         ]);
 
@@ -152,7 +152,7 @@ class AttributeScanner implements ScannerInterface
             $reader->consume();
         }
 
-        if ($expr === null || $expr === '') {
+        if ($expression === null || $expression === '') {
             //An empty attribute would mean we did something like
             //,, or had a space before a comma (since space is also a valid
             //separator
@@ -165,10 +165,10 @@ class AttributeScanner implements ScannerInterface
                 $reader->consume();
             }
 
-            $expr = null;
+            $expression = null;
         }
 
-        return $expr;
+        return $expression;
     }
 
     private function scanParenthesesContent(State $state)
@@ -192,17 +192,16 @@ class AttributeScanner implements ScannerInterface
             $token->escape();
             $token->check();
 
-            $variadic = $reader->peekString('...');
-            if ($variadic) {
+            if ($variadic = $reader->peekString('...')) {
                 $token->setIsVariadic(true);
                 $reader->consume();
             }
 
-            if (!($expr = $this->readExpression($reader))) {
+            if (($expression = $this->readExpression($reader)) === null) {
                 continue;
             }
 
-            $token->setName($expr);
+            $token->setName($expression);
 
             //Check for comments at this point
             // a(
