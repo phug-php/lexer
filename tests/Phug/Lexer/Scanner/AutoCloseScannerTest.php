@@ -26,6 +26,8 @@ class AutoCloseScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\IdScanner::scan
      * @covers \Phug\Lexer\Scanner\TagScanner
      * @covers \Phug\Lexer\Scanner\TagScanner::scan
+     * @covers \Phug\Lexer\Scanner\ElementScanner
+     * @covers \Phug\Lexer\Scanner\ElementScanner::scan
      */
     public function testScan()
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Grouping of ClassScanner, IdScanner, AutoCloseScanner and SubScanner
+ * Grouping of ClassScanner, IdScanner, AutoCloseScanner and SubScanner.
  */
 
 namespace Phug\Lexer\Scanner;

@@ -27,6 +27,8 @@ class AttributeScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParenthesesContent
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scanParentheses
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
+     * @covers \Phug\Lexer\Scanner\ElementScanner
+     * @covers \Phug\Lexer\Scanner\ElementScanner::scan
      */
     public function testScan()
     {
