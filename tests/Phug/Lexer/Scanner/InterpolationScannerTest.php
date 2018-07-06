@@ -20,7 +20,9 @@ class InterpolationScannerTest extends AbstractLexerTest
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scanInterpolation
      * @covers \Phug\Lexer\Scanner\InterpolationScanner::scan
      * @covers \Phug\Lexer\Scanner\TextScanner::scan
+     * @covers \Phug\Lexer\Scanner\TextScanner::scanInterpolationTokens
      * @covers \Phug\Lexer\Scanner\TextScanner::scanInterpolationToken
+     * @covers \Phug\Lexer\Scanner\TextScanner::leftTrimValueIfNotAfterInterpolation
      */
     public function testScan()
     {
