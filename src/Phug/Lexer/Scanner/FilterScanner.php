@@ -41,11 +41,48 @@ class FilterScanner implements ScannerInterface
 
                 continue;
             }
+            $level = $state->getLevel();
+            $newLevel = $level;
+            $lines = [];
+            $maxIndent = INF;
 
-            $analyzer = new LineAnalyzer($state, $reader);
-            $analyzer->analyze(true);
-            $lines = $analyzer->getFlatLines();
-            $maxIndent = $analyzer->getMaxIndent();
+            while ($reader->hasLength()) {
+                $indentationScanner = new IndentationScanner();
+                $newLevel = $indentationScanner->getIndentLevel($state, $level);
+
+                if (!$reader->peekChars([' ', "\t", "\n"])) {
+                    break;
+                }
+
+                if ($newLevel < $level) {
+                    if ($reader->match('[ \t]*\n')) {
+                        $reader->consume(mb_strlen($reader->getMatch(0)));
+                        $lines[] = '';
+
+                        continue;
+                    }
+
+                    $state->setLevel($newLevel);
+
+                    break;
+                }
+
+                $line = $reader->readUntilNewLine();
+                $lines[] = $line;
+                $unIndentedLine = ltrim($line);
+                if ($unIndentedLine !== '') {
+                    $indent = mb_strlen($line) - mb_strlen($unIndentedLine);
+                    if ($indent < $maxIndent) {
+                        $maxIndent = $indent;
+                    }
+                }
+
+                if (!$reader->peekNewLine()) {
+                    break;
+                }
+
+                $reader->consume(1);
+            }
 
             yield $state->createToken(NewLineToken::class);
             yield $state->createToken(IndentToken::class);
@@ -68,7 +105,7 @@ class FilterScanner implements ScannerInterface
             if ($reader->hasLength()) {
                 yield $state->createToken(NewLineToken::class);
 
-                $state->setLevel($analyzer->getNewLevel())->indent($analyzer->getLevel() + 1);
+                $state->setLevel($newLevel)->indent($level + 1);
 
                 while ($state->nextOutdent() !== false) {
                     yield $state->createToken(OutdentToken::class);

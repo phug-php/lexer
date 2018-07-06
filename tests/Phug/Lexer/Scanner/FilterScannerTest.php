@@ -5,6 +5,9 @@ namespace Phug\Test\Lexer\Scanner;
 use Phug\Lexer\Token\AttributeEndToken;
 use Phug\Lexer\Token\AttributeStartToken;
 use Phug\Lexer\Token\AttributeToken;
+use Phug\Lexer\Token\CodeToken;
+use Phug\Lexer\Token\CommentToken;
+use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\FilterToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
@@ -90,6 +93,96 @@ class FilterScannerTest extends AbstractLexerTest
             OutdentToken::class,
             OutdentToken::class,
             TagToken::class,
+            NewLineToken::class,
+        ]);
+    }
+
+    public function testStylusFilter()
+    {
+        $template = "//- set from php controller\n" .
+            "- prev = color\n" .
+            "\n" .
+            "//- set in the jade template\n" .
+            "- color = 'red'\n" .
+            "\n" .
+            "head\n" .
+            "  :stylus\n" .
+            "    prev = yellow\n" .
+            "    p\n" .
+            "      width 200px\n" .
+            "      color #{color}\n" .
+            "      a\n" .
+            "        color #{prev}\n" .
+            "      em\n" .
+            "        color prev\n" .
+            "body\n" .
+            "  p\n" .
+            "    | I'm\n" .
+            "    =\" \"\n" .
+            "    =color\n" .
+            "    =\" \"\n" .
+            "    | but my links are\n" .
+            "    =\" \"\n" .
+            "    a=prev\n" .
+            "    =\" \"\n" .
+            "    | and my quotes are\n" .
+            "    =\" \"\n" .
+            "    em=prev\n";
+
+        $this->assertTokens($template, [
+            CommentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            CodeToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            CommentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            CodeToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            FilterToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            OutdentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            ExpressionToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            ExpressionToken::class,
             NewLineToken::class,
         ]);
     }
