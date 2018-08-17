@@ -76,9 +76,9 @@ class AttributeScanner implements ScannerInterface
             (\\(([^\\(\\)\'"]+|(?1))*\\)) |
             (\\{([^\\{\\}\'"]+|(?1))*\\})
         )+)\\:', 'x') ||
-        $reader->match('\s+([.%*^&|!~[{+-]|\/(?!\/))') || (
+        $reader->match('\s+(\?[?:]|[.%*^&|!~[{+-]|\/(?!\/))') || (
             $reader->match('\s') &&
-            preg_match('/[.%*^&|!~\/}+-]\s*$/', $expression)
+            preg_match('/(\?[?:]|[.%*^&|!~\/}+-])\s*$/', $expression)
         );
     }
 
