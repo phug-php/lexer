@@ -446,6 +446,29 @@ class AttributeScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @group i
+     */
+    public function testDoubleTernary()
+    {
+        $this->assertTokens(implode("\n", [
+            'a.footer-group-link(',
+            '  href = row.url,',
+            "  target = row.is_blank ? '_blank' : null,",
+            "  rel = row.nofollow ? 'nofollow' : null,",
+            ') !{row.title}',
+        ]), [
+
+            TagToken::class,
+            ClassToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+    }
+
+    /**
      * @covers \Phug\Lexer\Scanner\AttributeScanner
      * @covers \Phug\Lexer\Scanner\AttributeScanner::scan
      * @covers \Phug\Lexer\Scanner\ExpressionScanner
