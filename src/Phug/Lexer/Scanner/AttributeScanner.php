@@ -25,6 +25,18 @@ class AttributeScanner implements ScannerInterface
         $reader->readSpaces();
     }
 
+    private function isTruncatedValue($expr)
+    {
+        $expr = preg_replace('/"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'/', '0', $expr);
+        $expr = preg_replace('/\\s*(
+                    (\\[([^\\[\\]]+|(?1))*\\]) |
+                    (\\(([^\\(\\)]+|(?1))*\\)) |
+                    (\\{([^\\{\\}]+|(?1))*\\})
+                )/x', '0', $expr);
+
+        return preg_match('/\?.*:\s*$/', $expr);
+    }
+
     private function isTruncatedExpression(Reader $reader, &$expr)
     {
         if (mb_substr($expr, -3) === 'new' || mb_substr($expr, -5) === 'clone') {
@@ -84,7 +96,8 @@ class AttributeScanner implements ScannerInterface
             $reader->match('\s+([.%*^&|!~[{+-]|\/(?!\/))') || (
                 $reader->match('\s') &&
                 preg_match('/[.%*^&|!~\/}+-]\s*$/', $expr)
-            )
+            ) ||
+            $this->isTruncatedValue($expr)
         ) {
             $match = $reader->getMatch(0);
             $expr .= $match;

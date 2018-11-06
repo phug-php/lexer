@@ -445,19 +445,15 @@ class AttributeScannerTest extends AbstractLexerTest
         ]);
     }
 
-    /**
-     * @group i
-     */
     public function testDoubleTernary()
     {
-        $this->assertTokens(implode("\n", [
+        list(, , , $href, $target, $rel) = $this->assertTokens(implode("\n", [
             'a.footer-group-link(',
             '  href = row.url,',
             "  target = row.is_blank ? '_blank' : null,",
             "  rel = row.nofollow ? 'nofollow' : null,",
-            ') !{row.title}',
+            ')',
         ]), [
-
             TagToken::class,
             ClassToken::class,
             AttributeStartToken::class,
@@ -466,6 +462,46 @@ class AttributeScannerTest extends AbstractLexerTest
             AttributeToken::class,
             AttributeEndToken::class,
         ]);
+
+        /* @var AttributeToken $href */
+        $this->assertSame('href', $href->getName());
+        $this->assertSame('row.url', $href->getValue());
+
+        /* @var AttributeToken $target */
+        $this->assertSame('target', $target->getName());
+        $this->assertSame('row.is_blank ? \'_blank\' : null', $target->getValue());
+
+        /* @var AttributeToken $rel */
+        $this->assertSame('rel', $rel->getName());
+        $this->assertSame('row.nofollow ? \'nofollow\' : null', $rel->getValue());
+
+        list(, , , $href, $target, $rel) = $this->assertTokens(implode("\n", [
+            'a.footer-group-link(',
+            '  href = row.url',
+            "  target = row.is_blank ? '_blank' : null",
+            "  rel = row.nofollow ? 'nofollow' : null",
+            ')',
+        ]), [
+            TagToken::class,
+            ClassToken::class,
+            AttributeStartToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeToken::class,
+            AttributeEndToken::class,
+        ]);
+
+        /* @var AttributeToken $href */
+        $this->assertSame('href', $href->getName());
+        $this->assertSame('row.url', $href->getValue());
+
+        /* @var AttributeToken $target */
+        $this->assertSame('target', $target->getName());
+        $this->assertSame('row.is_blank ? \'_blank\' : null', $target->getValue());
+
+        /* @var AttributeToken $rel */
+        $this->assertSame('rel', $rel->getName());
+        $this->assertSame('row.nofollow ? \'nofollow\' : null', $rel->getValue());
     }
 
     /**
