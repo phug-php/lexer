@@ -49,7 +49,7 @@ class AttributeScanner implements ScannerInterface
             return true;
         }
 
-        if ($reader->match('[\\t ]*[+\\/*%-]') || $reader->match('[\\t ]*(\\?'.
+        if ($reader->match('[\\t ]*((<|>|==|!=|\\+|-|\\*|\\/|%)=?)[\\t ]*') || $reader->match('[\\t ]*[+\\/*%-]') || $reader->match('[\\t ]*(\\?'.
             '(?:(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^\\?\\:\'"]++|(?-1))*+)'.
         '\\:)')) {
             $expression .= $reader->getMatch(0);
