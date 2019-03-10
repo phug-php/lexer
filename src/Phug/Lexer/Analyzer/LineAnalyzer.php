@@ -50,6 +50,11 @@ class LineAnalyzer
      */
     protected $allowedInterpolation = true;
 
+    /**
+     * @var bool
+     */
+    protected $outdent = false;
+
     public function __construct(State $state, Reader $reader, $lines = [])
     {
         $this->state = $state;
@@ -94,17 +99,26 @@ class LineAnalyzer
 
     public function analyze($quitOnOutdent, array $breakChars = [])
     {
+        $this->outdent = false;
         $this->level = $this->state->getLevel();
         $this->newLevel = $this->level;
         $breakChars = array_merge($breakChars, [' ', "\t", "\n"]);
         $this->newLine = false;
+        $first = true;
 
         while ($this->reader->hasLength()) {
             $this->newLine = true;
             $indentationScanner = new IndentationScanner();
-            $this->newLevel = $indentationScanner->getIndentLevel($this->state, $this->level);
+
+            if (!$first) {
+                $this->newLevel = $indentationScanner->getIndentLevel($this->state, $this->level);
+            }
+
+            $first = false;
 
             if (!$this->reader->peekChars($breakChars)) {
+                $this->outdent = $this->newLevel < $this->level;
+
                 break;
             }
 
@@ -116,6 +130,7 @@ class LineAnalyzer
                     continue;
                 }
 
+                $this->outdent = true;
                 $this->state->setLevel($this->newLevel);
 
                 break;
@@ -135,6 +150,14 @@ class LineAnalyzer
     public function hasNewLine()
     {
         return (bool) $this->newLine;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOutdent()
+    {
+        return $this->outdent;
     }
 
     /**

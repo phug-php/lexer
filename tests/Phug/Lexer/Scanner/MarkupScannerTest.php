@@ -57,6 +57,66 @@ class MarkupScannerTest extends AbstractLexerTest
             TagToken::class,
             TextToken::class,
         ]);
+
+        $this->lexer->setOption('multiline_markup_enabled', true);
+
+        $this->assertTokens(implode("\n", [
+            'body',
+            '  if (test == true)',
+            '    h1 Phug',
+            '  else',
+            '    <!---->',
+            '  div test',
+        ]), [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            ConditionalToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            ConditionalToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+            TextToken::class,
+        ]);
+
+        $this->lexer->setOption('multiline_markup_enabled', false);
+
+        $this->assertTokens(implode("\n", [
+            'body',
+            '  if (test == true)',
+            '    h1 Phug',
+            '  else',
+            '    <!---->',
+            '  div test',
+        ]), [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            ConditionalToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            ConditionalToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+            TextToken::class,
+        ]);
     }
 
     /**
@@ -83,6 +143,7 @@ class MarkupScannerTest extends AbstractLexerTest
         self::assertFalse($tok->isEscaped());
         self::assertSame($template, $tok->getValue());
 
+        $this->lexer->setOption('multiline_markup_enabled', true);
         $template = "<ul id='aa'>\n  <li class='foo'>item</li>\n</ul>";
         /** @var TextToken $tok */
         list($tok) = $this->assertTokens($template, [
@@ -91,6 +152,7 @@ class MarkupScannerTest extends AbstractLexerTest
 
         self::assertFalse($tok->isEscaped());
         self::assertSame($template, $tok->getValue());
+        $this->lexer->setOption('multiline_markup_enabled', false);
 
         $template = <<<'EOT'
 - var version = 1449104952939
@@ -107,6 +169,42 @@ class MarkupScannerTest extends AbstractLexerTest
 p You can <em>embed</em> html as well.
 p: <strong>Even</strong> as the body of a block expansion.
 EOT;
+        /* @var TextToken[] $texts */
+        $texts = array_filter($this->assertTokens($template, [
+            CodeToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            TagToken::class,
+            ExpansionToken::class,
+            TextToken::class,
+        ]), function ($token) {
+            return $token instanceof TextToken;
+        });
+
+        $this->lexer->setOption('multiline_markup_enabled', true);
+
         $this->assertTokens($template, [
             CodeToken::class,
             TextToken::class,
@@ -126,20 +224,27 @@ EOT;
             TextToken::class,
         ]);
 
-        $this->lexer->setOption('multiline_markup_enabled', true);
-
         $this->assertTokens("div\n  <div> Foo\n  Bar\n  </div>", [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
             TextToken::class,
             NewLineToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            TextToken::class,
+        ]);
+
+        $this->assertTokens("div\n  <div> Foo\n       Bar\n  </div>", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
             TextToken::class,
         ]);
 
         $this->lexer->setOption('multiline_markup_enabled', false);
 
-        $this->assertTokens("div\n  <div> Foo\n  Bar\n  </div>", [
+        list(, , , $text1, , , , $text2) = $this->assertTokens("div\n  <div> Foo\n  Bar\n  </div>", [
             TagToken::class,
             NewLineToken::class,
             IndentToken::class,
@@ -147,6 +252,25 @@ EOT;
             NewLineToken::class,
             TagToken::class,
             NewLineToken::class,
+            TextToken::class,
+        ]);
+
+        /* @var TextToken $text1 */
+        self::assertSame('<div> Foo', $text1->getValue());
+
+        /* @var TextToken $text2 */
+        self::assertSame('</div>', $text2->getValue());
+
+        $this->assertTokens("div\n  <div> Foo\n       Bar\n  </div>", [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
             TextToken::class,
         ]);
     }

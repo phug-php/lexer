@@ -83,16 +83,16 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'indent_style'             => null,
             'indent_width'             => null,
             'allow_mixed_indent'       => true,
-            'multiline_markup_enabled' => true,
+            'multiline_markup_enabled' => false,
             'encoding'                 => null,
             'lexer_modules'            => [],
             'keywords'                 => [],
             'scanners'                 => Scanners::getList(),
 
             //Events
-            'on_lex'     => null,
-            'on_lex_end' => null,
-            'on_token'   => null,
+            'on_lex'                   => null,
+            'on_lex_end'               => null,
+            'on_token'                 => null,
         ]);
 
         $this->state = null;
