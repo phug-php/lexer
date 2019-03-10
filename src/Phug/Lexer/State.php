@@ -52,13 +52,14 @@ class State implements OptionInterface
     {
         $this->lexer = $lexer;
         $this->setOptionsRecursive([
-            'reader_class_name'  => Reader::class,
-            'encoding'           => null,
-            'level'              => 0,
-            'indent_width'       => null,
-            'indent_style'       => null,
-            'allow_mixed_indent' => null,
-            'path'               => null,
+            'reader_class_name'        => Reader::class,
+            'encoding'                 => null,
+            'level'                    => 0,
+            'indent_width'             => null,
+            'indent_style'             => null,
+            'allow_mixed_indent'       => null,
+            'multiline_markup_enabled' => false,
+            'path'                     => null,
         ], $options ?: []);
 
         $readerClassName = $this->getOption('reader_class_name');

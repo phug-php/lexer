@@ -9,6 +9,7 @@ namespace Phug\Lexer\Scanner;
 use Phug\Lexer\Analyzer\LineAnalyzer;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
 
 class MarkupScanner extends MultilineScanner
@@ -21,26 +22,30 @@ class MarkupScanner extends MultilineScanner
             return;
         }
 
-        if (!$state->getOption('multiline_markup_enabled')) {
-            /** @var TextToken $token */
-            $token = $state->createToken(TextToken::class);
-            $token->setValue($reader->readUntilNewLine());
+        if ($state->getOption('multiline_markup_enabled')) {
+            $analyzer = new LineAnalyzer($state, $reader);
+            $analyzer->analyze(false, ['<']);
+            $lines = $analyzer->getLines();
 
-            yield $token;
+            foreach ($this->getUnescapedLines($state, $lines) as $token) {
+                yield $token;
+            }
+
+            if ($analyzer->hasNewLine()) {
+                yield $state->createToken(NewLineToken::class);
+
+                if ($analyzer->hasOutdent()) {
+                    yield $state->createToken(OutdentToken::class);
+                }
+            }
 
             return;
         }
 
-        $analyzer = new LineAnalyzer($state, $reader);
-        $analyzer->analyze(false, ['<']);
-        $lines = $analyzer->getLines();
+        /** @var TextToken $text */
+        $text = $state->createToken(TextToken::class);
+        $text->setValue($reader->readUntilNewLine());
 
-        foreach ($this->getUnescapedLines($state, $lines) as $token) {
-            yield $token;
-        }
-
-        if ($analyzer->hasNewLine()) {
-            yield $state->createToken(NewLineToken::class);
-        }
+        yield $text;
     }
 }

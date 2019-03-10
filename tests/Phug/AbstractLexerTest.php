@@ -54,6 +54,21 @@ abstract class AbstractLexerTest extends TestCase
         $lexer = $lexer ?: $this->lexer;
         $tokens = iterator_to_array($lexer->lex($expression));
 
+        $table = str_pad('expected', 80, ' ', STR_PAD_RIGHT).'got';
+        $lines = max(count($classNames), count($tokens));
+
+        for ($i = 0; $i < $lines; $i++) {
+            $expected = isset($classNames[$i]) ? $this->filterTokenClass($classNames[$i]) : '';
+            $table .= "\n".(isset($tokens[$i])
+                ? str_pad($expected, 80, ' ', STR_PAD_RIGHT).str_replace(
+                    "\n",
+                    "\n".str_repeat(' ', 80),
+                    trim($this->lexer->dump($tokens[$i]))
+                )
+                : $expected
+            );
+        }
+
         self::assertSame(
             count($tokens),
             count($classNames),
@@ -64,7 +79,7 @@ abstract class AbstractLexerTest extends TestCase
             ."\n"
             .'got      ('
             .implode(', ', array_map('trim', array_map([$this->lexer, 'dump'], $tokens)))
-            .')'
+            .")\n$table\n"
         );
 
         foreach ($tokens as $i => $token) {
