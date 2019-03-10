@@ -166,8 +166,7 @@ class MarkupScannerTest extends AbstractLexerTest
 p You can <em>embed</em> html as well.
 p: <strong>Even</strong> as the body of a block expansion.
 EOT;
-        /* @var TextToken[] $texts */
-        $texts = array_filter($this->assertTokens($template, [
+        $this->assertTokens($template, [
             CodeToken::class,
             TextToken::class,
             NewLineToken::class,
@@ -196,9 +195,7 @@ EOT;
             TagToken::class,
             ExpansionToken::class,
             TextToken::class,
-        ]), function ($token) {
-            return $token instanceof TextToken;
-        });
+        ]);
 
         $this->lexer->setOption('multiline_markup_enabled', true);
 
