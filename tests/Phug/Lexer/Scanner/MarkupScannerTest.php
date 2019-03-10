@@ -6,18 +6,59 @@ use Phug\Lexer;
 use Phug\Lexer\Scanner\MarkupScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\CodeToken;
+use Phug\Lexer\Token\ConditionalToken;
 use Phug\Lexer\Token\ExpansionToken;
 use Phug\Lexer\Token\ExpressionToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\NewLineToken;
+use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TagToken;
 use Phug\Lexer\Token\TextToken;
 use Phug\Test\AbstractLexerTest;
 
 class MarkupScannerTest extends AbstractLexerTest
 {
+    /**
+     * @covers \Phug\Lexer\Scanner\MarkupScanner
+     * @covers \Phug\Lexer\Scanner\MarkupScanner::scan
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::recordLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::getLine
+     */
+    public function testMarkupInCondition()
+    {
+        $this->assertTokens(implode("\n", [
+            'body',
+            '  if (test == true)',
+            '    h1 Phug',
+            '  else',
+            '    <!---->',
+            '  div test',
+        ]), [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            ConditionalToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            ConditionalToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+            NewLineToken::class,
+            OutdentToken::class,
+            TagToken::class,
+            TextToken::class,
+        ]);
+    }
+
     /**
      * /!\ Caution, breaking change on lexer version 0.6 to align phug on pugjs behavior.
      * You can set multiline_markup_enabled option to false to restore previous behavior.
