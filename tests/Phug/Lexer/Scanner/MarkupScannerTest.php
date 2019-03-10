@@ -120,9 +120,6 @@ class MarkupScannerTest extends AbstractLexerTest
     }
 
     /**
-     * /!\ Caution, breaking change on lexer version 0.6 to align phug on pugjs behavior.
-     * You can set multiline_markup_enabled option to false to restore previous behavior.
-     *
      * @see https://github.com/phug-php/phug/issues/34
      *
      * @covers \Phug\Lexer\Scanner\MarkupScanner

@@ -83,7 +83,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'indent_style'             => null,
             'indent_width'             => null,
             'allow_mixed_indent'       => true,
-            'multiline_markup_enabled' => false,
+            'multiline_markup_enabled' => true,
             'encoding'                 => null,
             'lexer_modules'            => [],
             'keywords'                 => [],

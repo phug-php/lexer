@@ -66,4 +66,30 @@ class TextScannerTest extends AbstractLexerTest
     {
         $this->assertTokens('|', []);
     }
+
+    public function testStartingWhitespace()
+    {
+        $template = implode("\n", [
+            'pre',
+            '  code.',
+            '    foo',
+            '    bar',
+            '    baz',
+        ]);
+
+        $tokens = $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+        ]);
+
+        /** @var TextToken $text */
+        $text = end($tokens);
+
+        self::assertSame("foo\nbar\nbaz", $text->getValue());
+    }
 }

@@ -109,9 +109,10 @@ class LineAnalyzer
         while ($this->reader->hasLength()) {
             $this->newLine = true;
             $indentationScanner = new IndentationScanner();
+            $newLevel = $indentationScanner->getIndentLevel($this->state, $this->level);
 
-            if (!$first) {
-                $this->newLevel = $indentationScanner->getIndentLevel($this->state, $this->level);
+            if (!$first || $newLevel > $this->newLevel) {
+                $this->newLevel = $newLevel;
             }
 
             $first = false;

@@ -58,7 +58,7 @@ class State implements OptionInterface
             'indent_width'             => null,
             'indent_style'             => null,
             'allow_mixed_indent'       => null,
-            'multiline_markup_enabled' => false,
+            'multiline_markup_enabled' => true,
             'path'                     => null,
         ], $options ?: []);
 
