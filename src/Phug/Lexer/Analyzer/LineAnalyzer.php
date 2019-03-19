@@ -176,8 +176,10 @@ class LineAnalyzer
     public function getFlatLines()
     {
         return array_map(function ($line) {
-            if ($line instanceof TokenInterface) {
-                $this->state->throwException('Unexpected '.get_class($line).' inside raw text.');
+            foreach ($line as $chunk) {
+                if ($chunk instanceof TokenInterface) {
+                    $this->state->throwException('Unexpected '.get_class($chunk).' inside raw text.');
+                }
             }
 
             return implode('', $line);
