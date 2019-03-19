@@ -137,6 +137,7 @@ class InterpolationScannerTest extends AbstractLexerTest
     }
 
     /**
+     * @covers                   \Phug\Lexer\Analyzer\LineAnalyzer::<public>
      * @expectedException        \Phug\LexerException
      * @expectedExceptionMessage Failed to lex: Unexpected Phug\Lexer\Token\InterpolationStartToken inside raw text.
      */

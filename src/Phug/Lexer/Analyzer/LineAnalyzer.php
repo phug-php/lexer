@@ -124,18 +124,11 @@ class LineAnalyzer
                 break;
             }
 
-            if ($this->newLevel < $this->level) {
-                if ($this->reader->match('[ \t]*\n')) {
-                    $this->reader->consume(mb_strlen($this->reader->getMatch(0)));
-                    $this->lines[] = [];
+            if ($this->newLevel < $this->level && $this->reader->match('[ \t]*\n')) {
+                $this->reader->consume(mb_strlen($this->reader->getMatch(0)));
+                $this->lines[] = [];
 
-                    continue;
-                }
-
-                $this->outdent = true;
-                $this->state->setLevel($this->newLevel);
-
-                break;
+                continue;
             }
 
             $this->recordLine();
