@@ -6,6 +6,7 @@ use Phug\Lexer\Scanner\IndentationScanner;
 use Phug\Lexer\Scanner\InterpolationScanner;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\TextToken;
+use Phug\Lexer\TokenInterface;
 use Phug\Reader;
 
 class LineAnalyzer
@@ -175,6 +176,12 @@ class LineAnalyzer
     public function getFlatLines()
     {
         return array_map(function ($line) {
+            foreach ($line as $chunk) {
+                if ($chunk instanceof TokenInterface) {
+                    $this->state->throwException('Unexpected '.get_class($chunk).' inside raw text.');
+                }
+            }
+
             return implode('', $line);
         }, $this->lines);
     }
