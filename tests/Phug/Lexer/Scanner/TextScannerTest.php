@@ -2,6 +2,7 @@
 
 namespace Phug\Test\Lexer\Scanner;
 
+use Phug\Lexer\Token\CommentToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
 use Phug\Lexer\Token\TagToken;
@@ -67,6 +68,9 @@ class TextScannerTest extends AbstractLexerTest
         $this->assertTokens('|', []);
     }
 
+    /**
+     * @covers \Phug\Lexer\Analyzer\LineAnalyzer::<public>
+     */
     public function testStartingWhitespace()
     {
         $template = implode("\n", [
@@ -91,5 +95,119 @@ class TextScannerTest extends AbstractLexerTest
         $text = end($tokens);
 
         self::assertSame("foo\nbar\nbaz", $text->getValue());
+
+        $template = implode("\n", [
+            'pre',
+            '  code.',
+            '    foo',
+            '  ',
+            '    bar',
+            '    baz',
+        ]);
+
+        $tokens = $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+        ]);
+
+        /** @var TextToken $text */
+        $text = end($tokens);
+
+        self::assertSame("foo\n\nbar\nbaz", $text->getValue());
+
+        $template = implode("\n", [
+            'pre',
+            '  code.',
+            '    foo',
+            '      ',
+            '    bar',
+            '    baz',
+        ]);
+
+        $tokens = $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            TextToken::class,
+        ]);
+
+        /** @var TextToken $text */
+        $text = end($tokens);
+
+        self::assertSame("foo\n  \nbar\nbaz", $text->getValue());
+
+        $template = implode("\n", [
+            'pre',
+            '  //',
+            '    foo',
+            ' ',
+            '    bar',
+            '    baz',
+        ]);
+
+        $tokens = $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            CommentToken::class,
+            TextToken::class,
+        ]);
+
+        /** @var TextToken $text */
+        $text = end($tokens);
+
+        self::assertSame("\n  foo\n\n  bar\n  baz", $text->getValue());
+
+        $template = implode("\n", [
+            'pre',
+            '  //',
+            '    foo',
+            '   ',
+            '    bar',
+            '    baz',
+        ]);
+
+        $tokens = $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            CommentToken::class,
+            TextToken::class,
+        ]);
+
+        /** @var TextToken $text */
+        $text = end($tokens);
+
+        self::assertSame("\n  foo\n \n  bar\n  baz", $text->getValue());
+
+        $template = implode("\n", [
+            'pre',
+            '  //',
+            '    foo',
+            '   x',
+            '    bar',
+            '    baz',
+        ]);
+
+        $tokens = $this->assertTokens($template, [
+            TagToken::class,
+            NewLineToken::class,
+            IndentToken::class,
+            CommentToken::class,
+            TextToken::class,
+        ]);
+
+        /** @var TextToken $text */
+        $text = end($tokens);
+
+        self::assertSame("\n  foo\n x\n  bar\n  baz", $text->getValue());
     }
 }
