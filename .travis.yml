@@ -5,28 +5,32 @@ git:
 
 matrix:
   include:
-    - php: 5.5
-      dist: precise
-    - php: 5.6
-    - php: 7.0
-    - php: 7.1
-    - php: 7.2
-    - php: 7.3
     - php: 7.4snapshot
     - php: 7.3
-      env: MULTITEST='on'
+      env: COVERAGE=on
+      dist: trusty
+    - php: 7.3
+      env: STYLECHECK=on
 
 install:
-  - travis_retry composer self-update
-  - travis_retry composer install
+  - composer self-update
+  - if [[ "$STYLECHECK" != "on" ]]; then composer require phpunit/phpunit:^7 phug/split --no-update; fi;
+  - if [[ "$STYLECHECK" = "on" ]]; then composer require squizlabs/php_codesniffer --no-update; fi;
+  - composer install
+  - |
+    if [[ "$STYLECHECK" != "on" ]]; then
+      mkdir -p tests/Phug && \
+      vendor/bin/split copy https://github.com/phug-php/phug.git tests/Phug/ --filters=tests/Phug/Lexer*,tests/Phug/AbstractLexerTest.php,tests/Phug/MockScanner.php;
+    fi;
 
 script:
-  - if [ "$MULTITEST" != "on" ]; then vendor/bin/phug-dev check --report --coverage-php-version=5.6; fi;
-  - if [ "$MULTITEST" = "on" ]; then vendor/bin/multi-tester --verbose; fi;
+  - if [[ "$STYLECHECK" != "on" && "$COVERAGE" != "on" ]]; then vendor/bin/phpunit; fi;
+  - if [[ "$COVERAGE" = "on" ]]; then vendor/bin/phpunit --coverage-text --coverage-clover=coverage.xml; fi;
+  - if [[ "$STYLECHECK" = "on" ]]; then vendor/bin/phpcs; fi;
 
 notifications:
   slack: phug:nzXFnxhU14RWK2EQSDL0u08z
 
 addons:
   code_climate:
-    repo_token: 02fe167d8f1d62fb82f40c2d8bd0f0bb5a5092a92665c7874e7ff3a4c523c39c
+    repo_token: 4c27d7efe84c820a751151e32eb3850b5238eadf335953720f2e1da7a5633144
