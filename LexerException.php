@@ -11,8 +11,4 @@ use Phug\Util\Exception\LocatedException;
  */
 class LexerException extends LocatedException
 {
-    public static function message($message, array $details = [])
-    {
-        return static::getFailureMessage('lex', $message, $details);
-    }
 }
