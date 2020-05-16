@@ -18,38 +18,33 @@ use Phug\Lexer\Token\TextToken;
 
 class InterpolationScanner implements ScannerInterface
 {
-    protected function scanInterpolation(State $state, $tagInterpolation, $interpolation, $escape)
+    protected function scanTagInterpolation(State $state, $tagInterpolation)
     {
-        if (strpos($interpolation, "\n") !== false) {
-            $state->throwException('End of line was reached with no closing bracket for interpolation.');
-        }
+        /** @var TagInterpolationStartToken $start */
+        $start = $state->createToken(TagInterpolationStartToken::class);
+        /** @var TagInterpolationEndToken $end */
+        $end = $state->createToken(TagInterpolationEndToken::class);
 
-        if ($tagInterpolation) {
-            /** @var TagInterpolationStartToken $start */
-            $start = $state->createToken(TagInterpolationStartToken::class);
-            /** @var TagInterpolationEndToken $end */
-            $end = $state->createToken(TagInterpolationEndToken::class);
+        $start->setEnd($end);
+        $end->setStart($start);
 
-            $start->setEnd($end);
-            $end->setStart($start);
+        $lexer = $state->getLexer();
 
-            $lexer = $state->getLexer();
+        yield $start;
 
-            yield $start;
-
-            foreach ($lexer->lex($tagInterpolation) as $token) {
-                if ($token instanceof NewLineToken) {
-                    $state->throwException('End of line was reached with no closing bracket for interpolation.');
-                }
-
-                yield $token;
+        foreach ($lexer->lex($tagInterpolation) as $token) {
+            if ($token instanceof NewLineToken) {
+                $state->throwException('End of line was reached with no closing bracket for interpolation.');
             }
 
-            yield $end;
-
-            return;
+            yield $token;
         }
 
+        yield $end;
+    }
+
+    protected function scanExpressionInterpolation(State $state, $interpolation, $escape)
+    {
         /** @var InterpolationStartToken $start */
         $start = $state->createToken(InterpolationStartToken::class);
         /** @var InterpolationEndToken $end */
@@ -69,6 +64,19 @@ class InterpolationScanner implements ScannerInterface
         yield $start;
         yield $token;
         yield $end;
+    }
+
+    protected function scanInterpolation(State $state, $tagInterpolation, $interpolation, $escape)
+    {
+        if (strpos($interpolation, "\n") !== false) {
+            $state->throwException('End of line was reached with no closing bracket for interpolation.');
+        }
+
+        if ($tagInterpolation) {
+            return $this->scanTagInterpolation($state, $tagInterpolation);
+        }
+
+        return $this->scanExpressionInterpolation($state, $interpolation, $escape);
     }
 
     protected function needSeparationBlankLine(State $state)
