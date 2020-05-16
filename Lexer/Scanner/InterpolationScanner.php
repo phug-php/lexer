@@ -34,7 +34,9 @@ class InterpolationScanner implements ScannerInterface
             $start = preg_quote($start, '/');
             $end = preg_quote($end, '/');
             $interpolations[] = $start.'(?<'.$name.'>'.
-                '(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^'.$start.$end.'\'"]++|(?-'.$backIndex.'))*+'.
+                '(?>"(?:\\\\[\\S\\s]|[^"\\\\])*"|\'(?:\\\\[\\S\\s]|[^\'\\\\])*\'|[^'.
+                $start.$end.
+                '\'"]++|(?-'.$backIndex.'))*+'.
                 ')'.$end;
             $backIndex++;
         }
