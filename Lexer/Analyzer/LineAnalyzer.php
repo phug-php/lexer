@@ -193,6 +193,13 @@ class LineAnalyzer
         }
     }
 
+    protected function setNewLevel($newLevel, $first = false)
+    {
+        if (!$first || $newLevel > $this->newLevel) {
+            $this->newLevel = $newLevel;
+        }
+    }
+
     protected function hasChunksUntil($breakChars)
     {
         $first = true;
@@ -201,11 +208,7 @@ class LineAnalyzer
             $this->newLine = true;
             $indentationScanner = new IndentationScanner();
             $newLevel = $indentationScanner->getIndentLevel($this->state, $this->level);
-
-            if (!$first || $newLevel > $this->newLevel) {
-                $this->newLevel = $newLevel;
-            }
-
+            $this->setNewLevel($newLevel, $first);
             $first = false;
 
             if (!$this->reader->peekChars($breakChars)) {
