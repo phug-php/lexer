@@ -57,6 +57,11 @@ class Lexer implements LexerInterface, ModuleContainerInterface
     private $lastToken;
 
     /**
+     * @var TokenInterface|null
+     */
+    private $previousToken;
+
+    /**
      * Creates a new lexer instance.
      *
      * The options should be an associative array
@@ -85,6 +90,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'indent_style'             => null,
             'indent_width'             => null,
             'allow_mixed_indent'       => true,
+            'multiline_interpolation'  => true,
             'multiline_markup_enabled' => true,
             'encoding'                 => null,
             'lexer_modules'            => [],
@@ -102,6 +108,14 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         $this->state = null;
 
         $this->updateOptions();
+    }
+
+    /**
+     * @return TokenInterface|null
+     */
+    public function getPreviousToken()
+    {
+        return $this->previousToken;
     }
 
     /**
@@ -203,6 +217,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
             'indent_style'             => $this->getOption('indent_style'),
             'indent_width'             => $this->getOption('indent_width'),
             'allow_mixed_indent'       => $this->getOption('allow_mixed_indent'),
+            'multiline_interpolation'  => $this->getOption('multiline_interpolation'),
             'multiline_markup_enabled' => $this->getOption('multiline_markup_enabled'),
             'level'                    => $this->getOption('level'),
             'mixin_keyword'            => $this->getRegExpOption('mixin_keyword'),
@@ -246,7 +261,17 @@ class Lexer implements LexerInterface, ModuleContainerInterface
 
         //Free state
         $this->state = null;
+        $this->previousToken = null;
         $this->lastToken = null;
+    }
+
+    /**
+     * @param TokenInterface $lastToken
+     */
+    private function setLastToken($lastToken)
+    {
+        $this->previousToken = $this->lastToken;
+        $this->lastToken = $lastToken;
     }
 
     private function getRegExpOption($name)
@@ -279,7 +304,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         if ($tokens) {
             //N> yield from $this->handleTokens($tokens)
             foreach ($this->handleTokens($tokens) as $tok) {
-                $this->lastToken = $tok;
+                $this->setLastToken($tok);
 
                 yield $tok;
             }
@@ -288,7 +313,7 @@ class Lexer implements LexerInterface, ModuleContainerInterface
         }
 
         $token = $event->getToken();
-        $this->lastToken = $token;
+        $this->setLastToken($token);
 
         yield $token;
     }
