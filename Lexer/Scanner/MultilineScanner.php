@@ -7,6 +7,7 @@
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Analyzer\LineAnalyzer;
+use Phug\Lexer\Scanner\Partial\TrailingOutdentHandlerTrait;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\IndentToken;
@@ -20,6 +21,8 @@ use Phug\Lexer\Token\TextToken;
 
 class MultilineScanner implements ScannerInterface
 {
+    use TrailingOutdentHandlerTrait;
+
     protected function unEscapedToken(State $state, $buffer)
     {
         /** @var TextToken $token */
@@ -101,15 +104,7 @@ class MultilineScanner implements ScannerInterface
             yield $token;
         }
 
-        if ($reader->hasLength()) {
-            yield $state->createToken(NewLineToken::class);
-
-            $state->setLevel($analyzer->getNewLevel())->indent($analyzer->getLevel() + 1);
-
-            while ($state->nextOutdent() !== false) {
-                yield $state->createToken(OutdentToken::class);
-            }
-        }
+        yield from $this->checkForTernary($analyzer, $state);
     }
 
     public function scan(State $state)
@@ -129,9 +124,7 @@ class MultilineScanner implements ScannerInterface
             $analyzer->analyze(true);
 
             if (count($lines = $analyzer->getLines())) {
-                foreach ($this->yieldLines($state, $lines, $analyzer) as $token) {
-                    yield $token;
-                }
+                yield from $this->yieldLines($state, $lines, $analyzer);
             }
         }
     }

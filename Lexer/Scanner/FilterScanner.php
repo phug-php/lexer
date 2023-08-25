@@ -7,6 +7,7 @@
 namespace Phug\Lexer\Scanner;
 
 use Phug\Lexer\Analyzer\LineAnalyzer;
+use Phug\Lexer\Scanner\Partial\TrailingOutdentHandlerTrait;
 use Phug\Lexer\ScannerInterface;
 use Phug\Lexer\State;
 use Phug\Lexer\Token\FilterToken;
@@ -17,6 +18,8 @@ use Phug\Lexer\Token\TextToken;
 
 class FilterScanner implements ScannerInterface
 {
+    use TrailingOutdentHandlerTrait;
+
     public function scan(State $state)
     {
         $reader = $state->getReader();
@@ -66,15 +69,7 @@ class FilterScanner implements ScannerInterface
             $token->getSourceLocation()->setOffsetLength(1); //Let it have at least 1 length for debugging
             yield $token;
 
-            if ($reader->hasLength()) {
-                yield $state->createToken(NewLineToken::class);
-
-                $state->setLevel($analyzer->getNewLevel())->indent($analyzer->getLevel() + 1);
-
-                while ($state->nextOutdent() !== false) {
-                    yield $state->createToken(OutdentToken::class);
-                }
-            }
+            yield from $this->checkForTernary($analyzer, $state);
         }
     }
 }
