@@ -14,7 +14,6 @@ use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\InterpolationEndToken;
 use Phug\Lexer\Token\InterpolationStartToken;
 use Phug\Lexer\Token\NewLineToken;
-use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TagInterpolationEndToken;
 use Phug\Lexer\Token\TagInterpolationStartToken;
 use Phug\Lexer\Token\TextToken;
@@ -86,8 +85,6 @@ class MultilineScanner implements ScannerInterface
 
     private function yieldLines(State $state, array $lines, LineAnalyzer $analyzer)
     {
-        $reader = $state->getReader();
-
         yield $state->createToken(IndentToken::class);
 
         $maxIndent = $analyzer->getMaxIndent();

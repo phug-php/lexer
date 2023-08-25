@@ -13,7 +13,6 @@ use Phug\Lexer\State;
 use Phug\Lexer\Token\FilterToken;
 use Phug\Lexer\Token\IndentToken;
 use Phug\Lexer\Token\NewLineToken;
-use Phug\Lexer\Token\OutdentToken;
 use Phug\Lexer\Token\TextToken;
 
 class FilterScanner implements ScannerInterface
