@@ -101,7 +101,9 @@ class MultilineScanner implements ScannerInterface
             yield $token;
         }
 
-        yield from $this->checkForTernary($analyzer, $state);
+        foreach ($this->yieldTrailingOutdent($analyzer, $state) as $token) {
+            yield $token;
+        }
     }
 
     public function scan(State $state)
@@ -121,7 +123,9 @@ class MultilineScanner implements ScannerInterface
             $analyzer->analyze(true);
 
             if (count($lines = $analyzer->getLines())) {
-                yield from $this->yieldLines($state, $lines, $analyzer);
+                foreach ($this->yieldLines($state, $lines, $analyzer) as $token) {
+                    yield $token;
+                }
             }
         }
     }

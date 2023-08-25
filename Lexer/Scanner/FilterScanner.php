@@ -68,7 +68,9 @@ class FilterScanner implements ScannerInterface
             $token->getSourceLocation()->setOffsetLength(1); //Let it have at least 1 length for debugging
             yield $token;
 
-            yield from $this->checkForTernary($analyzer, $state);
+            foreach ($this->yieldTrailingOutdent($analyzer, $state) as $token) {
+                yield $token;
+            }
         }
     }
 }

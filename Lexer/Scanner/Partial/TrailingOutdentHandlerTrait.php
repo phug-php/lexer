@@ -9,7 +9,7 @@ use Phug\Lexer\Token\OutdentToken;
 
 trait TrailingOutdentHandlerTrait
 {
-    private function checkForTernary(LineAnalyzer $analyzer, State $state)
+    private function yieldTrailingOutdent(LineAnalyzer $analyzer, State $state)
     {
         $reader = $state->getReader();
 
