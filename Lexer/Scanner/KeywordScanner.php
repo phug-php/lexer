@@ -24,7 +24,7 @@ class KeywordScanner implements ScannerInterface
             )) {
                 $name = $reader->getMatch('name');
 
-                if (in_array($name, $keywords, true)) {
+                if (in_array($name, $keywords)) {
                     $value = $reader->getMatch('value');
                     if (mb_substr($value, 0, 1) === ' ') {
                         $value = mb_substr($value, 1);
